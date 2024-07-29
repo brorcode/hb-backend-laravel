@@ -1,5 +1,6 @@
 services:
-    laravel.test:
+    hb-laravel:
+        container_name: 'hb-laravel'
         build:
             context: ./vendor/laravel/sail/runtimes/8.3
             dockerfile: Dockerfile
@@ -26,6 +27,7 @@ services:
             - mariadb
             - redis
     mariadb:
+        container_name: 'hb-mariadb'
         image: 'mariadb:11'
         ports:
             - '${FORWARD_DB_PORT:-3306}:3306'
@@ -50,6 +52,7 @@ services:
             retries: 3
             timeout: 5s
     redis:
+        container_name: 'hb-redis'
         image: 'redis:alpine'
         ports:
             - '${FORWARD_REDIS_PORT:-6379}:6379'
