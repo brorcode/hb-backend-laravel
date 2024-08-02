@@ -2,23 +2,17 @@
 
 namespace App\Http\Controllers\Api\v1;
 
-use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\v1\UserRequest;
 use App\Http\Resources\Api\v1\UserResource;
 use App\Models\User;
-use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\JsonResponse;
 
-class UserController extends Controller
+class UserController extends ApiController
 {
-    public function index(UserRequest $hotelRequest): JsonResource
+    public function index(UserRequest $userRequest): JsonResponse
     {
-        $users = User::query()
-            ->offset(($hotelRequest->page - 1) * $hotelRequest->limit)
-            ->limit($hotelRequest->limit + 1)
-            ->get();
+        $users = User::query()->simplePaginate($userRequest->limit);
 
-        return UserResource::collection($users)->additional([
-            'count' => User::query()->count(),
-        ]);
+        return $this->paginatedResponse(UserResource::collection($users));
     }
 }

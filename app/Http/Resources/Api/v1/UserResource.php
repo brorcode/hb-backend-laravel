@@ -26,6 +26,8 @@ class UserResource extends JsonResource
             'id' => $user->getKey(),
             'name' => $user->name,
             'email' => $user->email,
+            'createdAt' => $user->created_at,
+            'updatedAt' => $user->updated_at,
         ];
     }
 }
