@@ -7,6 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 /**
  * @property-read int page
  * @property-read int limit
+ * @property-read array sorting
  */
 class UserRequest extends FormRequest
 {
@@ -28,6 +29,22 @@ class UserRequest extends FormRequest
         return [
             'page' => ['required', 'integer'],
             'limit' => ['required', 'integer'],
+            'sorting' => ['required', 'array'],
+            'sorting.column' => ['nullable', 'string'],
+            'sorting.direction' => ['nullable', 'string'],
         ];
+    }
+
+    public function getSortingColumn(): ?string
+    {
+        return strtolower(
+            preg_replace('/(?<!^)[A-Z]/', '_$0',
+            $this->sorting['column'])
+        ) ?? null;
+    }
+
+    public function getSortingDirection(): ?string
+    {
+        return $this->sorting['direction'] ?? null;
     }
 }

@@ -11,7 +11,11 @@ class UserController extends ApiController
 {
     public function index(UserRequest $userRequest): JsonResponse
     {
-        $users = User::query()->simplePaginate($userRequest->limit);
+        $builder = User::query();
+        if ($userRequest->getSortingColumn() && $userRequest->getSortingDirection()) {
+            $builder->orderBy($userRequest->getSortingColumn(), $userRequest->getSortingDirection());
+        }
+        $users = $builder->simplePaginate($userRequest->limit);
 
         return $this->paginatedResponse(UserResource::collection($users));
     }
