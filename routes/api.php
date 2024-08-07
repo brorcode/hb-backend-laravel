@@ -18,6 +18,10 @@ Route::group(['prefix' => 'v1', 'as' => 'api.v1.'], function () {
         });
         Route::group(['prefix' => 'categories', 'as' => 'categories.'], function () {
             Route::post('/', [CategoryController::class, 'index'])->name('index');
+            Route::post('/store', [CategoryController::class, 'store'])->name('store');
+            Route::get('/{category}', [CategoryController::class, 'show'])->name('show');
+            Route::put('/{category}', [CategoryController::class, 'update'])->name('update');
+            Route::delete('/{category}', [CategoryController::class, 'destroy'])->name('destroy');
         });
 
         Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
