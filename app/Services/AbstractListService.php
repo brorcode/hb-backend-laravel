@@ -1,0 +1,59 @@
+<?php
+
+namespace App\Services;
+
+use App\Http\Requests\Api\v1\ListRequest;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+
+/**
+ * @template TModel of Model
+ */
+abstract class AbstractListService
+{
+    protected ListRequest $request;
+
+    /**
+     * @var class-string<Model|TModel>
+     */
+    protected string $model;
+
+    public function setRequest(ListRequest $request): void
+    {
+        $this->request = $request;
+    }
+
+    public function getListBuilder(): Builder
+    {
+        $TModel = resolve($this->model);
+        $builder = $TModel->query();
+        $this->applyFilters($builder);
+        $this->applySorting($builder);
+
+        return $builder;
+    }
+
+    private function applySorting($builder): void
+    {
+        if (!$this->request->getSortingColumn() && !$this->request->getSortingDirection()) {
+            return;
+        }
+
+        $builder->orderBy($this->request->getSortingColumn(), $this->request->getSortingDirection());
+    }
+
+    protected function applyFilters($builder): void
+    {
+        if (!$this->request->filters) {
+            return;
+        }
+
+        if (isset($this->request->filters['id'])) {
+            $builder->where('id', $this->request->filters['id']['value']);
+        }
+
+        $this->applySpecificFilters($builder);
+    }
+
+    abstract protected function applySpecificFilters($builder): void;
+}

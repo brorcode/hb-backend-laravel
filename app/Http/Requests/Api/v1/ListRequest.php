@@ -8,8 +8,9 @@ use Illuminate\Foundation\Http\FormRequest;
  * @property-read int page
  * @property-read int limit
  * @property-read array sorting
+ * @property-read array filters
  */
-class UserRequest extends FormRequest
+class ListRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -32,6 +33,7 @@ class UserRequest extends FormRequest
             'sorting' => ['required', 'array'],
             'sorting.column' => ['nullable', 'string'],
             'sorting.direction' => ['nullable', 'string'],
+            'filters' => ['nullable', 'array'],
         ];
     }
 

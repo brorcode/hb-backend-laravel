@@ -1,22 +1,27 @@
 <?php
 
+use App\Http\Controllers\Api\v1\CategoryController;
 use App\Http\Controllers\Api\v1\UserController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use Illuminate\Support\Facades\Route;
 
-Route::group(['prefix' => 'v1', 'as' => 'api.'], function () {
+Route::group(['prefix' => 'v1', 'as' => 'api.v1.'], function () {
+    Route::post('/login', [AuthenticatedSessionController::class, 'store'])->name('login');
+
     Route::group(['middleware' => 'auth:sanctum'], function () {
         Route::group(['prefix' => 'users', 'as' => 'users.'], function () {
             Route::post('/', [UserController::class, 'index'])->name('index');
+            Route::post('/store', [UserController::class, 'store'])->name('store');
+            Route::get('/{user}', [UserController::class, 'show'])->name('show');
+            Route::put('/{user}', [UserController::class, 'update'])->name('update');
+            Route::delete('/{user}', [UserController::class, 'destroy'])->name('destroy');
+        });
+        Route::group(['prefix' => 'categories', 'as' => 'categories.'], function () {
+            Route::post('/', [CategoryController::class, 'index'])->name('index');
         });
 
-        Route::post('/logout', [\App\Http\Controllers\Auth\AuthenticatedSessionController::class, 'destroy'])
+        Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
             ->middleware('auth')
             ->name('logout');
     });
-
-    Route::post('/login', [\App\Http\Controllers\Auth\AuthenticatedSessionController::class, 'store'])->name('login');
-});
-
-Route::middleware(['auth:sanctum'])->get('/user', function (\Illuminate\Http\Request $request) {
-    return $request->user();
 });
