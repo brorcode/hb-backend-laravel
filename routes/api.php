@@ -2,12 +2,9 @@
 
 use App\Http\Controllers\Api\v1\CategoryController;
 use App\Http\Controllers\Api\v1\UserController;
-use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'v1', 'as' => 'api.v1.'], function () {
-    Route::post('/login', [AuthenticatedSessionController::class, 'store'])->name('login');
-
     Route::group(['middleware' => 'auth:sanctum'], function () {
         Route::group(['prefix' => 'users', 'as' => 'users.'], function () {
             Route::post('/', [UserController::class, 'index'])->name('index');
@@ -23,9 +20,5 @@ Route::group(['prefix' => 'v1', 'as' => 'api.v1.'], function () {
             Route::put('/{category}', [CategoryController::class, 'update'])->name('update');
             Route::delete('/{category}', [CategoryController::class, 'destroy'])->name('destroy');
         });
-
-        Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
-            ->middleware('auth')
-            ->name('logout');
     });
 });

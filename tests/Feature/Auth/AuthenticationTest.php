@@ -3,43 +3,50 @@
 namespace Tests\Feature\Auth;
 
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 
 class AuthenticationTest extends TestCase
 {
-    use RefreshDatabase;
+    use DatabaseMigrations;
 
-    public function test_users_can_authenticate_using_the_login_screen(): void
+    private User $user;
+
+    public function setUp(): void
     {
-        $user = User::factory()->create();
+        parent::setUp();
 
-        $response = $this->post('/login', [
-            'email' => $user->email,
+        $this->user = User::factory()->create();
+    }
+
+    public function testUsersCanAuthenticateUsingTheLoginScreen(): void
+    {
+        $response = $this->postJson(route('login'), [
+            'email' => $this->user->email,
             'password' => 'password',
         ]);
 
         $this->assertAuthenticated();
-        $response->assertNoContent();
+        $response->assertOk();
+        $response->assertExactJson([
+            'name' => $this->user->name,
+            'email' => $this->user->email,
+        ]);
     }
 
-    public function test_users_can_not_authenticate_with_invalid_password(): void
+    public function testUsersCanNotAuthenticateWithInvalidPassword(): void
     {
-        $user = User::factory()->create();
-
-        $this->post('/login', [
-            'email' => $user->email,
+        $this->postJson('/login', [
+            'email' => $this->user->email,
             'password' => 'wrong-password',
         ]);
 
         $this->assertGuest();
     }
 
-    public function test_users_can_logout(): void
+    public function testUsersCanLogout(): void
     {
-        $user = User::factory()->create();
-
-        $response = $this->actingAs($user)->post('/logout');
+        $response = $this->actingAs($this->user)->postJson('/logout');
 
         $this->assertGuest();
         $response->assertNoContent();

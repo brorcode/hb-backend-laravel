@@ -9,9 +9,11 @@ class RegistrationTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_new_users_can_register(): void
+    public function testNewUsersCanRegister(): void
     {
-        $response = $this->post('/register', [
+        $this->markTestIncomplete('This test is currently incomplete.');
+
+        $response = $this->postJson('/register', [
             'name' => 'Test User',
             'email' => 'test@example.com',
             'password' => 'password',

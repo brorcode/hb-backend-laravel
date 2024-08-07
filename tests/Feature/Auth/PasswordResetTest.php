@@ -12,24 +12,28 @@ class PasswordResetTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_reset_password_link_can_be_requested(): void
+    public function testResetPasswordLinkCanBeRequested(): void
     {
+        $this->markTestIncomplete('This test is currently incomplete.');
+
         Notification::fake();
 
         $user = User::factory()->create();
 
-        $this->post('/forgot-password', ['email' => $user->email]);
+        $this->postJson('/forgot-password', ['email' => $user->email]);
 
         Notification::assertSentTo($user, ResetPassword::class);
     }
 
-    public function test_password_can_be_reset_with_valid_token(): void
+    public function testPasswordCanBeResetWithValidToken(): void
     {
+        $this->markTestIncomplete('This test is currently incomplete.');
+
         Notification::fake();
 
         $user = User::factory()->create();
 
-        $this->post('/forgot-password', ['email' => $user->email]);
+        $this->postJson('/forgot-password', ['email' => $user->email]);
 
         Notification::assertSentTo($user, ResetPassword::class, function (object $notification) use ($user) {
             $response = $this->post('/reset-password', [

@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Carbon\Carbon;
+use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -16,6 +17,8 @@ use Laravel\Sanctum\HasApiTokens;
  * @property string password
  * @property Carbon|null created_at
  * @property Carbon|null updated_at
+ *
+ * @method static UserFactory factory($count = null, $state = [])
  */
 class User extends Authenticatable
 {
