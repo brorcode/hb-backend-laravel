@@ -31,7 +31,7 @@ class UserController extends ApiController
         $user->password = $request->password;
         $user->save();
 
-        return response()->json([], Response::HTTP_CREATED);
+        return response()->json(['message' => 'Пользователь создан'], Response::HTTP_CREATED);
     }
 
     public function show(User $user): JsonResponse

@@ -19,7 +19,7 @@ class AuthenticationTest extends TestCase
         $this->user = User::factory()->create();
     }
 
-    public function testUsersCanAuthenticateUsingTheLoginScreen(): void
+    public function testUsersCanAuthenticateUsingApi(): void
     {
         $response = $this->postJson(route('login'), [
             'email' => $this->user->email,
@@ -31,6 +31,24 @@ class AuthenticationTest extends TestCase
         $response->assertExactJson([
             'name' => $this->user->name,
             'email' => $this->user->email,
+        ]);
+    }
+
+    public function testUsersCanNotAuthenticateWithMissedData(): void
+    {
+        $response = $this->postJson(route('login'));
+
+        $response->assertUnprocessable();
+        $response->assertExactJson([
+            'message' => 'Заполните форму правильно.',
+            'errors' => [
+                'email' => [
+                    'Поле email обязательно.'
+                ],
+                'password' => [
+                    'Поле пароль обязательно.'
+                ],
+            ],
         ]);
     }
 
@@ -46,7 +64,7 @@ class AuthenticationTest extends TestCase
 
     public function testUsersCanLogout(): void
     {
-        $response = $this->actingAs($this->user)->postJson('/logout');
+        $response = $this->actingAs($this->user)->postJson(route('logout'));
 
         $this->assertGuest();
         $response->assertNoContent();

@@ -3,8 +3,6 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-use Illuminate\Session\TokenMismatchException;
-use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -25,24 +23,5 @@ return Application::configure(basePath: dirname(__DIR__))
         //
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        $exceptions->respond(function (\Illuminate\Http\JsonResponse $response) {
-            if ($response->getStatusCode() === 419) {
-                return response()->json([
-                    'message' => 'Запрос не авторизован.',
-                ], HttpFoundationResponse::HTTP_UNAUTHORIZED);
-            }
-
-            return $response;
-        });
-
-        $exceptions->render(function (\Throwable $exception) {
-            if ($exception instanceof \Illuminate\Validation\ValidationException) {
-                return response()->json([
-                    'message' => 'Заполните форму правильно.',
-                    'errors' => $exception->errors(),
-                ], $exception->status);
-            }
-
-            return null; // Let Laravel handle other exceptions
-        });
+        // Custom exceptions handling implementation. Look at the App\Exceptions\Handler.php for more information
     })->create();

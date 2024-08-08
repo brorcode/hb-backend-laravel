@@ -31,6 +31,11 @@ class UserUpsertRequest extends FormRequest
      */
     public function rules(): array
     {
+        $passwordRules = [Password::min(8)];
+        if (!$this->user) {
+            $passwordRules[] = 'required';
+        }
+
         return [
             'name' => ['required'],
             'email' => [
@@ -38,7 +43,7 @@ class UserUpsertRequest extends FormRequest
                 'email:filter',
                 Rule::unique((new User())->getTable())->ignore($this->user),
             ],
-            'password' => [Password::min(8)],
+            'password' => $passwordRules,
         ];
     }
 }

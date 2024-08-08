@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\Api\v1;
 
+use App\Exceptions\ApiBadRequest;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
@@ -30,23 +32,31 @@ class ListRequest extends FormRequest
         return [
             'page' => ['required', 'integer'],
             'limit' => ['required', 'integer'],
-            'sorting' => ['required', 'array'],
-            'sorting.column' => ['nullable', 'string'],
-            'sorting.direction' => ['nullable', 'string'],
+            'sorting' => ['nullable', 'array'],
+            'sorting.column' => ['required_with:sorting', 'string'],
+            'sorting.direction' => ['required_with:sorting', 'in:ASC,DESC'],
             'filters' => ['nullable', 'array'],
         ];
     }
 
-    public function getSortingColumn(): ?string
+    public function getSortingColumn(): string
     {
         return strtolower(
             preg_replace('/(?<!^)[A-Z]/', '_$0',
             $this->sorting['column'])
-        ) ?? null;
+        );
     }
 
-    public function getSortingDirection(): ?string
+    public function getSortingDirection(): string
     {
-        return $this->sorting['direction'] ?? null;
+        return $this->sorting['direction'];
+    }
+
+    /**
+     * @throws ApiBadRequest
+     */
+    protected function failedValidation(Validator $validator): void
+    {
+        throw new ApiBadRequest();
     }
 }

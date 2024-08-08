@@ -35,7 +35,7 @@ abstract class AbstractListService
 
     private function applySorting($builder): void
     {
-        if (!$this->request->getSortingColumn() && !$this->request->getSortingDirection()) {
+        if (!$this->request->sorting) {
             return;
         }
 
