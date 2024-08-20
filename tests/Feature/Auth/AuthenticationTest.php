@@ -21,7 +21,7 @@ class AuthenticationTest extends TestCase
 
     public function testUsersCanAuthenticateUsingApi(): void
     {
-        $response = $this->postJson(route('login'), [
+        $response = $this->postJson(route('api.v1.login'), [
             'email' => $this->user->email,
             'password' => 'password',
         ]);
@@ -36,7 +36,7 @@ class AuthenticationTest extends TestCase
 
     public function testUsersCanNotAuthenticateWithMissedData(): void
     {
-        $response = $this->postJson(route('login'));
+        $response = $this->postJson(route('api.v1.login'));
 
         $response->assertUnprocessable();
         $response->assertExactJson([
@@ -54,7 +54,7 @@ class AuthenticationTest extends TestCase
 
     public function testUsersCanNotAuthenticateWithInvalidPassword(): void
     {
-        $this->postJson('/login', [
+        $this->postJson(route('api.v1.logout'), [
             'email' => $this->user->email,
             'password' => 'wrong-password',
         ]);
@@ -64,7 +64,7 @@ class AuthenticationTest extends TestCase
 
     public function testUsersCanLogout(): void
     {
-        $response = $this->actingAs($this->user)->postJson(route('logout'));
+        $response = $this->actingAs($this->user)->postJson(route('api.v1.logout'));
 
         $this->assertGuest();
         $response->assertNoContent();
