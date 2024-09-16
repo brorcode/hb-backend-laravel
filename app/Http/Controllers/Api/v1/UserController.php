@@ -6,7 +6,7 @@ use App\Http\Requests\Api\v1\ListRequest;
 use App\Http\Requests\Api\v1\UserUpsertRequest;
 use App\Http\Resources\Api\v1\UserResource;
 use App\Models\User;
-use App\Services\UserService;
+use App\Services\User\UserListService;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -14,7 +14,7 @@ class UserController extends ApiController
 {
     public function index(ListRequest $request): JsonResponse
     {
-        $userService = UserService::create();
+        $userService = UserListService::create();
         $userService->setRequest($request);
 
         $builder = $userService->getListBuilder();

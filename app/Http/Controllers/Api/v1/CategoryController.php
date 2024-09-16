@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Api\v1;
 
-use App\Http\Requests\Api\v1\CategoryUpsertRequest;
+use App\Http\Requests\Api\v1\Category\CategoryUpsertRequest;
 use App\Http\Requests\Api\v1\ListRequest;
-use App\Http\Resources\Api\v1\CategoryResource;
+use App\Http\Resources\Api\v1\Category\CategoryResource;
 use App\Models\Category;
-use App\Services\CategoryService;
+use App\Services\Category\CategoryListService;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -14,7 +14,7 @@ class CategoryController extends ApiController
 {
     public function index(ListRequest $request): JsonResponse
     {
-        $service = CategoryService::create();
+        $service = CategoryListService::create();
         $service->setRequest($request);
 
         $builder = $service->getListBuilder();
@@ -27,7 +27,7 @@ class CategoryController extends ApiController
     {
         $category = new Category();
         $category->name = $request->name;
-        $category->description = $request->description;
+        $category->is_manual_created = true;
         $category->save();
 
         return response()->json([], Response::HTTP_CREATED);
@@ -41,7 +41,6 @@ class CategoryController extends ApiController
     public function update(CategoryUpsertRequest $request, Category $category): JsonResponse
     {
         $category->name = $request->name;
-        $category->description = $request->description;
         $category->save();
 
         return $this->response(CategoryResource::make($category), 'Категория обновлена');

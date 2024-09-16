@@ -3,8 +3,25 @@
 namespace App\Providers;
 
 use App\Exceptions\Handler;
+use App\Models\Account;
+use App\Models\Category;
+use App\Models\CategoryPointer;
+use App\Models\CategoryPointerTag;
+use App\Models\Loan;
+use App\Models\Tag;
+use App\Models\Transaction;
+use App\Observers\AccountObserver;
+use App\Observers\CategoryObserver;
+use App\Observers\CategoryPointerObserver;
+use App\Observers\CategoryPointerTagObserver;
+use App\Observers\LoanObserver;
+use App\Observers\TagObserver;
+use App\Observers\TransactionObserver;
+use App\Services\ImportTransactions\DelimiterDetector;
+use App\Services\OwnerService;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Contracts\Debug\ExceptionHandler;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -14,7 +31,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->singleton(ExceptionHandler::class, Handler::class);
+        $this->app->singleton(OwnerService::class);
+        $this->app->singleton(DelimiterDetector::class);
+        $this->app->bind(ExceptionHandler::class, Handler::class);
     }
 
     /**
@@ -22,8 +41,23 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Model::preventLazyLoading(!app()->isProduction());
+
+        $this->registerObservers();
+
         ResetPassword::createUrlUsing(function (object $notifiable, string $token) {
             return config('app.frontend_url')."/password-reset/$token?email={$notifiable->getEmailForPasswordReset()}";
         });
+    }
+
+    private function registerObservers(): void
+    {
+        Account::observe(AccountObserver::class);
+        Category::observe(CategoryObserver::class);
+        Transaction::observe(TransactionObserver::class);
+        CategoryPointer::observe(CategoryPointerObserver::class);
+        CategoryPointerTag::observe(CategoryPointerTagObserver::class);
+        Tag::observe(TagObserver::class);
+        Loan::observe(LoanObserver::class);
     }
 }

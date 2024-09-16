@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources\Api\v1;
+namespace App\Http\Resources\Api\v1\Category;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
@@ -13,11 +13,6 @@ class CategoryResource extends JsonResource
         return $this->resource;
     }
 
-    /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
-     */
     public function toArray(Request $request): array
     {
         $category = $this->getResource();
@@ -25,9 +20,8 @@ class CategoryResource extends JsonResource
         return [
             'id' => $category->getKey(),
             'name' => $category->name,
-            'description' => $category->description,
-            'createdAt' => $category->created_at,
-            'updatedAt' => $category->updated_at,
+            'created_at' => $category->created_at,
+            'updated_at' => $category->updated_at,
         ];
     }
 }

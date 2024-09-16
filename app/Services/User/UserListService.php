@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\User;
 
 use App\Models\User;
+use App\Services\AbstractListService;
+use App\Services\ServiceInstance;
 
-class UserService extends AbstractListService
+class UserListService extends AbstractListService
 {
     use ServiceInstance;
 

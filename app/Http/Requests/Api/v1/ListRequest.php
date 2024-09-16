@@ -4,7 +4,6 @@ namespace App\Http\Requests\Api\v1;
 
 use App\Exceptions\ApiBadRequest;
 use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * @property-read int page
@@ -12,21 +11,8 @@ use Illuminate\Foundation\Http\FormRequest;
  * @property-read array sorting
  * @property-read array filters
  */
-class ListRequest extends FormRequest
+class ListRequest extends ApiRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return true;
-    }
-
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
@@ -57,6 +43,13 @@ class ListRequest extends FormRequest
      */
     protected function failedValidation(Validator $validator): void
     {
+        $exception = $validator->getException();
+        $instance = new $exception($validator);
+
+        logger()->error($instance->getMessage(), [
+            'errors' => $instance->errors(),
+        ]);
+
         throw new ApiBadRequest();
     }
 }

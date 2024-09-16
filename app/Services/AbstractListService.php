@@ -23,10 +23,16 @@ abstract class AbstractListService
         $this->request = $request;
     }
 
-    public function getListBuilder(): Builder
+    protected function getBuilder(): Builder
     {
         $TModel = resolve($this->model);
-        $builder = $TModel->query();
+
+        return $TModel->query();
+    }
+
+    public function getListBuilder(): Builder
+    {
+        $builder = $this->getBuilder();
         $this->applyFilters($builder);
         $this->applySorting($builder);
 
@@ -55,5 +61,5 @@ abstract class AbstractListService
         $this->applySpecificFilters($builder);
     }
 
-    abstract protected function applySpecificFilters($builder): void;
+    abstract protected function applySpecificFilters(Builder $builder): void;
 }

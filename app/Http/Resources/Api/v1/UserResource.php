@@ -13,11 +13,6 @@ class UserResource extends JsonResource
         return $this->resource;
     }
 
-    /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
-     */
     public function toArray(Request $request): array
     {
         $user = $this->getResource();
@@ -26,8 +21,8 @@ class UserResource extends JsonResource
             'id' => $user->getKey(),
             'name' => $user->name,
             'email' => $user->email,
-            'createdAt' => $user->created_at,
-            'updatedAt' => $user->updated_at,
+            'created_at' => $user->created_at,
+            'updated_at' => $user->updated_at,
         ];
     }
 }
