@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Models\Category;
 use App\Models\Transaction;
 use App\Models\User;
+use App\Services\ImportTransactions\CategoryPointerService;
 use App\Services\ImportTransactions\ImportService;
 use App\Services\OwnerService;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -17,10 +18,13 @@ class UpdateTransactionCategoriesJob implements ShouldQueue
     use Queueable;
 
     private User $user;
+    private CategoryPointerService $categoryPointerService;
 
     public function __construct(User $user)
     {
         $this->user = $user;
+        $this->categoryPointerService = CategoryPointerService::create();
+        // @todo do we need a custom long-running queue?
         // $this->onQueue('long-running');
     }
 
@@ -54,8 +58,10 @@ class UpdateTransactionCategoriesJob implements ShouldQueue
     {
         $service = ImportService::create();
 
-        $childCategoryName = $transaction->category->name;
-        $parentCategoryName = $transaction->category->parentCategory->name;
+        $childCategoryName = $this->categoryPointerService->getChildCategoryName($transaction->category->name);
+        $parentCategoryName = $this->categoryPointerService
+            ->getParentCategoryName($transaction->category->parentCategory->name, $transaction->category->name)
+        ;
 
         $category = $service->getCategory($parentCategoryName, $childCategoryName);
 

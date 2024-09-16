@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Exceptions\SystemException;
 use App\Models\Transaction;
 use App\Services\OwnerService;
 use Illuminate\Validation\ValidationException;
@@ -17,6 +18,9 @@ class TransactionObserver
         $this->checkTransfer($transaction);
     }
 
+    /**
+     * @throws SystemException
+     */
     public function created(Transaction $transaction): void
     {
         $user = OwnerService::make()->getUser();

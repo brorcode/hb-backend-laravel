@@ -17,6 +17,9 @@ class OwnerService
         $this->user = $user;
     }
 
+    /**
+     * @throws SystemException
+     */
     public function getUser(): User
     {
         if (!$user = Auth::user()) {
