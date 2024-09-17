@@ -22,8 +22,8 @@ class UserListTest extends TestCase
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
-                'createdAt' => $user->created_at,
-                'updatedAt' => $user->updated_at,
+                'created_at' => $user->created_at,
+                'updated_at' => $user->updated_at,
             ];
         });
 

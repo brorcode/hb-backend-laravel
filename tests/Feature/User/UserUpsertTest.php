@@ -36,8 +36,8 @@ class UserUpsertTest extends TestCase
                 'id' => $this->user->id,
                 'name' => $this->user->name,
                 'email' => $this->user->email,
-                'createdAt' => $this->user->created_at,
-                'updatedAt' => $this->user->updated_at,
+                'created_at' => $this->user->created_at,
+                'updated_at' => $this->user->updated_at,
             ],
         ]);
     }
@@ -111,8 +111,8 @@ class UserUpsertTest extends TestCase
                 'id' => $this->user->id,
                 'name' => 'test',
                 'email' => 'test@example.com',
-                'createdAt' => $this->user->created_at,
-                'updatedAt' => $this->user->updated_at,
+                'created_at' => $this->user->created_at,
+                'updated_at' => $this->user->updated_at,
             ],
         ]);
     }
@@ -140,8 +140,8 @@ class UserUpsertTest extends TestCase
                 'id' => $this->user->id,
                 'name' => $this->user->name,
                 'email' => $this->user->email,
-                'createdAt' => $this->user->created_at,
-                'updatedAt' => $this->user->updated_at,
+                'created_at' => $this->user->created_at,
+                'updated_at' => $this->user->updated_at,
             ],
         ]);
     }

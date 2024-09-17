@@ -29,8 +29,10 @@ class AuthenticationTest extends TestCase
         $this->assertAuthenticated();
         $response->assertOk();
         $response->assertExactJson([
-            'name' => $this->user->name,
-            'email' => $this->user->email,
+            'data' => [
+                'name' => $this->user->name,
+                'email' => $this->user->email,
+            ],
         ]);
     }
 
