@@ -2,30 +2,31 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Auth\Events\Verified;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
-use Illuminate\Http\RedirectResponse;
+use App\Http\Controllers\Api\v1\ApiController;
+use App\Http\Requests\EmailVerificationRequest;
+use App\Http\Resources\Api\v1\UserProfileResource;
+use App\Models\User;
+use Illuminate\Http\JsonResponse;
 
-class VerifyEmailController extends Controller
+class VerifyEmailController extends ApiController
 {
-    /**
-     * Mark the authenticated user's email address as verified.
-     */
-    public function __invoke(EmailVerificationRequest $request): RedirectResponse
+    public function __invoke(EmailVerificationRequest $request): JsonResponse
     {
-        if ($request->user()->hasVerifiedEmail()) {
-            return redirect()->intended(
-                config('app.frontend_url').'/dashboard?verified=1'
+        /** @var User $user */
+        $user = $request->user();
+
+        if ($user->hasVerifiedEmail()) {
+            return $this->response(
+                UserProfileResource::make($user),
+                'Ваша почта уже потверждена'
             );
         }
 
-        if ($request->user()->markEmailAsVerified()) {
-            event(new Verified($request->user()));
-        }
+        $user->markEmailAsVerified();
 
-        return redirect()->intended(
-            config('app.frontend_url').'/dashboard?verified=1'
+        return $this->response(
+            UserProfileResource::make($user),
+            'Ваша почта потверждена'
         );
     }
 }

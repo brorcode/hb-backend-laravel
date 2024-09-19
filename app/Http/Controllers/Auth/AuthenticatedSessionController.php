@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Api\v1\ApiController;
 use App\Http\Requests\LoginRequest;
+use App\Http\Resources\Api\v1\UserProfileResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
-class AuthenticatedSessionController extends Controller
+class AuthenticatedSessionController extends ApiController
 {
     /**
      * Handle an incoming authentication request.
@@ -22,15 +23,13 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return response()->json([
-            'data' => $request->user()->only('name', 'email'),
-        ]);
+        return $this->response(UserProfileResource::make($request->user()));
     }
 
     /**
      * Destroy an authenticated session.
      */
-    public function destroy(Request $request): Response
+    public function destroy(Request $request): JsonResponse
     {
         Auth::guard('web')->logout();
 
@@ -38,6 +37,6 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return response()->noContent();
+        return response()->json([], ResponseAlias::HTTP_NO_CONTENT);
     }
 }

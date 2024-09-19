@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\v1\DictionaryController;
 use App\Http\Controllers\Api\v1\TagController;
 use App\Http\Controllers\Api\v1\TransactionController;
 use App\Http\Controllers\Api\v1\UserController;
+use App\Http\Controllers\Api\v1\UserProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'v1', 'as' => 'api.v1.'], function () {
@@ -18,6 +19,16 @@ Route::group(['prefix' => 'v1', 'as' => 'api.v1.'], function () {
             Route::put('/{user}', [UserController::class, 'update'])->name('update');
             Route::delete('/{user}', [UserController::class, 'destroy'])->name('destroy');
         });
+
+        Route::group(['prefix' => 'profile', 'as' => 'user.profile.'], function () {
+            Route::get('/', [UserProfileController::class, 'index'])->name('index');
+            Route::put('/', [UserProfileController::class, 'update'])->name('update');
+            Route::post('/email/verification', [UserProfileController::class, 'emailVerification'])
+                ->middleware(['throttle:6,1'])
+                ->name('email.verification')
+            ;
+        });
+
         Route::group(['prefix' => 'categories', 'as' => 'categories.'], function () {
             Route::post('/', [CategoryController::class, 'index'])->name('index');
             Route::post('/store', [CategoryController::class, 'store'])->name('store');

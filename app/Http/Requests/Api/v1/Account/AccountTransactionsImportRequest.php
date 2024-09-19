@@ -4,7 +4,6 @@ namespace App\Http\Requests\Api\v1\Account;
 
 use App\Http\Requests\Api\v1\ApiRequest;
 use App\Models\Account;
-use App\Models\Tag;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Validation\ValidationException;

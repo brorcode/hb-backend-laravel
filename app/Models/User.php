@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Notifications\VerifyEmail;
 use Carbon\Carbon;
 use Database\Factories\UserFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -17,6 +18,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property-read int id
  * @property string name
  * @property string email
+ * @property Carbon|null email_verified_at
  * @property string password
  * @property Carbon|null created_at
  * @property Carbon|null updated_at
@@ -118,4 +120,9 @@ class User extends Authenticatable implements MustVerifyEmail
     //         $query->where('name', Role::NAME_DEMO_USER);
     //     })->get();
     // }
+
+    public function sendEmailVerificationNotification(): void
+    {
+        $this->notify(new VerifyEmail);
+    }
 }

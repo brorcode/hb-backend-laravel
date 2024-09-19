@@ -42,7 +42,7 @@ class AuthenticationTest extends TestCase
 
         $response->assertUnprocessable();
         $response->assertExactJson([
-            'message' => 'Заполните форму правильно.',
+            'message' => 'Заполните форму правильно',
             'errors' => [
                 'email' => [
                     'Поле email обязательно.'

@@ -78,7 +78,7 @@ class UserUpsertTest extends TestCase
 
         $response->assertUnprocessable();
         $response->assertExactJson([
-            'message' => 'Заполните форму правильно.',
+            'message' => 'Заполните форму правильно',
             'errors' => $errors,
         ]);
     }
@@ -155,7 +155,7 @@ class UserUpsertTest extends TestCase
 
         $response->assertUnprocessable();
         $response->assertExactJson([
-            'message' => 'Заполните форму правильно.',
+            'message' => 'Заполните форму правильно',
             'errors' => $errors,
         ]);
     }

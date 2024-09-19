@@ -6,7 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class UserResource extends JsonResource
+class UserProfileResource extends JsonResource
 {
     private function getResource(): User
     {
@@ -22,8 +22,7 @@ class UserResource extends JsonResource
             'name' => $user->name,
             'email' => $user->email,
             'has_verified_email' => $user->hasVerifiedEmail(),
-            'created_at' => $user->created_at,
-            'updated_at' => $user->updated_at,
+
         ];
     }
 }

@@ -16,6 +16,9 @@ class ApiRequest extends FormRequest
         return [];
     }
 
+    /**
+     * Runs when rules passed
+     */
     public function rulesPassed(): void
     {
     }

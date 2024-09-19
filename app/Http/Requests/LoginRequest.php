@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Http\Requests\Api\v1\ApiRequest;
 use Illuminate\Auth\Events\Lockout;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
@@ -13,7 +13,7 @@ use Illuminate\Validation\ValidationException;
  * @property-read string email
  * @property-read string password
  */
-class LoginRequest extends FormRequest
+class LoginRequest extends ApiRequest
 {
     public function rules(): array
     {
@@ -26,8 +26,8 @@ class LoginRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'email' => 'email',
-            'password' => 'пароль',
+            'email' => 'Email',
+            'password' => 'Пароль',
         ];
     }
 

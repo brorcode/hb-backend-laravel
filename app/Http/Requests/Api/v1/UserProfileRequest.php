@@ -7,29 +7,22 @@ use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 
 /**
- * @property-read User|null user
- *
  * @property-read string name
  * @property-read string email
  * @property-read string|null password
  */
-class UserUpsertRequest extends ApiRequest
+class UserProfileRequest extends ApiRequest
 {
     public function rules(): array
     {
-        $passwordRules = [Password::defaults()];
-        if (!$this->user) {
-            $passwordRules[] = 'required';
-        }
-
         return [
             'name' => ['required'],
             'email' => [
                 'required',
                 'email:filter',
-                Rule::unique((new User())->getTable())->ignore($this->user),
+                Rule::unique((new User())->getTable())->ignore($this->user()),
             ],
-            'password' => $passwordRules,
+            'password' => ['nullable', 'confirmed', Password::defaults()],
         ];
     }
 }

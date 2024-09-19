@@ -53,7 +53,7 @@ class UserListTest extends TestCase
         $response = $this->postJson(route('api.v1.users.index'), $request);
         $response->assertBadRequest();
         $response->assertExactJson([
-            'message' => 'Ошибка сервера. Попробуйте еще раз.',
+            'message' => 'Ошибка сервера. Попробуйте еще раз',
         ]);
     }
 
