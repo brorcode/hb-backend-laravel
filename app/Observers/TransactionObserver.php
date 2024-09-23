@@ -40,7 +40,7 @@ class TransactionObserver
      */
     private function checkTransaction(Transaction $transaction): void
     {
-        if ($transaction->is_debit) {
+        if (!$transaction->is_debit) {
             $transaction->amount = abs($transaction->amount) * -1;
         }
 
@@ -68,7 +68,7 @@ class TransactionObserver
         if (!$accountTo = request()->input('account_to')) {
             return;
         }
-        if (!$transaction->is_debit) {
+        if ($transaction->is_debit) {
             throw ValidationException::withMessages([
                 'is_debit' => ['Данная транзакция должна быть расходом.'],
             ]);
@@ -86,7 +86,7 @@ class TransactionObserver
         $newTransaction->category_id = $transaction->category_id;
         $newTransaction->amount = abs($transaction->amount);
         $newTransaction->account_id = $accountTo;
-        $newTransaction->is_debit = false;
+        $newTransaction->is_debit = true;
         $newTransaction->is_transfer = true;
         $newTransaction->created_at = $createdAt;
         $newTransaction->updated_at = $createdAt;

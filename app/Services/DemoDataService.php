@@ -47,13 +47,13 @@ class DemoDataService
         $this->createCategory('Источник 1', $parentCategory);
         $this->createCategory('Источник 2', $parentCategory);
         $this->createCategory('Источник 3', $parentCategory);
-        $this->createCreditTransaction($account, $parentCategory);
+        $this->createDebitTransactions($account, $parentCategory);
 
         $parentCategory = $this->createCategory('Супермаркеты');
         $this->createCategory('Магазин продуктов 1', $parentCategory);
         $this->createCategory('Магазин продуктов 2', $parentCategory);
         $this->createCategory('Магазин продуктов 3', $parentCategory);
-        $this->createDebitTransactions($account, $parentCategory);
+        $this->createCreditTransaction($account, $parentCategory);
         $tag = $this->createTag('Название тега');
         $tag->transactions()->syncWithoutDetaching($parentCategory->subTransactions()->get());
 
@@ -61,13 +61,13 @@ class DemoDataService
         $this->createCategory('Фитнес', $parentCategory);
         $this->createCategory('Бассейн', $parentCategory);
         $this->createCategory('Спортивный магазин', $parentCategory);
-        $this->createDebitTransactions($account, $parentCategory);
+        $this->createCreditTransaction($account, $parentCategory);
 
         $parentCategory = $this->createCategory('Одежда');
         $this->createCategory('Магазин одежды 1', $parentCategory);
         $this->createCategory('Магазин одежды 2', $parentCategory);
         $this->createCategory('Магазин одежды 3', $parentCategory);
-        $this->createDebitTransactions($account, $parentCategory);
+        $this->createCreditTransaction($account, $parentCategory);
         $this->createLoans($account);
         $this->createCategoryPointers();
     }
@@ -155,36 +155,36 @@ class DemoDataService
         return $account;
     }
 
-    private function createCreditTransaction(Account $account, Category $parentCategory): void
+    private function createDebitTransactions(Account $account, Category $parentCategory): void
     {
         $parentCategory->subCategories()->get()->each(function (Category $childCategory) use ($account) {
             $amount = mt_rand(7000, 10000);
             $createdAt = now()->subMinute();
-            $this->createTransaction($childCategory, $amount, $account, false, false, $createdAt);
+            $this->createTransaction($childCategory, $amount, $account, false, true, $createdAt);
 
             $amount = mt_rand(3000, 7000);
             $createdAt = now()->subMonths(1)->subMinute();
-            $this->createTransaction($childCategory, $amount, $account, false, false, $createdAt);
+            $this->createTransaction($childCategory, $amount, $account, false, true, $createdAt);
 
             $amount = mt_rand(1000, 3000);
             $createdAt = now()->subMonths(2)->subMinute();
-            $this->createTransaction($childCategory, $amount, $account, false, false, $createdAt);
+            $this->createTransaction($childCategory, $amount, $account, false, true, $createdAt);
         });
     }
 
-    private function createDebitTransactions(Account $account, Category $parentCategory): void
+    private function createCreditTransaction(Account $account, Category $parentCategory): void
     {
         $parentCategory->subCategories()->get()->each(function (Category $childCategory) use ($account) {
             $amount = mt_rand(100, 1000);
 
             $createdAt = now();
-            $this->createTransaction($childCategory, $amount, $account, false, true, $createdAt);
+            $this->createTransaction($childCategory, $amount, $account, false, false, $createdAt);
 
             $createdAt = now()->subMonths(1);
-            $this->createTransaction($childCategory, $amount, $account, false, true, $createdAt);
+            $this->createTransaction($childCategory, $amount, $account, false, false, $createdAt);
 
             $createdAt = now()->subMonths(2);
-            $this->createTransaction($childCategory, $amount, $account, false, true, $createdAt);
+            $this->createTransaction($childCategory, $amount, $account, false, false, $createdAt);
         });
     }
 
@@ -213,31 +213,16 @@ class DemoDataService
     private function createLoans(Account $account): void
     {
         $parentCategory = $this->createCategory('Долги');
-        $childDebitCategory = $this->createCategory('Мы дали в долг', $parentCategory);
-        $childCreditCategory = $this->createCategory('Нам вернули долг', $parentCategory);
-        $this->createCreditLoan($account, $childDebitCategory, $childCreditCategory);
+        $childCreditCategory = $this->createCategory('Мы дали в долг', $parentCategory);
+        $childDebitCategory = $this->createCategory('Нам вернули долг', $parentCategory);
+        $this->createDebitLoan($account, $childCreditCategory, $childDebitCategory);
 
-        $childCreditCategory = $this->createCategory('Нам дали в долг / кредит', $parentCategory);
-        $childDebitCategory = $this->createCategory('Мы вернули долг / кредит', $parentCategory);
-        $this->createDebitLoan($account, $childDebitCategory, $childCreditCategory);
+        $childDebitCategory = $this->createCategory('Нам дали в долг / кредит', $parentCategory);
+        $childCreditCategory = $this->createCategory('Мы вернули долг / кредит', $parentCategory);
+        $this->createCreditLoan($account, $childCreditCategory, $childDebitCategory);
     }
 
-    private function createDebitLoan(Account $account, Category $childDebitCategory, Category $childCreditCategory): void
-    {
-        $loan = new Loan();
-        $loan->name = 'Кредит 1';
-        $loan->amount = 1000;
-        $loan->type_id = Loan::TYPE_ID_DEBIT;
-        $loan->deadline_on = now()->addMonth();
-        $loan->save();
-
-        $this->createTransaction($childCreditCategory, 1000, $account, true, false, now(), $loan);
-        for ($i = 0; $i < 5; $i++) {
-            $this->createTransaction($childDebitCategory, -100, $account, false, true, now(), $loan);
-        }
-    }
-
-    private function createCreditLoan(Account $account, Category $childDebitCategory, Category $childCreditCategory): void
+    private function createDebitLoan(Account $account, Category $childCreditCategory, Category $childDebitCategory): void
     {
         $loan = new Loan();
         $loan->name = 'Должник 1';
@@ -246,9 +231,24 @@ class DemoDataService
         $loan->deadline_on = now()->addMonth();
         $loan->save();
 
-        $this->createTransaction($childDebitCategory, -1500, $account, true, true, now(), $loan);
+        $this->createTransaction($childCreditCategory, -1500, $account, true, false, now(), $loan);
         for ($i = 0; $i < 5; $i++) {
-            $this->createTransaction($childCreditCategory, 100, $account, true, false, now(), $loan);
+            $this->createTransaction($childDebitCategory, 100, $account, true, true, now(), $loan);
+        }
+    }
+
+    private function createCreditLoan(Account $account, Category $childCreditCategory, Category $childDebitCategory): void
+    {
+        $loan = new Loan();
+        $loan->name = 'Кредит 1';
+        $loan->amount = 1000;
+        $loan->type_id = Loan::TYPE_ID_DEBIT;
+        $loan->deadline_on = now()->addMonth();
+        $loan->save();
+
+        $this->createTransaction($childDebitCategory, 1000, $account, true, true, now(), $loan);
+        for ($i = 0; $i < 5; $i++) {
+            $this->createTransaction($childCreditCategory, -100, $account, false, false, now(), $loan);
         }
     }
 

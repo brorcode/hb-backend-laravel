@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\v1\TagController;
 use App\Http\Controllers\Api\v1\TransactionController;
 use App\Http\Controllers\Api\v1\UserController;
 use App\Http\Controllers\Api\v1\UserProfileController;
+use App\Http\Controllers\Api\v1\DashboardController;
 use App\Models\Permission;
 use Illuminate\Support\Facades\Route;
 
@@ -115,6 +116,13 @@ Route::group(['prefix' => 'v1', 'as' => 'api.v1.'], function () {
             Route::post('/save', [CategoryPointerController::class, 'save'])->name('save')
                 ->middleware('permission:'.Permission::NAME_CATEGORY_POINTERS_EDIT)
             ;
+        });
+
+        Route::group(['prefix' => 'dashboard', 'as' => 'dashboard.'], function () {
+            Route::get('/balance', [DashboardController::class, 'balance'])->name('balance');
+            Route::get('/debit-by-month', [DashboardController::class, 'debitByMonth'])->name('debit-by-month');
+            Route::get('/credit-by-month', [DashboardController::class, 'creditByMonth'])->name('credit-by-month');
+            Route::get('/total-by-month', [DashboardController::class, 'totalByMonth'])->name('total-by-month');
         });
     });
 });

@@ -19,7 +19,6 @@ class CategoryPointerResource extends JsonResource
         $categoryPointer = $this->getResource();
 
         return [
-            'id' => $categoryPointer->getKey(),
             'name' => $categoryPointer->name,
             'is_parent' => $categoryPointer->is_parent,
             'tags_array' => $categoryPointer->categoryPointerTags->pluck('name')->toArray(),

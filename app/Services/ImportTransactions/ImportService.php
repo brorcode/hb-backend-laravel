@@ -78,7 +78,7 @@ class ImportService
         $transaction->created_at = $row['date'];
         $transaction->updated_at = $row['date'];
         $transaction->save();
-        
+
         $this->imported++;
     }
 
@@ -107,7 +107,7 @@ class ImportService
 
     private function isDebit(string $amount): bool
     {
-        return $amount < 0;
+        return $amount > 0;
     }
 
     public function isBetweenAccounts(string $parentCategoryName): bool
