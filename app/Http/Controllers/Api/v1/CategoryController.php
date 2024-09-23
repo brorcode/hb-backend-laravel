@@ -30,7 +30,7 @@ class CategoryController extends ApiController
         $category->is_manual_created = true;
         $category->save();
 
-        return response()->json([], Response::HTTP_CREATED);
+        return response()->json(['message' => 'Категория создана'], Response::HTTP_CREATED);
     }
 
     public function show(Category $category): JsonResponse

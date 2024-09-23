@@ -15,18 +15,19 @@ class UserDestroyTest extends TestCase
 
     public function testUserDestroy(): void
     {
-        $users = User::factory(2)->create();
-        $this->actingAs($users->first());
+        $this->userLogin();
 
+        $users = User::factory(2)->create();
         $userToBeDeleted = $users->last();
 
-        $this->assertCount(2, User::all());
+        $this->assertCount(3, User::all());
         $this->assertDatabaseHas((new User())->getTable(), [
             'name' => $userToBeDeleted->name,
             'email' => $userToBeDeleted->email,
         ]);
         $response = $this->deleteJson(route('api.v1.users.destroy', $userToBeDeleted));
-        $this->assertCount(1, User::all());
+
+        $this->assertCount(2, User::all());
         $this->assertDatabaseMissing((new User())->getTable(), [
             'name' => $userToBeDeleted->name,
             'email' => $userToBeDeleted->email,

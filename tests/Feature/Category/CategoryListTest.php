@@ -1,14 +1,13 @@
 <?php
 
-namespace Tests\Feature\User;
+namespace Tests\Feature\Category;
 
-use App\Exceptions\ApiBadRequest;
-use App\Models\User;
+use App\Models\Category;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
-class UserListTest extends TestCase
+class CategoryListTest extends TestCase
 {
     use DatabaseMigrations;
 
@@ -19,21 +18,19 @@ class UserListTest extends TestCase
         $this->userLogin();
     }
 
-    public function testUserListApiReturnsCorrectResponse(): void
+    public function testCategoryListApiReturnsCorrectResponse(): void
     {
-        User::factory(10)->create();
-        $data = User::query()->take(10)->get()->map(function (User $user) {
+        $categories = Category::factory(11)->create();
+        $data = $categories->take(10)->map(function (Category $category) {
             return [
-                'id' => $user->id,
-                'name' => $user->name,
-                'email' => $user->email,
-                'has_verified_email' => $user->hasVerifiedEmail(),
-                'created_at' => $user->created_at,
-                'updated_at' => $user->updated_at,
+                'id' => $category->id,
+                'name' => $category->name,
+                'created_at' => $category->created_at,
+                'updated_at' => $category->updated_at,
             ];
         });
 
-        $response = $this->postJson(route('api.v1.users.index'), [
+        $response = $this->postJson(route('api.v1.categories.index'), [
             'page' => 1,
             'limit' => 10,
         ]);
@@ -51,9 +48,9 @@ class UserListTest extends TestCase
     }
 
     #[DataProvider('invalidDataProvider')]
-    public function testUserListApiReturnsValidationErrors(array $request): void
+    public function testCategoryListApiReturnsValidationErrors(array $request): void
     {
-        $response = $this->postJson(route('api.v1.users.index'), $request);
+        $response = $this->postJson(route('api.v1.categories.index'), $request);
         $response->assertBadRequest();
         $response->assertExactJson([
             'message' => 'Ошибка сервера. Попробуйте еще раз',

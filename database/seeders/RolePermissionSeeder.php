@@ -1,37 +1,18 @@
 <?php
 
-namespace App\Console\Commands;
+namespace Database\Seeders;
 
 use App\Models\Permission;
 use App\Models\Role;
-use Illuminate\Console\Command;
+use Illuminate\Database\Seeder;
 
-class CreateRolePermissions extends Command
+class RolePermissionSeeder extends Seeder
 {
     /**
-     * The name and signature of the console command.
-     *
-     * @var string
+     * Run the database seeds.
      */
-    protected $signature = 'app:create-role-permissions';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Command description';
-
-    /**
-     * Execute the console command.
-     */
-    public function handle(): void
+    public function run(): void
     {
-        $this->info(now()->toDateTimeString().' Starting CreateRolePermissions Command.');
-
-        $rolesCount = 0;
-        $permissionsCount = 0;
-
         collect(Role::NAMES)->each(function ($roleName) use (&$rolesCount) {
             if (!Role::query()->where('name', $roleName)->exists()) {
                 Role::create(['name' => $roleName]);
@@ -47,10 +28,6 @@ class CreateRolePermissions extends Command
         });
 
         $this->assignPermissionsToRoles();
-
-        $this->info('Roles created: ' . $rolesCount);
-        $this->info('Permissions created: ' . $permissionsCount);
-        $this->info(now()->toDateTimeString().' Ending CreateRolePermissions Command.');
     }
 
     protected function assignPermissionsToRoles(): void

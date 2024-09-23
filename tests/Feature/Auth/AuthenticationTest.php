@@ -19,7 +19,7 @@ class AuthenticationTest extends TestCase
         $this->user = User::factory()->create();
     }
 
-    public function testUsersCanAuthenticateUsingApi(): void
+    public function testUserCanAuthenticateUsingApi(): void
     {
         $response = $this->postJson(route('api.v1.login'), [
             'email' => $this->user->email,
@@ -32,11 +32,13 @@ class AuthenticationTest extends TestCase
             'data' => [
                 'name' => $this->user->name,
                 'email' => $this->user->email,
+                'has_verified_email' => $this->user->hasVerifiedEmail(),
+                'permissions' => [],
             ],
         ]);
     }
 
-    public function testUsersCanNotAuthenticateWithMissedData(): void
+    public function testUserCanNotAuthenticateWithMissedData(): void
     {
         $response = $this->postJson(route('api.v1.login'));
 
@@ -45,16 +47,16 @@ class AuthenticationTest extends TestCase
             'message' => 'Заполните форму правильно',
             'errors' => [
                 'email' => [
-                    'Поле email обязательно.'
+                    'Поле Email обязательно.'
                 ],
                 'password' => [
-                    'Поле пароль обязательно.'
+                    'Поле Пароль обязательно.'
                 ],
             ],
         ]);
     }
 
-    public function testUsersCanNotAuthenticateWithInvalidPassword(): void
+    public function testUserCanNotAuthenticateWithInvalidPassword(): void
     {
         $this->postJson(route('api.v1.logout'), [
             'email' => $this->user->email,
@@ -64,7 +66,7 @@ class AuthenticationTest extends TestCase
         $this->assertGuest();
     }
 
-    public function testUsersCanLogout(): void
+    public function testUserCanLogout(): void
     {
         $response = $this->actingAs($this->user)->postJson(route('api.v1.logout'));
 

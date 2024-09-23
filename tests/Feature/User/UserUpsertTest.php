@@ -19,11 +19,10 @@ class UserUpsertTest extends TestCase
     {
         parent::setUp();
 
-        $this->user = User::factory()->create([
+        $this->user = $this->userLogin([
             'email' => 'user@email.test',
             'password' => 'testPassword12345',
         ]);
-        $this->actingAs($this->user);
     }
 
     public function testUserShow(): void
@@ -36,6 +35,7 @@ class UserUpsertTest extends TestCase
                 'id' => $this->user->id,
                 'name' => $this->user->name,
                 'email' => $this->user->email,
+                'has_verified_email' => $this->user->hasVerifiedEmail(),
                 'created_at' => $this->user->created_at,
                 'updated_at' => $this->user->updated_at,
             ],
@@ -111,6 +111,7 @@ class UserUpsertTest extends TestCase
                 'id' => $this->user->id,
                 'name' => 'test',
                 'email' => 'test@example.com',
+                'has_verified_email' => $this->user->hasVerifiedEmail(),
                 'created_at' => $this->user->created_at,
                 'updated_at' => $this->user->updated_at,
             ],
@@ -140,6 +141,7 @@ class UserUpsertTest extends TestCase
                 'id' => $this->user->id,
                 'name' => $this->user->name,
                 'email' => $this->user->email,
+                'has_verified_email' => $this->user->hasVerifiedEmail(),
                 'created_at' => $this->user->created_at,
                 'updated_at' => $this->user->updated_at,
             ],

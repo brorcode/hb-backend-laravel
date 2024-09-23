@@ -2,10 +2,9 @@
 
 namespace Tests\Feature\Auth;
 
-use App\Models\User;
-use Illuminate\Auth\Events\Verified;
+use App\Exceptions\UrlExpiredException;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Exceptions;
 use Illuminate\Support\Facades\URL;
 use Tests\TestCase;
 
@@ -15,39 +14,99 @@ class EmailVerificationTest extends TestCase
 
     public function testEmailCanBeVerified(): void
     {
-        $this->markTestIncomplete('This test is currently incomplete.');
-
-        $user = User::factory()->unverified()->create();
-
-        Event::fake();
+        $user = $this->userLogin([
+            'email_verified_at' => null,
+        ]);
 
         $verificationUrl = URL::temporarySignedRoute(
             'verification.verify',
             now()->addMinutes(60),
-            ['id' => $user->id, 'hash' => sha1($user->email)]
+            ['id' => $user->getKey(), 'hash' => sha1($user->email)]
         );
 
+        $this->assertFalse($user->fresh()->hasVerifiedEmail());
         $response = $this->actingAs($user)->get($verificationUrl);
-
-        Event::assertDispatched(Verified::class);
         $this->assertTrue($user->fresh()->hasVerifiedEmail());
-        $response->assertRedirect(config('app.frontend_url').'/dashboard?verified=1');
+
+        $response->assertExactJson([
+            'message' => 'Ваша почта потверждена',
+            'data' => [
+                'name' => $user->name,
+                'email' => $user->email,
+                'has_verified_email' => $user->hasVerifiedEmail(),
+                'permissions' => $user->getPermissionsViaRoles()->pluck('name')->toArray(),
+            ],
+        ]);
+    }
+
+    public function testEmailCannotBeVerifiedTwice(): void
+    {
+        $user = $this->userLogin();
+
+        $verificationUrl = URL::temporarySignedRoute(
+            'verification.verify',
+            now()->addMinutes(60),
+            ['id' => $user->getKey(), 'hash' => sha1($user->email)]
+        );
+
+        $this->assertTrue($user->fresh()->hasVerifiedEmail());
+        $response = $this->actingAs($user)->get($verificationUrl);
+        $this->assertTrue($user->fresh()->hasVerifiedEmail());
+
+        $response->assertExactJson([
+            'message' => 'Ваша почта уже потверждена',
+            'data' => [
+                'name' => $user->name,
+                'email' => $user->email,
+                'has_verified_email' => $user->hasVerifiedEmail(),
+                'permissions' => $user->getPermissionsViaRoles()->pluck('name')->toArray(),
+            ],
+        ]);
+    }
+
+    public function testEmailIsNotVerifiedWithInvalidId(): void
+    {
+        $user = $this->userLogin([
+            'email_verified_at' => null,
+        ]);
+
+        $verificationUrl = URL::temporarySignedRoute(
+            'verification.verify',
+            now()->addMinutes(60),
+            ['id' => 111, 'hash' => sha1($user->email)]
+        );
+
+        Exceptions::fake();
+
+        $this->actingAs($user)->getJson($verificationUrl);
+        $this->assertFalse($user->fresh()->hasVerifiedEmail());
+
+        Exceptions::assertReported(UrlExpiredException::class);
+        Exceptions::assertReported(function (UrlExpiredException $e) {
+            return $e->getMessage() === 'Ссылка устарела. Запросите новую';
+        });
     }
 
     public function testEmailIsNotVerifiedWithInvalidHash(): void
     {
-        $this->markTestIncomplete('This test is currently incomplete.');
-
-        $user = User::factory()->unverified()->create();
+        $user = $this->userLogin([
+            'email_verified_at' => null,
+        ]);
 
         $verificationUrl = URL::temporarySignedRoute(
             'verification.verify',
             now()->addMinutes(60),
-            ['id' => $user->id, 'hash' => sha1('wrong-email')]
+            ['id' => $user->getKey(), 'hash' => sha1('wrong-email')]
         );
 
-        $this->actingAs($user)->getJson($verificationUrl);
+        Exceptions::fake();
 
+        $this->actingAs($user)->getJson($verificationUrl);
         $this->assertFalse($user->fresh()->hasVerifiedEmail());
+
+        Exceptions::assertReported(UrlExpiredException::class);
+        Exceptions::assertReported(function (UrlExpiredException $e) {
+            return $e->getMessage() === 'Ссылка устарела. Запросите новую';
+        });
     }
 }
