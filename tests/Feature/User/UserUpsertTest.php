@@ -103,17 +103,19 @@ class UserUpsertTest extends TestCase
             'email' => 'test@example.com',
         ]);
 
-        $this->assertTrue(Hash::check('test12345', $this->user->refresh()->password));
+        $freshUser = $this->user->fresh();
+        $this->assertTrue(Hash::check('test12345', $freshUser->password));
         $response->assertOk();
+
         $response->assertExactJson([
             'message' => 'Пользователь обновлен',
             'data' => [
-                'id' => $this->user->id,
+                'id' => $freshUser->getKey(),
                 'name' => 'test',
                 'email' => 'test@example.com',
-                'has_verified_email' => $this->user->hasVerifiedEmail(),
-                'created_at' => $this->user->created_at,
-                'updated_at' => $this->user->updated_at,
+                'has_verified_email' => $freshUser->hasVerifiedEmail(),
+                'created_at' => $freshUser->created_at,
+                'updated_at' => $freshUser->updated_at,
             ],
         ]);
     }

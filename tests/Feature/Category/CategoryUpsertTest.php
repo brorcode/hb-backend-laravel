@@ -89,13 +89,15 @@ class CategoryUpsertTest extends TestCase
         ]);
 
         $response->assertOk();
+
+        $freshCategory = $category->fresh();
         $response->assertExactJson([
             'message' => 'Категория обновлена',
             'data' => [
-                'id' => $category->id,
+                'id' => $freshCategory->getKey(),
                 'name' => 'new category name',
-                'created_at' => $category->created_at,
-                'updated_at' => $category->updated_at,
+                'created_at' => $freshCategory->created_at,
+                'updated_at' => $freshCategory->updated_at,
             ],
         ]);
     }

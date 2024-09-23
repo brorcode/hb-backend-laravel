@@ -32,7 +32,7 @@ class AccountController extends ApiController
         $account->name = $request->name;
         $account->save();
 
-        return response()->json([], Response::HTTP_CREATED);
+        return response()->json(['message' => 'Аккаунт создан'], Response::HTTP_CREATED);
     }
 
     public function show(Account $account): JsonResponse
