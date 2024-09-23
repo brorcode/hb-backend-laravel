@@ -18,11 +18,10 @@ class UserProfileResource extends JsonResource
         $user = $this->getResource();
 
         return [
-            'id' => $user->getKey(),
             'name' => $user->name,
             'email' => $user->email,
             'has_verified_email' => $user->hasVerifiedEmail(),
-
+            'permissions' => $user->getPermissionsViaRoles()->pluck('name')->toArray(),
         ];
     }
 }

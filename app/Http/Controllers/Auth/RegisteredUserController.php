@@ -6,6 +6,7 @@ use App\Events\UserRegistered;
 use App\Http\Controllers\Api\v1\ApiController;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Resources\Api\v1\UserProfileResource;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
@@ -20,6 +21,8 @@ class RegisteredUserController extends ApiController
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
         $user->save();
+
+        $user->syncRoles(Role::NAME_NOT_VERIFIED_USER);
 
         event(new UserRegistered($user));
 

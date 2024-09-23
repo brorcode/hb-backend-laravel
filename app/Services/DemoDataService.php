@@ -8,6 +8,7 @@ use App\Models\CategoryPointer;
 use App\Models\CategoryPointerTag;
 use App\Models\Integration;
 use App\Models\Loan;
+use App\Models\Role;
 use App\Models\Tag;
 use App\Models\Transaction;
 use App\Models\User;
@@ -88,7 +89,19 @@ class DemoDataService
         $user->password = Hash::make('password');
         $user->save();
 
+        $role = $this->createRole(Role::NAME_DEMO_USER);
+        $user->assignRole($role);
+
         return $user;
+    }
+
+    private function createRole(string $name): Role
+    {
+        $role = new Role();
+        $role->name = $name;
+        $role->save();
+
+        return $role;
     }
 
     private function checkIntegrations(): void

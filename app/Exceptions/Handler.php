@@ -9,6 +9,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Exceptions\InvalidSignatureException;
 use Illuminate\Session\TokenMismatchException;
 use Illuminate\Validation\ValidationException;
+use Spatie\Permission\Exceptions\UnauthorizedException;
 use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
@@ -26,7 +27,7 @@ class Handler extends ExceptionHandler
         return match (true) {
             $e instanceof ValidationException => $this->validationError($e),
             $e instanceof ApiBadRequest => $this->badApiRequest($e),
-            $e instanceof ModelNotFoundException => $this->modelNotFound(),
+            $e instanceof ModelNotFoundException, $e instanceof UnauthorizedException => $this->forbidden(),
             $e instanceof NotFoundHttpException => $this->routeNotFound(),
             $e instanceof InvalidSignatureException => $this->urlExpired(),
             $e instanceof TokenMismatchException, $e instanceof AuthenticationException => $this->notAuthenticated(),
@@ -54,9 +55,12 @@ class Handler extends ExceptionHandler
         ], HttpFoundationResponse::HTTP_UNAUTHORIZED);
     }
 
-    private function modelNotFound(): JsonResponse
+    private function forbidden(): JsonResponse
     {
-        return response()->json(['message' => 'Запись не найдена'], HttpFoundationResponse::HTTP_NOT_FOUND);
+        /*
+         * 403 because user should not know if there is something doesn't exist in a database
+         */
+        return response()->json(['message' => 'Доступ запрещен'], HttpFoundationResponse::HTTP_FORBIDDEN);
     }
 
     private function routeNotFound(): JsonResponse
