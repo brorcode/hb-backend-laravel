@@ -1,13 +1,13 @@
 <?php
 
-namespace Tests\Feature\Category;
+namespace Tests\Feature\Transaction;
 
-use App\Models\Category;
+use App\Models\Transaction;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
-class CategoryListTest extends TestCase
+class TransactionListTest extends TestCase
 {
     use DatabaseMigrations;
 
@@ -18,19 +18,24 @@ class CategoryListTest extends TestCase
         $this->userLogin();
     }
 
-    public function testCategoryListApiReturnsCorrectResponse(): void
+    public function testTransactionListApiReturnsCorrectResponse(): void
     {
-        $categories = Category::factory(11)->create();
-        $data = $categories->take(10)->map(function (Category $category) {
+        $transactions = Transaction::factory(11)->create();
+        $data = $transactions->take(10)->map(function (Transaction $transaction) {
             return [
-                'id' => $category->getKey(),
-                'name' => $category->name,
-                'created_at' => $category->created_at,
-                'updated_at' => $category->updated_at,
+                'id' => $transaction->getKey(),
+                'amount' => $transaction->amount,
+                'category' => $transaction->category->only(['id', 'name']),
+                'account' => $transaction->account->only(['id', 'name']),
+                'tags' => $transaction->tags->pluck('name')->toArray(),
+                'is_debit' => $transaction->is_debit,
+                'is_transfer' => $transaction->is_transfer,
+                'created_at' => $transaction->created_at,
+                'updated_at' => $transaction->updated_at,
             ];
         });
 
-        $response = $this->postJson(route('api.v1.categories.index'), [
+        $response = $this->postJson(route('api.v1.transactions.index'), [
             'page' => 1,
             'limit' => 10,
         ]);
@@ -48,9 +53,9 @@ class CategoryListTest extends TestCase
     }
 
     #[DataProvider('invalidDataProvider')]
-    public function testCategoryListApiReturnsValidationErrors(array $request): void
+    public function testTransactionListApiReturnsValidationErrors(array $request): void
     {
-        $response = $this->postJson(route('api.v1.categories.index'), $request);
+        $response = $this->postJson(route('api.v1.transactions.index'), $request);
         $response->assertBadRequest();
         $response->assertExactJson([
             'message' => 'Ошибка сервера. Попробуйте еще раз',

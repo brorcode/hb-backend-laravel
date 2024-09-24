@@ -36,7 +36,7 @@ class TransactionController extends ApiController
         $transaction->is_transfer = $request->is_transfer;
         $transaction->save();
 
-        return response()->json([], Response::HTTP_CREATED);
+        return response()->json(['message' => 'Транзакция создана'], Response::HTTP_CREATED);
     }
 
     public function show(Transaction $transaction): JsonResponse

@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Scopes\OwnerScope;
 use App\Observers\AccountObserver;
 use Carbon\Carbon;
+use Database\Factories\AccountFactory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -24,6 +25,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read Collection users
  *
  * @method static self findOrFail(int $id)
+ * @method static AccountFactory factory($count = null, $state = [])
  *
  * @see AccountObserver
  */

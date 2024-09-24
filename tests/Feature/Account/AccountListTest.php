@@ -23,15 +23,19 @@ class AccountListTest extends TestCase
     {
         $accounts = Account::factory()
             ->count(11)
-            ->has(Transaction::factory()->count(10))
+            ->has(Transaction::factory()->count(3)->state([
+                'amount' => 10,
+                'is_debit' => true,
+                'is_transfer' => false,
+            ]))
             ->create()
         ;
 
         $data = $accounts->take(10)->map(function (Account $account) {
             return [
-                'id' => $account->id,
+                'id' => $account->getKey(),
                 'name' => $account->name,
-                'amount' => $account->transactions->sum('amount'),
+                'amount' => 3*10,
                 'created_at' => $account->created_at,
                 'updated_at' => $account->updated_at,
             ];

@@ -32,7 +32,7 @@ class AccountTransactionsImportRequest extends ApiRequest
             $this->account = Account::findOrFail($this->account_id);
         } catch (ModelNotFoundException) {
             throw ValidationException::withMessages([
-                'account_id' => 'Аккаунт не найден',
+                'account_id' => 'Аккаунт не найден.',
             ]);
         }
     }

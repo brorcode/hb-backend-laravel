@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Scopes\OwnerScope;
 use App\Observers\CategoryObserver;
 use Carbon\Carbon;
+use Database\Factories\CategoryFactory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -27,6 +28,8 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
  * @property-read Collection transactionsCredit
  * @property-read Category|null parentCategory
  * @property-read Collection users
+ *
+ * @method static CategoryFactory factory($count = null, $state = [])
  *
  * @see CategoryObserver
  */

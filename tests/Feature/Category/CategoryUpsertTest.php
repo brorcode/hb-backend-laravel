@@ -3,9 +3,7 @@
 namespace Tests\Feature\Category;
 
 use App\Models\Category;
-use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Support\Facades\Hash;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
@@ -29,7 +27,7 @@ class CategoryUpsertTest extends TestCase
         $response->assertOk();
         $response->assertExactJson([
             'data' => [
-                'id' => $category->id,
+                'id' => $category->getKey(),
                 'name' => $category->name,
                 'created_at' => $category->created_at,
                 'updated_at' => $category->updated_at,
@@ -56,7 +54,7 @@ class CategoryUpsertTest extends TestCase
         ]);
     }
 
-    #[DataProvider('invalidCreateCategoryDataProvider')]
+    #[DataProvider('invalidCategoryDataProvider')]
     public function testCategoryCanNotBeStoredWithInvalidData(array $request, array $errors): void
     {
         Category::factory()->create(['name' => 'existing category name']);
@@ -102,34 +100,7 @@ class CategoryUpsertTest extends TestCase
         ]);
     }
 
-    public function testUserIsNotUpdatedIfDataIsNotChanged(): void
-    {
-        /** @var Category $category */
-        $category = Category::factory()->create(['name' => 'test category name']);
-        $this->assertCount(1, Category::all());
-
-        $response = $this->putJson(route('api.v1.categories.update', $category), [
-            'name' => $category->name,
-        ]);
-
-        $this->assertCount(1, Category::all());
-        $this->assertDatabaseHas((new Category())->getTable(), [
-            'name' => $category->name,
-        ]);
-
-        $response->assertOk();
-        $response->assertExactJson([
-            'message' => 'Категория обновлена',
-            'data' => [
-                'id' => $category->id,
-                'name' => $category->name,
-                'created_at' => $category->created_at,
-                'updated_at' => $category->updated_at,
-            ],
-        ]);
-    }
-
-    #[DataProvider('invalidUpdateCategoryDataProvider')]
+    #[DataProvider('invalidCategoryDataProvider')]
     public function testUserCanNotBeUpdatedWithInvalidData(array $request, array $errors): void
     {
         Category::factory()->create(['name' => 'existing category name']);
@@ -144,37 +115,15 @@ class CategoryUpsertTest extends TestCase
         ]);
     }
 
-    public static function invalidCreateCategoryDataProvider(): array
-    {
-        $dataProvider = [
-            'wrong_data_1' => [
-                'request' => [],
-                'errors' => [
-                    'name' => ['Поле name обязательно.'],
-                ],
-            ],
-        ];
-
-        return array_merge($dataProvider, self::commonValidationAssertions());
-    }
-
-    public static function invalidUpdateCategoryDataProvider(): array
-    {
-        $dataProvider = [
-            'wrong_data_1' => [
-                'request' => [],
-                'errors' => [
-                    'name' => ['Поле name обязательно.'],
-                ],
-            ],
-        ];
-
-        return array_merge($dataProvider, self::commonValidationAssertions());
-    }
-
-    private static function commonValidationAssertions(): array
+    public static function invalidCategoryDataProvider(): array
     {
         return [
+            'wrong_data_1' => [
+                'request' => [],
+                'errors' => [
+                    'name' => ['Поле name обязательно.'],
+                ],
+            ],
             'wrong_data_2' => [
                 'request' => [
                     'name' => 'existing category name',

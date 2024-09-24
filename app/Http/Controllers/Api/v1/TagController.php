@@ -30,7 +30,7 @@ class TagController extends ApiController
         $transaction->name = $request->name;
         $transaction->save();
 
-        return response()->json([], Response::HTTP_CREATED);
+        return response()->json(['message' => 'Тег создан'], Response::HTTP_CREATED);
     }
 
     public function show(Tag $tag): JsonResponse
@@ -43,14 +43,14 @@ class TagController extends ApiController
         $tag->name = $request->name;
         $tag->save();
 
-        return $this->response(TagResource::make($tag), 'Тэг обновлен');
+        return $this->response(TagResource::make($tag), 'Тег обновлен');
     }
 
     public function destroy(Tag $tag): JsonResponse
     {
         $tag->delete();
 
-        return response()->json(['message' => 'Тэг удален']);
+        return response()->json(['message' => 'Тег удален']);
     }
 
     public function attach(TagAttachDetachRequest $request): JsonResponse

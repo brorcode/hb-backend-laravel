@@ -22,7 +22,7 @@ class RegisterRequest extends ApiRequest
                 'required',
                 'string',
                 'lowercase',
-                'email',
+                'email:filter',
                 'max:255',
                 Rule::unique((new User())->getTable()),
             ],

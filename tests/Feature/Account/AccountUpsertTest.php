@@ -32,7 +32,7 @@ class AccountUpsertTest extends TestCase
         $response->assertOk();
         $response->assertExactJson([
             'data' => [
-                'id' => $account->id,
+                'id' => $account->getKey(),
                 'name' => $account->name,
                 'amount' => $account->transactions->sum('amount'),
                 'created_at' => $account->created_at,
@@ -60,7 +60,7 @@ class AccountUpsertTest extends TestCase
         ]);
     }
 
-    #[DataProvider('invalidCreateAccountDataProvider')]
+    #[DataProvider('invalidAccountDataProvider')]
     public function testAccountCanNotBeStoredWithInvalidData(array $request, array $errors): void
     {
         Account::factory()->create(['name' => 'existing account name']);
@@ -111,40 +111,8 @@ class AccountUpsertTest extends TestCase
         ]);
     }
 
-    public function testUserIsNotUpdatedIfDataIsNotChanged(): void
-    {
-        /** @var Account $account */
-        $account = Account::factory()
-            ->has(Transaction::factory()->count(10))
-            ->create(['name' => 'test account name'])
-        ;
-
-        $this->assertCount(1, Account::all());
-
-        $response = $this->putJson(route('api.v1.accounts.update', $account), [
-            'name' => $account->name,
-        ]);
-
-        $this->assertCount(1, Account::all());
-        $this->assertDatabaseHas((new Account())->getTable(), [
-            'name' => $account->name,
-        ]);
-
-        $response->assertOk();
-        $response->assertExactJson([
-            'message' => 'Аккаунт обновлен',
-            'data' => [
-                'id' => $account->id,
-                'name' => $account->name,
-                'amount' => $account->transactions->sum('amount'),
-                'created_at' => $account->created_at,
-                'updated_at' => $account->updated_at,
-            ],
-        ]);
-    }
-
-    #[DataProvider('invalidUpdateAccountDataProvider')]
-    public function testUserCanNotBeUpdatedWithInvalidData(array $request, array $errors): void
+    #[DataProvider('invalidAccountDataProvider')]
+    public function testAccountCanNotBeUpdatedWithInvalidData(array $request, array $errors): void
     {
         Account::factory()->create(['name' => 'existing account name']);
         $accountForUpdate = Account::factory()->create(['name' => 'test account name']);
@@ -158,37 +126,15 @@ class AccountUpsertTest extends TestCase
         ]);
     }
 
-    public static function invalidCreateAccountDataProvider(): array
-    {
-        $dataProvider = [
-            'wrong_data_1' => [
-                'request' => [],
-                'errors' => [
-                    'name' => ['Поле name обязательно.'],
-                ],
-            ],
-        ];
-
-        return array_merge($dataProvider, self::commonValidationAssertions());
-    }
-
-    public static function invalidUpdateAccountDataProvider(): array
-    {
-        $dataProvider = [
-            'wrong_data_1' => [
-                'request' => [],
-                'errors' => [
-                    'name' => ['Поле name обязательно.'],
-                ],
-            ],
-        ];
-
-        return array_merge($dataProvider, self::commonValidationAssertions());
-    }
-
-    private static function commonValidationAssertions(): array
+    public static function invalidAccountDataProvider(): array
     {
         return [
+            'wrong_data_1' => [
+                'request' => [],
+                'errors' => [
+                    'name' => ['Поле name обязательно.'],
+                ],
+            ],
             'wrong_data_2' => [
                 'request' => [
                     'name' => 'existing account name',

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Exceptions\SystemException;
+use Database\Factories\IntegrationFactory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,6 +14,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property int code_id
  *
  * @property-read Collection users
+ *
+ * @method static IntegrationFactory factory($count = null, $state = [])
  */
 class Integration extends Model
 {
@@ -32,6 +35,9 @@ class Integration extends Model
         self::CODE_ID_TINKOFF_BANK_BUSINESS,
     ];
 
+    /**
+     * @throws SystemException
+     */
     private static function findOrFailByCodeId(int $codeId): self
     {
         /** @var self $model */
@@ -42,26 +48,41 @@ class Integration extends Model
         return $model;
     }
 
+    /**
+     * @throws SystemException
+     */
     public static function findTinkoffBank(): self
     {
         return self::findOrFailByCodeId(self::CODE_ID_TINKOFF_BANK);
     }
 
+    /**
+     * @throws SystemException
+     */
     public static function findSberBank(): self
     {
         return self::findOrFailByCodeId(self::CODE_ID_SBERBANK);
     }
 
+    /**
+     * @throws SystemException
+     */
     public static function findTochkaBank(): self
     {
         return self::findOrFailByCodeId(self::CODE_ID_TOCHKA_BANK);
     }
 
+    /**
+     * @throws SystemException
+     */
     public static function findYandexMoney(): self
     {
         return self::findOrFailByCodeId(self::CODE_ID_YANDEX_MONEY);
     }
 
+    /**
+     * @throws SystemException
+     */
     public static function findTinkoffBankBusiness(): self
     {
         return self::findOrFailByCodeId(self::CODE_ID_TINKOFF_BANK_BUSINESS);

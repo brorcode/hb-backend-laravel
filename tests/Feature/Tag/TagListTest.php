@@ -1,13 +1,14 @@
 <?php
 
-namespace Tests\Feature\Category;
+namespace Tests\Feature\Tag;
 
-use App\Models\Category;
+use App\Models\Tag;
+use App\Models\Transaction;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
-class CategoryListTest extends TestCase
+class TagListTest extends TestCase
 {
     use DatabaseMigrations;
 
@@ -18,19 +19,27 @@ class CategoryListTest extends TestCase
         $this->userLogin();
     }
 
-    public function testCategoryListApiReturnsCorrectResponse(): void
+    public function testTagListApiReturnsCorrectResponse(): void
     {
-        $categories = Category::factory(11)->create();
-        $data = $categories->take(10)->map(function (Category $category) {
+        $tags = Tag::factory(11)
+            ->has(Transaction::factory()->count(3)->state([
+                'amount' => 10,
+                'is_debit' => true,
+                'is_transfer' => false,
+            ]))
+            ->create()
+        ;
+        $data = $tags->take(10)->map(function (Tag $tag) {
             return [
-                'id' => $category->getKey(),
-                'name' => $category->name,
-                'created_at' => $category->created_at,
-                'updated_at' => $category->updated_at,
+                'id' => $tag->getKey(),
+                'name' => $tag->name,
+                'amount' => 3*10,
+                'created_at' => $tag->created_at,
+                'updated_at' => $tag->updated_at,
             ];
         });
 
-        $response = $this->postJson(route('api.v1.categories.index'), [
+        $response = $this->postJson(route('api.v1.tags.index'), [
             'page' => 1,
             'limit' => 10,
         ]);
@@ -48,9 +57,9 @@ class CategoryListTest extends TestCase
     }
 
     #[DataProvider('invalidDataProvider')]
-    public function testCategoryListApiReturnsValidationErrors(array $request): void
+    public function testTagListApiReturnsValidationErrors(array $request): void
     {
-        $response = $this->postJson(route('api.v1.categories.index'), $request);
+        $response = $this->postJson(route('api.v1.tags.index'), $request);
         $response->assertBadRequest();
         $response->assertExactJson([
             'message' => 'Ошибка сервера. Попробуйте еще раз',

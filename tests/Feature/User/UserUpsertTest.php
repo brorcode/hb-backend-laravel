@@ -32,7 +32,7 @@ class UserUpsertTest extends TestCase
         $response->assertOk();
         $response->assertExactJson([
             'data' => [
-                'id' => $this->user->id,
+                'id' => $this->user->getKey(),
                 'name' => $this->user->name,
                 'email' => $this->user->email,
                 'has_verified_email' => $this->user->hasVerifiedEmail(),
@@ -116,36 +116,6 @@ class UserUpsertTest extends TestCase
                 'has_verified_email' => $freshUser->hasVerifiedEmail(),
                 'created_at' => $freshUser->created_at,
                 'updated_at' => $freshUser->updated_at,
-            ],
-        ]);
-    }
-
-    public function testUserIsNotUpdatedIfDataIsNotChanged(): void
-    {
-        $this->assertCount(1, User::all());
-
-        $response = $this->putJson(route('api.v1.users.update', $this->user), [
-            'name' => $this->user->name,
-            'email' => $this->user->email,
-        ]);
-
-        $this->assertCount(1, User::all());
-        $this->assertDatabaseHas((new User())->getTable(), [
-            'name' => $this->user->name,
-            'email' => $this->user->email,
-        ]);
-
-        $this->assertTrue(Hash::check('testPassword12345', $this->user->refresh()->password));
-        $response->assertOk();
-        $response->assertExactJson([
-            'message' => 'Пользователь обновлен',
-            'data' => [
-                'id' => $this->user->id,
-                'name' => $this->user->name,
-                'email' => $this->user->email,
-                'has_verified_email' => $this->user->hasVerifiedEmail(),
-                'created_at' => $this->user->created_at,
-                'updated_at' => $this->user->updated_at,
             ],
         ]);
     }

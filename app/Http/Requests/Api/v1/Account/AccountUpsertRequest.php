@@ -4,7 +4,6 @@ namespace App\Http\Requests\Api\v1\Account;
 
 use App\Http\Requests\Api\v1\ApiRequest;
 use App\Models\Account;
-use App\Models\Category;
 use Illuminate\Validation\Rule;
 
 /**

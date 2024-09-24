@@ -2,6 +2,8 @@
 
 namespace App\Services\ImportTransactions;
 
+use App\Exceptions\LogicException;
+use App\Exceptions\SystemException;
 use App\Models\Account;
 
 class ReaderFactory
@@ -13,6 +15,10 @@ class ReaderFactory
         $this->parserFactory = $parserFactory;
     }
 
+    /**
+     * @throws LogicException
+     * @throws SystemException
+     */
     public function make(Account $account): Reader
     {
         return new Reader($this->parserFactory->make($account), $account);
