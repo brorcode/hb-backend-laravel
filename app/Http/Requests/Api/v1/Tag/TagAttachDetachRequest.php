@@ -31,7 +31,7 @@ class TagAttachDetachRequest extends ApiRequest
             $this->tag = Tag::findOrFail($this->tag_id);
         } catch (ModelNotFoundException) {
             throw ValidationException::withMessages([
-                'tag_id' => 'Тэг не найден',
+                'tag_id' => 'Тег не найден',
             ]);
         }
     }

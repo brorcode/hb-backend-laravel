@@ -17,7 +17,6 @@ class CategoryPointerController extends ApiController
             'parent' => CategoryPointerResource::collection($service->getPointers(true)),
             'child' => CategoryPointerResource::collection($service->getPointers(false)),
         ]);
-
     }
 
     public function save(CategoryPointerRequest $request, CategoryPointerService $service): JsonResponse

@@ -4,12 +4,12 @@ namespace App\Models;
 
 use App\Models\Scopes\OwnerScope;
 use App\Observers\CategoryPointerObserver;
+use Database\Factories\CategoryPointerFactory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property-read int id
@@ -18,6 +18,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  *
  * @property-read Collection categoryPointerTags
  * @property-read Collection users
+ *
+ * @method static CategoryPointerFactory factory($count = null, $state = [])
  *
  * @see CategoryPointerObserver
  */

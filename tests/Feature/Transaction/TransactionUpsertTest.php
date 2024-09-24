@@ -23,18 +23,21 @@ class TransactionUpsertTest extends TestCase
     public function testTransactionShow(): void
     {
         /** @var Transaction $transaction */
-        $transaction = Transaction::factory()->create();
+        $transaction = Transaction::factory()->create([
+            'amount' => 123,
+            'is_debit' => true,
+        ]);
         $response = $this->getJson(route('api.v1.transactions.show', $transaction));
 
         $response->assertOk();
         $response->assertExactJson([
             'data' => [
                 'id' => $transaction->getKey(),
-                'amount' => $transaction->amount,
+                'amount' => 123,
                 'category' => $transaction->category->only(['id', 'name']),
                 'account' => $transaction->account->only(['id', 'name']),
                 'tags' => $transaction->tags->pluck('name')->toArray(),
-                'is_debit' => $transaction->is_debit,
+                'is_debit' => true,
                 'is_transfer' => $transaction->is_transfer,
                 'created_at' => $transaction->created_at,
                 'updated_at' => $transaction->updated_at,

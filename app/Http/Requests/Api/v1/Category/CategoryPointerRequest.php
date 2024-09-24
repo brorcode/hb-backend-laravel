@@ -17,8 +17,8 @@ class CategoryPointerRequest extends ApiRequest
             'child' => ['required', 'array'],
             'parent.*.name' => ['required'],
             'child.*.name' => ['required'],
-            'parent.*.tags_array' => ['required'],
-            'child.*.tags_array' => ['required'],
+            'parent.*.tags_array' => ['required', 'array'],
+            'child.*.tags_array' => ['required', 'array'],
         ];
     }
 }
