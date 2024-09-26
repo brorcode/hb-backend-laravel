@@ -138,10 +138,6 @@ class Category extends Model
 
     public function isParent(): bool
     {
-        if($this->parent_id) {
-            return false;
-        }
-
-        return true;
+        return $this->parent_id === null;
     }
 }

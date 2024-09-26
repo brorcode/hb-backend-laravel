@@ -40,7 +40,7 @@ class Handler extends ExceptionHandler
         return response()->json(['message' => $e->getMessage()], $e->getStatusCode());
     }
 
-    protected function validationError(ValidationException $e): JsonResponse
+    private function validationError(ValidationException $e): JsonResponse
     {
         return response()->json([
             'message' => 'Заполните форму правильно',

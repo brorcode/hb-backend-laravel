@@ -27,7 +27,7 @@ class TransactionListService extends AbstractListService
     protected function applySpecificFilters(Builder $builder): void
     {
         if (isset($this->request->filters['amount'])) {
-            $builder->where('amount', $this->request->filters['amount']['value']);
+            $builder->where('amount', $this->request->filters['amount']['value'] * 100);
         }
 
         if (isset($this->request->filters['categories'])) {
@@ -37,13 +37,6 @@ class TransactionListService extends AbstractListService
         if (isset($this->request->filters['accounts'])) {
             $builder->whereIn('account_id', array_column($this->request->filters['accounts']['value'], 'id'));
         }
-
-        // @todo check how is better when or if
-        // $builder->when($this->request->filters['tags'], function (Builder $query, array $tags) {
-        //     $query->whereHas('tags', function (Builder $query2) use ($tags) {
-        //         $query2->whereIn('tags.id', array_column($tags['value'], 'id'));
-        //     });
-        // });
 
         if (isset($this->request->filters['tags'])) {
             $builder->whereHas('tags', function(Builder $query) {

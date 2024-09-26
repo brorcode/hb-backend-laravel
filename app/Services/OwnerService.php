@@ -10,7 +10,7 @@ class OwnerService
 {
     use ServiceSingleton;
 
-    private User $user;
+    private ?User $user = null;
 
     public function setUser(User $user): void
     {
