@@ -4,11 +4,9 @@ namespace Tests\Feature\Account;
 
 use App\Models\Account;
 use App\Models\Integration;
-use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
-use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class AccountImportTransactionsTest extends TestCase
