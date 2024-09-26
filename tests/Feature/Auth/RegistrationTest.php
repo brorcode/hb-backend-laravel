@@ -46,7 +46,6 @@ class RegistrationTest extends TestCase
             return $notification->toMail($user)->subject === 'Подтвердить адрес электронной почты';
         });
 
-
         $this->assertAuthenticated();
         $response->assertExactJson($this->getResponseData($user));
     }
@@ -101,6 +100,17 @@ class RegistrationTest extends TestCase
                 ],
                 'errors' => [
                     'email' => ['Значение поля Email должно быть действительным электронным адресом.'],
+                ],
+            ],
+            'wrong_data_4' => [
+                'request' => [
+                    'name' => 'Test User',
+                    'email' => 'test@example.TEST',
+                    'password' => '123456789',
+                    'password_confirmation' => '123456789',
+                ],
+                'errors' => [
+                    'email' => ['Значение поля Email должно быть в нижнем регистре.'],
                 ],
             ],
         ];

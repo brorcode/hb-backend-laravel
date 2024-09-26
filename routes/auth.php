@@ -21,10 +21,6 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api.v1.'], function () {
         ->middleware('api.guest')
         ->name('password.email');
 
-    Route::post('/reset-password', [NewPasswordController::class, 'store'])
-        ->middleware('api.guest')
-        ->name('password.store');
-
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
         ->middleware('auth')
         ->name('logout');
@@ -33,3 +29,7 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api.v1.'], function () {
 Route::get('/verify-email/{id}/{hash}', VerifyEmailController::class)
     ->middleware(['auth', 'permission:'.Permission::NAME_PROFILE_EDIT, 'signed', 'throttle:6,1'])
     ->name('verification.verify');
+
+Route::post('/reset-password', [NewPasswordController::class, 'store'])
+    ->middleware('api.guest')
+    ->name('password.reset');

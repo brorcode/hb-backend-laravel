@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Notifications\ResetPassword;
 use App\Notifications\VerifyEmail;
 use Carbon\Carbon;
 use Database\Factories\UserFactory;
@@ -135,5 +136,10 @@ class User extends Authenticatable implements MustVerifyEmail
         $this->syncRoles(Role::NAME_USER);
 
         return $verified;
+    }
+
+    public function sendPasswordResetNotification(#[\SensitiveParameter] $token): void
+    {
+        $this->notify(new ResetPassword($token));
     }
 }
