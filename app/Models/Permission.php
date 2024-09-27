@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use Database\Factories\PermissionFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\Permission\Models\Permission as BasePermission;
 
 /**
  * @property string name
  * @property string guard_name
+ *
+ * @method static PermissionFactory factory($count = null, $state = [])
  */
 class Permission extends BasePermission
 {

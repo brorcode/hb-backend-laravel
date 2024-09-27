@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use Database\Factories\RoleFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\Permission\Models\Role as BaseRole;
 
 /**
  * @property string name
  * @property string guard_name
+ *
+ * @method static RoleFactory factory($count = null, $state = [])
  */
 class Role extends BaseRole
 {
