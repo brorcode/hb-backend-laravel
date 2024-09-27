@@ -60,7 +60,7 @@ class ImportService
             $this->populateDatabase($row, $account);
 
             if ($row['parent_category_name'] === self::CASH) {
-                $this->createCashCreditTransaction($row);
+                $this->createCashDebitTransaction($row);
             }
         });
     }
@@ -119,7 +119,7 @@ class ImportService
         return false;
     }
 
-    private function createCashCreditTransaction(Collection $row): void
+    private function createCashDebitTransaction(Collection $row): void
     {
         /** @var Account $account */
         if (!$account = Account::query()->where('name', self::CASH)->first()) {

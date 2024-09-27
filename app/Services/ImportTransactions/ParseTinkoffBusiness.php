@@ -21,6 +21,8 @@ class ParseTinkoffBusiness extends Parser implements ParserContract
      * $row[7] = 'Дата операции'
      * $row[11] = 'Сумма платежа'
      * $row[19] = 'Дочерняя категория'
+     *
+     * @throws SystemException
      */
     public function parse(array $row, Account $account, ?Carbon $latestImportedDate): ?Collection
     {
@@ -34,15 +36,12 @@ class ParseTinkoffBusiness extends Parser implements ParserContract
             return null;
         }
 
-        Log::alert($dateRow);
-        Log::alert($date->toDateTimeString());
-
         $row[11] = str_replace(',', '.', $row[11]);
         $amountInCents = strval($row[11] * 100);
 
         $amount = match($row[2]) {
-            'Debit' => '-'.$amountInCents,
-            'Credit' => $amountInCents,
+            'Debit' => $amountInCents,
+            'Credit' => '-'.$amountInCents,
             default => throw new SystemException('Undefined operation type'),
         };
 
