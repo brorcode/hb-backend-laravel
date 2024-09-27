@@ -48,10 +48,6 @@ class AppServiceProvider extends ServiceProvider
 
         $this->registerObservers();
         $this->registerEventListeners();
-
-        ResetPassword::createUrlUsing(function (object $notifiable, string $token) {
-            return config('app.frontend_url')."/password-reset/$token?email={$notifiable->getEmailForPasswordReset()}";
-        });
     }
 
     private function registerObservers(): void

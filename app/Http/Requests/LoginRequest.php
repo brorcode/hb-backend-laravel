@@ -62,15 +62,8 @@ class LoginRequest extends ApiRequest
             return;
         }
 
-        event(new Lockout($this));
-
-        $seconds = RateLimiter::availableIn($this->throttleKey());
-
         throw ValidationException::withMessages([
-            'email' => trans('auth.throttle', [
-                'seconds' => $seconds,
-                'minutes' => ceil($seconds / 60),
-            ]),
+            'email' => 'Слишком много попыток входа. Пожалуйста, попробуйте позже.',
         ]);
     }
 

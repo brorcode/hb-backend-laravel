@@ -54,6 +54,7 @@ class UserUpsertTest extends TestCase
             'name' => 'test',
             'email' => 'test@example.com',
             'password' => 'test12345',
+            'password_confirmation' => 'test12345',
         ]);
 
         $this->assertCount(2, User::all());
@@ -95,6 +96,7 @@ class UserUpsertTest extends TestCase
             'name' => 'test',
             'email' => 'test@example.com',
             'password' => 'test12345',
+            'password_confirmation' => 'test12345',
         ]);
 
         $this->assertCount(1, User::all());
@@ -176,7 +178,10 @@ class UserUpsertTest extends TestCase
                 ],
                 'errors' => [
                     'email' => ['Значение поля email должно быть действительным электронным адресом.'],
-                    'password' => ['Количество символов в поле password должно быть не меньше 8.'],
+                    'password' => [
+                        'Значение поля password не совпадает с подтверждаемым.',
+                        'Количество символов в поле password должно быть не меньше 8.'
+                    ],
                 ],
             ],
             'wrong_data_3' => [
@@ -184,6 +189,7 @@ class UserUpsertTest extends TestCase
                     'name' => 'test',
                     'email' => 'user@email.test',
                     'password' => 'test12345',
+                    'password_confirmation' => 'test12345',
                 ],
                 'errors' => [
                     'email' => ['Такое значение поля email уже существует.'],

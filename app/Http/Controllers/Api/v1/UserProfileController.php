@@ -7,6 +7,7 @@ use App\Http\Resources\Api\v1\UserProfileResource;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UserProfileController extends ApiController
 {
@@ -26,7 +27,7 @@ class UserProfileController extends ApiController
             $user->email_verified_at = null;
         }
         if ($request->password) {
-            $user->password = $request->password;
+            $user->password = Hash::make($request->password);
         }
         $user->save();
 

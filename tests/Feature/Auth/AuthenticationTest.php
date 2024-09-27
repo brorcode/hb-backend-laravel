@@ -58,12 +58,49 @@ class AuthenticationTest extends TestCase
 
     public function testUserCanNotAuthenticateWithInvalidPassword(): void
     {
-        $this->postJson(route('api.v1.logout'), [
+        $response = $this->postJson(route('api.v1.login'), [
             'email' => $this->user->email,
             'password' => 'wrong-password',
         ]);
 
         $this->assertGuest();
+        $response->assertUnprocessable();
+        $response->assertExactJson([
+            'message' => 'Заполните форму правильно',
+            'errors' => [
+                'email' => [
+                    'Неверное имя пользователя или пароль.'
+                ],
+            ],
+        ]);
+    }
+
+    public function testUserCanNotAuthenticateWithRateLimitsAttempts()
+    {
+        for ($i = 0; $i < 5; $i++) {
+            $response = $this->postJson(route('api.v1.login'), [
+                'email' => $this->user->email,
+                'password' => 'wrong-password',
+            ]);
+            $response->assertUnprocessable();
+        }
+
+        // After 5 failed attempts, check if rate limiting is in effect
+        $response = $this->postJson(route('api.v1.login'), [
+            'email' => $this->user->email,
+            'password' => 'wrong-password',
+            'remember' => false,
+        ]);
+
+        $response->assertUnprocessable();
+        $response->assertExactJson([
+            'message' => 'Заполните форму правильно',
+            'errors' => [
+                'email' => [
+                    'Слишком много попыток входа. Пожалуйста, попробуйте позже.'
+                ],
+            ],
+        ]);
     }
 
     public function testUserCanLogout(): void

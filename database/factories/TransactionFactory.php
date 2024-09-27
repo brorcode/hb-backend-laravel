@@ -22,6 +22,7 @@ class TransactionFactory extends Factory
             'loan_id' => null,
             'is_debit' => $this->faker->boolean,
             'is_transfer' => $this->faker->boolean,
+            'created_at' => now(),
         ];
     }
 

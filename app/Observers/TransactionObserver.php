@@ -79,17 +79,17 @@ class TransactionObserver
             ]);
         }
 
-        request()->request->remove('account_to');
+        request()->offsetUnset('account_to');
 
-        $createdAt = $transaction->created_at->addSecond();
+        $date = $transaction->created_at->addSecond();
         $newTransaction = new Transaction();
         $newTransaction->category_id = $transaction->category_id;
         $newTransaction->amount = abs($transaction->amount);
         $newTransaction->account_id = $accountTo;
         $newTransaction->is_debit = true;
         $newTransaction->is_transfer = true;
-        $newTransaction->created_at = $createdAt;
-        $newTransaction->updated_at = $createdAt;
+        $newTransaction->created_at = $date;
+        $newTransaction->updated_at = $date;
         $newTransaction->save();
     }
 }

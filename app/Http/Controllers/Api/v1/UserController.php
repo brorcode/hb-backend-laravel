@@ -8,6 +8,7 @@ use App\Http\Resources\Api\v1\UserResource;
 use App\Models\User;
 use App\Services\User\UserListService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\Response;
 
 class UserController extends ApiController
@@ -44,7 +45,7 @@ class UserController extends ApiController
         $user->name = $request->name;
         $user->email = $request->email;
         if ($request->password) {
-            $user->password = $request->password;
+            $user->password = Hash::make($request->password);
         }
         $user->save();
 

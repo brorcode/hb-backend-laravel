@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Scopes\OwnerScope;
 use App\Observers\TransactionObserver;
 use Carbon\Carbon;
+use Database\Factories\TransactionFactory;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -29,6 +30,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property-read Loan|null loan
  * @property-read Collection|null tags
  * @property-read Collection users
+ *
+ * @method static TransactionFactory factory($count = null, $state = [])
  *
  * @see TransactionObserver
  */

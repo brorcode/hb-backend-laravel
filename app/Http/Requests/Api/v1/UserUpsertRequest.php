@@ -17,9 +17,9 @@ class UserUpsertRequest extends ApiRequest
 {
     public function rules(): array
     {
-        $passwordRules = [Password::defaults()];
+        $passwordRules = ['nullable', 'confirmed', Password::defaults()];
         if (!$this->user) {
-            $passwordRules[] = 'required';
+            $passwordRules[0] = 'required';
         }
 
         return [
