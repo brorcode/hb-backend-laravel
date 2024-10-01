@@ -44,6 +44,7 @@ Route::group(['prefix' => 'v1', 'as' => 'api.v1.'], function () {
         Route::group(['prefix' => 'categories', 'as' => 'categories.'], function () {
             Route::group(['middleware' => 'permission:'.Permission::NAME_CATEGORIES_VIEW], function () {
                 Route::post('/', [CategoryController::class, 'index'])->name('index');
+                Route::post('/{parent_category_id}/child', [CategoryController::class, 'child'])->name('child');
                 Route::get('/{category}', [CategoryController::class, 'show'])->name('show');
             });
 
@@ -99,6 +100,9 @@ Route::group(['prefix' => 'v1', 'as' => 'api.v1.'], function () {
 
         Route::group(['prefix' => 'dictionary', 'as' => 'dictionary.'], function () {
             Route::post('/categories', [DictionaryController::class, 'categories'])->name('categories')
+                ->middleware('permission:'.Permission::NAME_CATEGORIES_VIEW)
+            ;
+            Route::post('/categories/parent', [DictionaryController::class, 'categoriesParent'])->name('categories.parent')
                 ->middleware('permission:'.Permission::NAME_CATEGORIES_VIEW)
             ;
             Route::post('/accounts', [DictionaryController::class, 'accounts'])->name('accounts')

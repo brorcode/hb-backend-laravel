@@ -26,6 +26,10 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
  * @property-read Collection transactions
  * @property-read Collection transactionsDebit
  * @property-read Collection transactionsCredit
+ * @property-read Collection transactionsTransfer
+ * @property-read Collection subTransactionsDebit
+ * @property-read Collection subTransactionsCredit
+ * @property-read Collection subTransactionsTransfer
  * @property-read Category|null parentCategory
  * @property-read Collection users
  *

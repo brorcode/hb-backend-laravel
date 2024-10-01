@@ -6,10 +6,11 @@ use App\Models\Category;
 use App\Services\AbstractListService;
 use App\Services\ServiceInstance;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Support\Facades\DB;
 
-class CategoryListService extends AbstractListService
+class CategoryChildListService extends AbstractListService
 {
     use ServiceInstance;
 
@@ -20,52 +21,48 @@ class CategoryListService extends AbstractListService
         $builder = parent::getBuilder();
 
         $builder
-            ->whereNull('parent_id')
             ->with([
                 'parentCategory',
-                'subTransactionsDebit' => function(HasManyThrough $query) {
+                'transactionsDebit' => function (HasMany $query) {
                     $query
                         ->select([
+                            'category_id',
                             DB::raw('count(category_id) as count'),
                             DB::raw('sum(amount) as amount'),
                         ])
                         ->groupBy([
-                            'laravel_through_key',
-                        ])
-                    ;
+                            'category_id',
+                        ]);
                 },
-                'subTransactionsCredit' => function(HasManyThrough $query) {
+                'transactionsCredit' => function (HasMany $query) {
                     $query
                         ->select([
+                            'category_id',
                             DB::raw('count(category_id) as count'),
                             DB::raw('sum(amount) as amount'),
                         ])
                         ->groupBy([
-                            'laravel_through_key',
-                        ])
-                    ;
+                            'category_id',
+                        ]);
                 },
-                'subTransactionsTransfer' => function(HasManyThrough $query) {
+                'transactionsTransfer' => function (HasMany $query) {
                     $query
                         ->select([
+                            'category_id',
                             DB::raw('count(category_id) as count'),
                             DB::raw('sum(amount) as amount'),
                         ])
                         ->groupBy([
-                            'laravel_through_key',
-                        ])
-                    ;
+                            'category_id',
+                        ]);
                 }
-            ])
-        ;
+            ]);
 
         return $builder;
     }
 
-    protected function applySpecificFilters($builder): void
+    protected function applySpecificFilters(Builder $builder): void
     {
-        if (isset($this->request->filters['name'])) {
-            $builder->where('name', 'like', "%{$this->request->filters['name']['value']}%");
-        }
+        $builder->where('parent_id', $this->request->route('parent_category_id'));
     }
 }

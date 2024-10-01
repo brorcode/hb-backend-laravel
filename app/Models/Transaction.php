@@ -102,9 +102,4 @@ class Transaction extends Model
     {
         return $this->belongsToMany(User::class);
     }
-
-    public function isDebit(): bool
-    {
-        return $this->is_debit && !$this->is_transfer;
-    }
 }

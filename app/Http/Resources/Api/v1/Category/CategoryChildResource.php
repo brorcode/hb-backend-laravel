@@ -4,9 +4,8 @@ namespace App\Http\Resources\Api\v1\Category;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
 
-class CategoryResource extends CategoryBaseResource
+class CategoryChildResource extends CategoryBaseResource
 {
     private function getResource(): Category
     {
@@ -25,9 +24,9 @@ class CategoryResource extends CategoryBaseResource
                 'updated_at' => $category->updated_at,
             ] + $this->getTransactionData(
                 $category,
-                'subTransactionsDebit',
-                'subTransactionsCredit',
-                'subTransactionsTransfer'
+                'transactionsDebit',
+                'transactionsCredit',
+                'transactionsTransfer'
             );
     }
 }

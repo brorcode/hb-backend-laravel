@@ -50,10 +50,6 @@ abstract class AbstractListService
 
     protected function applyFilters($builder): void
     {
-        if (!$this->request->filters) {
-            return;
-        }
-
         if (isset($this->request->filters['id'])) {
             $builder->where('id', $this->request->filters['id']['value']);
         }

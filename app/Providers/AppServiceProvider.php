@@ -21,7 +21,6 @@ use App\Observers\TagObserver;
 use App\Observers\TransactionObserver;
 use App\Services\ImportTransactions\DelimiterDetector;
 use App\Services\OwnerService;
-use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Event;
