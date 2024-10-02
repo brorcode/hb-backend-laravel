@@ -2,7 +2,6 @@
 
 namespace App\Services\ImportTransactions;
 
-use App\Exceptions\LogicException;
 use App\Exceptions\SystemException;
 use App\Models\Account;
 use App\Models\Integration;

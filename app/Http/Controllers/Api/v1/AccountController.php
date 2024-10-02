@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api\v1;
 
-use App\Exceptions\LogicException;
 use App\Exceptions\SystemException;
 use App\Http\Requests\Api\v1\Account\AccountTransactionsImportRequest;
 use App\Http\Requests\Api\v1\Account\AccountUpsertRequest;

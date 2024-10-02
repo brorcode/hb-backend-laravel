@@ -42,7 +42,7 @@ class OwnerServiceTest extends TestCase
         $this->assertTrue($user->is($authUser));
     }
 
-    public function testGetUserCanThrowLogicException(): void
+    public function testGetUserCanThrowSystemException(): void
     {
         $this->expectException(SystemException::class);
         $this->expectExceptionMessage('User doesn\'t set.');
