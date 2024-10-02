@@ -99,10 +99,10 @@ Route::group(['prefix' => 'v1', 'as' => 'api.v1.'], function () {
         });
 
         Route::group(['prefix' => 'dictionary', 'as' => 'dictionary.'], function () {
-            Route::post('/categories', [DictionaryController::class, 'categories'])->name('categories')
+            Route::post('/categories/parent', [DictionaryController::class, 'categoriesParent'])->name('categories.parent')
                 ->middleware('permission:'.Permission::NAME_CATEGORIES_VIEW)
             ;
-            Route::post('/categories/parent', [DictionaryController::class, 'categoriesParent'])->name('categories.parent')
+            Route::post('/categories/child', [DictionaryController::class, 'categoriesChild'])->name('categories.child')
                 ->middleware('permission:'.Permission::NAME_CATEGORIES_VIEW)
             ;
             Route::post('/accounts', [DictionaryController::class, 'accounts'])->name('accounts')

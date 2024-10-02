@@ -3,12 +3,12 @@
 namespace Tests\Feature\Dictionary;
 
 use App\Models\Category;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class CategoryDictionaryTest extends TestCase
+class CategoryChildDictionaryTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     public function setUp(): void
     {
@@ -17,10 +17,10 @@ class CategoryDictionaryTest extends TestCase
         $this->userLogin();
     }
 
-    public function testCategoryDictionaryList(): void
+    public function testCategoryChildDictionaryList(): void
     {
         $categories = Category::factory(11)->withParentCategory()->create();
-        $response = $this->postJson(route('api.v1.dictionary.categories'));
+        $response = $this->postJson(route('api.v1.dictionary.categories.child'));
 
         $data = $categories->take(10)->map(function (Category $category) {
             return [
@@ -33,7 +33,7 @@ class CategoryDictionaryTest extends TestCase
         $response->assertExactJson($data->toArray());
     }
 
-    public function testCategoryDictionaryListWithSearch(): void
+    public function testCategoryChildDictionaryListWithSearch(): void
     {
         $categories = Category::factory(2)->withParentCategory()
             ->sequence(
@@ -42,7 +42,7 @@ class CategoryDictionaryTest extends TestCase
             )
             ->create()
         ;
-        $response = $this->postJson(route('api.v1.dictionary.categories'), [
+        $response = $this->postJson(route('api.v1.dictionary.categories.child'), [
             'q' => 'Name 1',
         ]);
 

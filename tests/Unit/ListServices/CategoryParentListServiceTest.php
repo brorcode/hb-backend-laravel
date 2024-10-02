@@ -4,14 +4,14 @@ namespace Tests\Unit\ListServices;
 
 use App\Http\Requests\Api\v1\ListRequest;
 use App\Models\Category;
-use App\Services\Category\CategoryListService;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use App\Services\Category\CategoryParentListService;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
-class CategoryListServiceTest extends TestCase
+class CategoryParentListServiceTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     public function setUp(): void
     {
@@ -20,8 +20,8 @@ class CategoryListServiceTest extends TestCase
         $this->userLogin();
     }
 
-    #[DataProvider('categoryFiltersDataProvider')]
-    public function testCategoryListServiceHandleFilters(int $count, array $sequence, string $filterKey, array $filters): void
+    #[DataProvider('categoryParentFiltersDataProvider')]
+    public function testParentCategoryListServiceHandleFilters(int $count, array $sequence, string $filterKey, array $filters): void
     {
         Category::factory()
             ->count($count)
@@ -29,7 +29,7 @@ class CategoryListServiceTest extends TestCase
             ->create()
         ;
 
-        $service = CategoryListService::create();
+        $service = CategoryParentListService::create();
         $request = new ListRequest();
         $request->merge([
             'page' => 1,
@@ -46,8 +46,8 @@ class CategoryListServiceTest extends TestCase
         $this->assertEquals($filters[$filterKey]['value'], $data[0][$filterKey]);
     }
 
-    #[DataProvider('categorySortingDataProvider')]
-    public function testCategoryListServiceHandleSorting(int $count, array $sequence, array $sorting): void
+    #[DataProvider('categoryParentSortingDataProvider')]
+    public function testParentCategoryListServiceHandleSorting(int $count, array $sequence, array $sorting): void
     {
         Category::factory()
             ->count($count)
@@ -55,7 +55,7 @@ class CategoryListServiceTest extends TestCase
             ->create()
         ;
 
-        $service = CategoryListService::create();
+        $service = CategoryParentListService::create();
         $request = new ListRequest();
         $request->merge([
             'page' => 1,
@@ -80,7 +80,7 @@ class CategoryListServiceTest extends TestCase
         }
     }
 
-    public static function categoryFiltersDataProvider(): array
+    public static function categoryParentFiltersDataProvider(): array
     {
         return [
             'filter_1' => [
@@ -112,7 +112,7 @@ class CategoryListServiceTest extends TestCase
         ];
     }
 
-    public static function categorySortingDataProvider(): array
+    public static function categoryParentSortingDataProvider(): array
     {
         return [
             'sorting_1' => [

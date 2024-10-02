@@ -5,13 +5,13 @@ namespace Tests\Unit;
 use App\Models\Account;
 use App\Models\Category;
 use App\Models\Transaction;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
 
 class TransactionObserverTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     public function setUp(): void
     {

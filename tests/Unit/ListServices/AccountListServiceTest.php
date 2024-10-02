@@ -5,13 +5,13 @@ namespace Tests\Unit\ListServices;
 use App\Http\Requests\Api\v1\ListRequest;
 use App\Models\Account;
 use App\Services\Account\AccountListService;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class AccountListServiceTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     public function setUp(): void
     {

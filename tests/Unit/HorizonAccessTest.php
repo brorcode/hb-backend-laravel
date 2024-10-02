@@ -2,17 +2,15 @@
 
 namespace Tests\Unit;
 
-use App\Exceptions\SystemException;
 use App\Models\Permission;
 use App\Models\Role;
 use App\Models\User;
-use App\Services\OwnerService;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class HorizonAccessTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     public function testHorizonIsProtected(): void
     {

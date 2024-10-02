@@ -3,12 +3,12 @@
 namespace Tests\Feature\Tag;
 
 use App\Models\Tag;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class TagDestroyTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     public function testTagDestroy(): void
     {

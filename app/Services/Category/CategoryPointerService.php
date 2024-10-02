@@ -67,7 +67,7 @@ class CategoryPointerService
     {
         if (CategoryPointer::findByName($name)) {
             throw ValidationException::withMessages(
-                ['category_pointer_id' => "Каждая категория должна иметь уникальное имя. Дубликат: {$name}"],
+                ['category_pointer_id' => "Каждая категория должна иметь уникальное имя. Дубликат: {$name}."],
             );
         }
 
@@ -87,7 +87,7 @@ class CategoryPointerService
         foreach ($tags as $name) {
             if (CategoryPointerTag::findByName($name, $categoryPointer->is_parent)) {
                 throw ValidationException::withMessages(
-                    ['category_pointer_tag_id' => "Каждый тег должен иметь уникальное имя. Дубликат: {$name}"],
+                    ['category_pointer_tag_id' => "Каждый тег должен иметь уникальное имя. Дубликат: {$name}."],
                 );
             }
 

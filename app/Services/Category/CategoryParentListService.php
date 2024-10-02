@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Support\Facades\DB;
 
-class CategoryListService extends AbstractListService
+class CategoryParentListService extends AbstractListService
 {
     use ServiceInstance;
 

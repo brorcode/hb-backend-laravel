@@ -3,14 +3,14 @@
 namespace Tests\Feature\CategoryPointer;
 
 use App\Jobs\UpdateTransactionCategoriesJob;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Queue;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class CategoryPointerSaveTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     public function setUp(): void
     {
@@ -122,6 +122,63 @@ class CategoryPointerSaveTest extends TestCase
                 'errors' => [
                     'parent.0.tags_array' => ['Значение поля parent.0.tags_array должно быть массивом.'],
                     'child.0.tags_array' => ['Значение поля child.0.tags_array должно быть массивом.'],
+                ],
+            ],
+            'wrong_data_5' => [
+                'request' => [
+                    'parent' => [
+                        [
+                            'name' => 'test parent',
+                            'tags_array' => ['tag 1', 'tag 1'],
+                        ]
+                    ],
+                    'child' => [
+                        [
+                            'name' => 'test child',
+                            'tags_array' => ['tag 2', 'tag 3'],
+                        ]
+                    ],
+                ],
+                'errors' => [
+                    'category_pointer_tag_id' => ['Каждый тег должен иметь уникальное имя. Дубликат: tag 1.'],
+                ],
+            ],
+            'wrong_data_6' => [
+                'request' => [
+                    'parent' => [
+                        [
+                            'name' => 'test parent',
+                            'tags_array' => ['tag 1', 'tag 2'],
+                        ]
+                    ],
+                    'child' => [
+                        [
+                            'name' => 'test child',
+                            'tags_array' => ['tag 3', 'tag 3'],
+                        ]
+                    ],
+                ],
+                'errors' => [
+                    'category_pointer_tag_id' => ['Каждый тег должен иметь уникальное имя. Дубликат: tag 3.'],
+                ],
+            ],
+            'wrong_data_7' => [
+                'request' => [
+                    'parent' => [
+                        [
+                            'name' => 'test tag name',
+                            'tags_array' => ['tag 1', 'tag 2'],
+                        ]
+                    ],
+                    'child' => [
+                        [
+                            'name' => 'test tag name',
+                            'tags_array' => ['tag 3', 'tag 4'],
+                        ]
+                    ],
+                ],
+                'errors' => [
+                    'category_pointer_id' => ['Каждая категория должна иметь уникальное имя. Дубликат: test tag name.'],
                 ],
             ],
         ];

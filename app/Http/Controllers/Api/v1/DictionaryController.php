@@ -11,21 +11,21 @@ use Illuminate\Http\Request;
 
 class DictionaryController extends ApiController
 {
-    public function categories(Request $request, DictionaryService $service): JsonResponse
-    {
-        $builder = Category::query()
-            ->select(['id', 'name'])
-            ->whereNotNull('parent_id')
-        ;
-
-        return $service->getItems($builder, $request);
-    }
-
     public function categoriesParent(Request $request, DictionaryService $service): JsonResponse
     {
         $builder = Category::query()
             ->select(['id', 'name'])
             ->whereNull('parent_id')
+        ;
+
+        return $service->getItems($builder, $request);
+    }
+
+    public function categoriesChild(Request $request, DictionaryService $service): JsonResponse
+    {
+        $builder = Category::query()
+            ->select(['id', 'name'])
+            ->whereNotNull('parent_id')
         ;
 
         return $service->getItems($builder, $request);

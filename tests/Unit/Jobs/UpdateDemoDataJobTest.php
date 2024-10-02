@@ -11,13 +11,13 @@ use App\Models\Loan;
 use App\Models\Tag;
 use App\Models\Transaction;
 use App\Models\User;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 
 class UpdateDemoDataJobTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     private function dispatch(): void
     {
@@ -124,5 +124,11 @@ class UpdateDemoDataJobTest extends TestCase
         $this->assertCount(1, CategoryPointerTag::all());
         $this->assertCount(1, CategoryPointer::all());
         $this->assertCount(1, Account::all());
+    }
+
+    public function testUpdateDemoDataJobReturnsCorrectTagNames(): void
+    {
+        $tagNames = (new UpdateDemoDataJob())->tags();
+        $this->assertEquals(['UpdateDemoDataJob'], $tagNames);
     }
 }

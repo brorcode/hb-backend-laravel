@@ -5,13 +5,13 @@ namespace Tests\Feature\Transaction;
 use App\Models\Account;
 use App\Models\Category;
 use App\Models\Transaction;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class TransactionUpsertTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     public function setUp(): void
     {
@@ -180,8 +180,8 @@ class TransactionUpsertTest extends TestCase
                 ],
                 'errors' => [
                     'amount' => ['Значение поля amount должно быть числом.'],
-                    'category_id' => ['Значение поля category id не существует.'],
-                    'account_id' => ['Значение поля account id не существует.'],
+                    'category_id' => ['Такого значения не существует.'],
+                    'account_id' => ['Такого значения не существует.'],
                     'created_at' => ['Значение поля created at должно быть корректной датой.'],
                     'is_debit' => ['Значение поля is debit должно быть логического типа.'],
                     'is_transfer' => ['Значение поля is transfer должно быть логического типа.'],

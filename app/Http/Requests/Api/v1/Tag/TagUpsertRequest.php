@@ -4,7 +4,7 @@ namespace App\Http\Requests\Api\v1\Tag;
 
 use App\Http\Requests\Api\v1\ApiRequest;
 use App\Models\Tag;
-use Illuminate\Validation\Rule;
+use App\Rules\UniqueNameForUserRule;
 
 /**
  * @property-read Tag|null tag
@@ -18,7 +18,7 @@ class TagUpsertRequest extends ApiRequest
         return [
             'name' => [
                 'required',
-                Rule::unique((new Tag())->getTable())->ignore($this->tag),
+                new UniqueNameForUserRule(Tag::class, $this->tag),
             ],
         ];
     }

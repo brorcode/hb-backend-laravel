@@ -9,14 +9,15 @@ use App\Models\CategoryPointerTag;
 use App\Models\Scopes\OwnerScope;
 use App\Models\Transaction;
 use App\Models\User;
+use App\Services\ImportTransactions\ImportService;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 
 class UpdateTransactionCategoriesJobTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     private User $user;
 
@@ -193,5 +194,47 @@ class UpdateTransactionCategoriesJobTest extends TestCase
         $this->assertSame(2, Category::query()->count());
         // all users have 3 categories
         $this->assertSame(3, Category::query()->withoutGlobalScope(OwnerScope::class)->count());
+    }
+
+    public function testJobChecksAndUpdatesTransferTransactions(): void
+    {
+        $this->actingAs($this->user);
+
+        $parentCategories = Category::factory()
+            ->count(3)
+            ->sequence(
+                ['name' => ImportService::BETWEEN_ACCOUNTS],
+                ['name' => ImportService::CASH],
+                ['name' => ImportService::CORRECTING],
+            )
+            ->create()
+        ;
+
+        $parentCategories->each(function (Category $parentCategory) {
+            Category::factory()
+                ->has(Transaction::factory()->notTransfer())
+                ->create(['parent_id' => $parentCategory->getKey()])
+            ;
+        });
+
+        $this->assertCount(3, Transaction::all());
+        $this->assertSame(3, Transaction::query()
+            ->where('is_transfer', false)
+            ->count()
+        );
+
+        $this->dispatch();
+
+        $this->assertCount(3, Transaction::all());
+        $this->assertSame(3, Transaction::query()
+            ->where('is_transfer', true)
+            ->count()
+        );
+    }
+
+    public function testUpdateTransactionCategoriesJobReturnsCorrectTagNames(): void
+    {
+        $tagNames = (new UpdateTransactionCategoriesJob($this->user))->tags();
+        $this->assertEquals(['UpdateTransactionCategoriesJob'], $tagNames);
     }
 }

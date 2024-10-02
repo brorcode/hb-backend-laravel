@@ -2,11 +2,9 @@
 
 namespace Tests\Feature\UserProfile;
 
-use App\Models\Account;
-use App\Models\Transaction;
 use App\Models\User;
 use App\Notifications\VerifyEmail;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -14,7 +12,7 @@ use Tests\TestCase;
 
 class UserProfileTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     private User $user;
 

@@ -4,7 +4,7 @@ namespace App\Http\Requests\Api\v1\Account;
 
 use App\Http\Requests\Api\v1\ApiRequest;
 use App\Models\Account;
-use Illuminate\Validation\Rule;
+use App\Rules\UniqueNameForUserRule;
 
 /**
  * @property-read Account|null account
@@ -18,7 +18,7 @@ class AccountUpsertRequest extends ApiRequest
         return [
             'name' => [
                 'required',
-                Rule::unique((new Account())->getTable())->ignore($this->account),
+                new UniqueNameForUserRule(Account::class, $this->account),
             ],
         ];
     }

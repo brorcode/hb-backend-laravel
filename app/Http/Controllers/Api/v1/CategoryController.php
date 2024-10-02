@@ -8,7 +8,7 @@ use App\Http\Resources\Api\v1\Category\CategoryChildResource;
 use App\Http\Resources\Api\v1\Category\CategoryResource;
 use App\Models\Category;
 use App\Services\Category\CategoryChildListService;
-use App\Services\Category\CategoryListService;
+use App\Services\Category\CategoryParentListService;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -16,7 +16,7 @@ class CategoryController extends ApiController
 {
     public function index(ListRequest $request): JsonResponse
     {
-        $service = CategoryListService::create();
+        $service = CategoryParentListService::create();
         $service->setRequest($request);
 
         $builder = $service->getListBuilder();

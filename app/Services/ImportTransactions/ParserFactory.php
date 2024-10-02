@@ -10,7 +10,7 @@ use App\Models\Integration;
 class ParserFactory
 {
     /**
-     * @throws SystemException|LogicException
+     * @throws SystemException
      */
     public function make(Account $account): ParserContract
     {
@@ -26,7 +26,7 @@ class ParserFactory
             case Integration::findYandexMoney()->getKey():
                 throw new SystemException('Автоимпорт для Яндекса отключен, внесите транзакции вручную.');
             default:
-                throw new LogicException('Undefined integration');
+                throw new SystemException('Undefined integration');
         }
     }
 }

@@ -6,7 +6,7 @@ use App\Events\UserRegistered;
 use App\Models\User;
 use App\Notifications\VerifyEmail;
 use Database\Seeders\RolePermissionSeeder;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Notification;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -14,7 +14,7 @@ use Tests\TestCase;
 
 class RegistrationTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     public function testNewUsersCanRegister(): void
     {

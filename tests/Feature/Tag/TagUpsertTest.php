@@ -2,14 +2,15 @@
 
 namespace Tests\Feature\Tag;
 
+use App\Models\Scopes\OwnerScope;
 use App\Models\Tag;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class TagUpsertTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     public function setUp(): void
     {
@@ -117,6 +118,57 @@ class TagUpsertTest extends TestCase
         ]);
     }
 
+    public function testTagCanBeUpdatedWithOutNameChange(): void
+    {
+        /** @var Tag $tag */
+        $tag = Tag::factory()->create(['name' => 'existing tag name']);
+
+        $response = $this->putJson(route('api.v1.tags.update', $tag), [
+            'name' => 'existing tag name',
+        ]);
+
+        $response->assertOk();
+        $response->assertExactJson([
+            'message' => 'Тег обновлен',
+            'data' => [
+                'id' => $tag->getKey(),
+                'name' => 'existing tag name',
+                'amount' => 0,
+                'created_at' => $tag->created_at,
+                'updated_at' => $tag->updated_at,
+            ],
+        ]);
+    }
+
+    public function testTagCanBeCreatedIfAnotherUserHasTheSameTagName(): void
+    {
+        $this->userLogin();
+        Tag::factory()->create(['name' => 'tag 1']);
+
+        $this->userLogin();
+        $response = $this->postJson(route('api.v1.tags.store'), [
+            'name' => 'tag 1',
+        ]);
+
+        $this->assertCount(
+            2,
+            Tag::query()->withoutGlobalScope(OwnerScope::class)->where('name', 'tag 1')->get()
+        );
+
+        $response->assertCreated();
+        $response->assertExactJson([
+            'message' => 'Тег создан',
+        ]);
+
+        // This line added because when down migrations are executed
+        // it returns an error because in the 2020_11_23_010507_drop_tag_name_unique.php
+        // down tries to return back unique tag name key. And as in the test we check two
+        // users can create same tag name we have an issue:
+        // Duplicate entry 'tag 1' for key 'tags_name_unique'
+        // (Connection: mariadb, SQL: alter table `tags` add unique `tags_name_unique`(`name`))
+        Tag::query()->delete();
+    }
+
     public static function invalidTagDataProvider(): array
     {
         return [
@@ -131,7 +183,7 @@ class TagUpsertTest extends TestCase
                     'name' => 'existing tag name',
                 ],
                 'errors' => [
-                    'name' => ['Такое значение поля name уже существует.'],
+                    'name' => ['Такое название уже существует.'],
                 ],
             ],
         ];

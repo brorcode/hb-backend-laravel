@@ -2,16 +2,14 @@
 
 namespace Tests\Feature\CategoryPointer;
 
-use App\Models\Category;
 use App\Models\CategoryPointer;
 use App\Models\CategoryPointerTag;
-use Database\Factories\CategoryPointerFactory;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class CategoryPointerIndexTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     public function testCategoryPointerIndex(): void
     {

@@ -2,7 +2,6 @@
 
 namespace App\Services\ImportTransactions;
 
-use App\Exceptions\LogicException;
 use App\Exceptions\SystemException;
 use App\Models\Account;
 
@@ -16,7 +15,6 @@ class ReaderFactory
     }
 
     /**
-     * @throws LogicException
      * @throws SystemException
      */
     public function make(Account $account): Reader

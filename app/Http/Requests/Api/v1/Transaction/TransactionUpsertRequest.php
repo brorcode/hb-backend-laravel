@@ -5,8 +5,8 @@ namespace App\Http\Requests\Api\v1\Transaction;
 use App\Http\Requests\Api\v1\ApiRequest;
 use App\Models\Account;
 use App\Models\Category;
+use App\Rules\ExistForUserRule;
 use Carbon\Carbon;
-use Illuminate\Validation\Rule;
 
 /**
  * @property-read string amount
@@ -22,8 +22,8 @@ class TransactionUpsertRequest extends ApiRequest
     {
         return [
             'amount' => ['required', 'numeric', 'min:0.01'],
-            'category_id' => ['required', Rule::exists((new Category())->getTable(), (new Category())->getKeyName())],
-            'account_id' => ['required', Rule::exists((new Account())->getTable(), (new Account())->getKeyName())],
+            'category_id' => ['required', new ExistForUserRule(Category::class)],
+            'account_id' => ['required', new ExistForUserRule(Account::class)],
             'created_at' => ['required', 'date'],
             'is_debit' => ['required', 'bool'],
             'is_transfer' => ['required', 'bool'],

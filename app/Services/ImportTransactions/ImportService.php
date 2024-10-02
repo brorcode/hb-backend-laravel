@@ -2,6 +2,7 @@
 
 namespace App\Services\ImportTransactions;
 
+use App\Exceptions\LogicException;
 use App\Exceptions\SystemException;
 use App\Models\Account;
 use App\Models\Category;
@@ -43,14 +44,7 @@ class ImportService
         $this->imported = 0;
         $reader = $this->factory->make($account);
         $transactions = $reader->parse($file);
-
-        try {
-            $this->saveTransactions($transactions, $account);
-        } catch (Exception $e) {
-            Log::error($e->getMessage() . "\n" . $e->getTraceAsString());
-
-            throw new SystemException($e->getMessage());
-        }
+        $this->saveTransactions($transactions, $account);
     }
 
     private function saveTransactions(Collection $rows, Account $account): void

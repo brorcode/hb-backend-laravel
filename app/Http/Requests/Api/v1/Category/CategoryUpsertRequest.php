@@ -4,7 +4,8 @@ namespace App\Http\Requests\Api\v1\Category;
 
 use App\Http\Requests\Api\v1\ApiRequest;
 use App\Models\Category;
-use Illuminate\Validation\Rule;
+use App\Rules\ExistForUserRule;
+use App\Rules\UniqueNameForUserRule;
 
 /**
  * @property-read Category|null category
@@ -20,12 +21,11 @@ class CategoryUpsertRequest extends ApiRequest
         return [
             'name' => [
                 'required',
-                // TODO does this checks all categories in DB or only for the user? It should check only for the logged in user
-                Rule::unique((new Category())->getTable())->ignore($this->category),
+                new UniqueNameForUserRule(Category::class, $this->category),
             ],
             'parent_id' => [
                 'required_if:is_child,true',
-                Rule::exists((new Category())->getTable(), (new Category())->getKeyName()),
+                new ExistForUserRule(Category::class),
             ],
         ];
     }
