@@ -3,6 +3,7 @@
 namespace Tests\Feature\Auth;
 
 use App\Events\UserRegistered;
+use App\Models\Role;
 use App\Models\User;
 use App\Notifications\VerifyEmail;
 use Database\Seeders\RolePermissionSeeder;
@@ -25,6 +26,9 @@ class RegistrationTest extends TestCase
         $response = $this->postJson(route('api.v1.register'), $this->getRequestData());
         $this->assertCount(1, User::all());
         $user = User::query()->first();
+
+        $this->assertCount(1, $user->roles);
+        $this->assertEquals(Role::NAME_USER, $user->roles->first()->name);
 
         Event::assertDispatched(UserRegistered::class);
 
@@ -133,7 +137,7 @@ class RegistrationTest extends TestCase
             'data' => [
                 'name' => $user->name,
                 'email' => $user->email,
-                'has_verified_email' => $user->hasVerifiedEmail(),
+                'has_verified_email' => false,
                 'permissions' => $user->getPermissionsViaRoles()->pluck('name')->toArray(),
             ],
         ];

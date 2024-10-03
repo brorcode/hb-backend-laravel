@@ -33,7 +33,7 @@ class EmailVerificationTest extends TestCase
             'data' => [
                 'name' => $user->name,
                 'email' => $user->email,
-                'has_verified_email' => $user->hasVerifiedEmail(),
+                'has_verified_email' => true,
                 'permissions' => $user->getPermissionsViaRoles()->pluck('name')->toArray(),
             ],
         ]);
@@ -58,7 +58,7 @@ class EmailVerificationTest extends TestCase
             'data' => [
                 'name' => $user->name,
                 'email' => $user->email,
-                'has_verified_email' => $user->hasVerifiedEmail(),
+                'has_verified_email' => true,
                 'permissions' => $user->getPermissionsViaRoles()->pluck('name')->toArray(),
             ],
         ]);

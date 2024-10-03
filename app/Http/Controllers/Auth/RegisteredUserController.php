@@ -22,7 +22,7 @@ class RegisteredUserController extends ApiController
         $user->password = Hash::make($request->password);
         $user->save();
 
-        $user->syncRoles(Role::NAME_NOT_VERIFIED_USER);
+        $user->syncRoles(Role::NAME_USER);
 
         event(new UserRegistered($user));
 

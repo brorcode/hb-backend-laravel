@@ -86,6 +86,7 @@ class DemoDataService
         $user = new User();
         $user->name = 'Demo User';
         $user->email = $email;
+        $user->email_verified_at = Carbon::now();
         $user->password = Hash::make('password');
         $user->save();
 

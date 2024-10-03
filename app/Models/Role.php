@@ -18,13 +18,11 @@ class Role extends BaseRole
 
     const NAME_SUPER_USER = 'Super User';
     const NAME_USER = 'User';
-    const NAME_NOT_VERIFIED_USER = 'Not Verified User';
     const NAME_DEMO_USER = 'Demo User';
 
     const NAMES = [
         self::NAME_SUPER_USER,
         self::NAME_USER,
-        self::NAME_NOT_VERIFIED_USER,
         self::NAME_DEMO_USER,
     ];
 }

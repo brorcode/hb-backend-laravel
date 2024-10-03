@@ -72,10 +72,6 @@ class RolePermissionSeeder extends Seeder
                 Permission::NAME_CATEGORY_POINTERS_VIEW,
                 Permission::NAME_PROFILE_VIEW,
             ],
-            Role::NAME_NOT_VERIFIED_USER => [
-                Permission::NAME_PROFILE_VIEW,
-                Permission::NAME_PROFILE_EDIT,
-            ],
         ];
 
         collect($rolePermissions)->each(function ($permissions, $roleName) {

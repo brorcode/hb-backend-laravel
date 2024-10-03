@@ -129,13 +129,9 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function markEmailAsVerified(): bool
     {
-        $verified = $this->forceFill([
+        return $this->forceFill([
             'email_verified_at' => $this->freshTimestamp(),
         ])->save();
-
-        $this->syncRoles(Role::NAME_USER);
-
-        return $verified;
     }
 
     public function sendPasswordResetNotification(#[\SensitiveParameter] $token): void
