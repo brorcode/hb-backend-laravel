@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Unit\Observers;
 
 use App\Models\Account;
 use App\Models\Category;

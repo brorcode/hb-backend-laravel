@@ -159,14 +159,6 @@ class TagUpsertTest extends TestCase
         $response->assertExactJson([
             'message' => 'Тег создан',
         ]);
-
-        // This line added because when down migrations are executed
-        // it returns an error because in the 2020_11_23_010507_drop_tag_name_unique.php
-        // down tries to return back unique tag name key. And as in the test we check two
-        // users can create same tag name we have an issue:
-        // Duplicate entry 'tag 1' for key 'tags_name_unique'
-        // (Connection: mariadb, SQL: alter table `tags` add unique `tags_name_unique`(`name`))
-        Tag::query()->delete();
     }
 
     public static function invalidTagDataProvider(): array

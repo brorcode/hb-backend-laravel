@@ -37,14 +37,6 @@ class Tag extends Model
         static::addGlobalScope(new OwnerScope);
     }
 
-    public static function findByName(string $name): ?self
-    {
-        return self::query()
-            ->where('name', $name)
-            ->first()
-        ;
-    }
-
     public function transactions(): BelongsToMany
     {
         return $this->belongsToMany(Transaction::class);

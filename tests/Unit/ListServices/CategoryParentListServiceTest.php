@@ -5,13 +5,13 @@ namespace Tests\Unit\ListServices;
 use App\Http\Requests\Api\v1\ListRequest;
 use App\Models\Category;
 use App\Services\Category\CategoryParentListService;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class CategoryParentListServiceTest extends TestCase
 {
-    use RefreshDatabase;
+    use DatabaseMigrations;
 
     public function setUp(): void
     {
