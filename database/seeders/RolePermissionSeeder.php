@@ -47,8 +47,6 @@ class RolePermissionSeeder extends Seeder
                 Permission::NAME_TAGS_EDIT,
                 Permission::NAME_CATEGORY_POINTERS_VIEW,
                 Permission::NAME_CATEGORY_POINTERS_EDIT,
-                Permission::NAME_PROFILE_VIEW,
-                Permission::NAME_PROFILE_EDIT,
             ],
             Role::NAME_USER => [
                 Permission::NAME_TRANSACTIONS_VIEW,
@@ -61,8 +59,6 @@ class RolePermissionSeeder extends Seeder
                 Permission::NAME_TAGS_EDIT,
                 Permission::NAME_CATEGORY_POINTERS_VIEW,
                 Permission::NAME_CATEGORY_POINTERS_EDIT,
-                Permission::NAME_PROFILE_VIEW,
-                Permission::NAME_PROFILE_EDIT,
             ],
             Role::NAME_DEMO_USER => [
                 Permission::NAME_TRANSACTIONS_VIEW,
@@ -70,7 +66,6 @@ class RolePermissionSeeder extends Seeder
                 Permission::NAME_ACCOUNTS_VIEW,
                 Permission::NAME_TAGS_VIEW,
                 Permission::NAME_CATEGORY_POINTERS_VIEW,
-                Permission::NAME_PROFILE_VIEW,
             ],
         ];
 

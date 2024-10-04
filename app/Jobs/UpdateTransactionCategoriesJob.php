@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Exceptions\SystemException;
 use App\Models\Category;
 use App\Models\Transaction;
 use App\Models\User;
@@ -24,8 +25,7 @@ class UpdateTransactionCategoriesJob implements ShouldQueue
     {
         $this->user = $user;
         $this->categoryPointerService = CategoryPointerService::create();
-        // @todo do we need a custom long-running queue?
-        // $this->onQueue('long-running');
+        $this->onQueue('long-running');
     }
 
     public function tags(): array

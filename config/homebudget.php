@@ -2,5 +2,6 @@
 
 return [
     'chunk' => 1000,
-    'demo_user_email' => env('DEMO_USER_EMAIL', 'test@example.com'),
+    'super_user_email' => env('SUPER_USER_EMAIL', ''),
+    'demo_user_email' => env('DEMO_USER_EMAIL', ''),
 ];

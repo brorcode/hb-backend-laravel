@@ -5,7 +5,6 @@ use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
-use App\Models\Permission;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'api/v1', 'as' => 'api.v1.'], function () {
@@ -27,7 +26,7 @@ Route::group(['prefix' => 'api/v1', 'as' => 'api.v1.'], function () {
 });
 
 Route::get('/verify-email/{id}/{hash}', VerifyEmailController::class)
-    ->middleware(['auth', 'permission:'.Permission::NAME_PROFILE_EDIT, 'signed', 'throttle:6,1'])
+    ->middleware(['auth', 'signed', 'throttle:6,1'])
     ->name('verification.verify');
 
 Route::post('/reset-password', [NewPasswordController::class, 'store'])

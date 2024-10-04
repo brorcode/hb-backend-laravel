@@ -85,6 +85,7 @@ return [
 
     'waits' => [
         'redis:default' => 60,
+        'redis-long-running:long-running' => env('HORIZON_TIMEOUT_LONG_RUNNING', 600),
     ],
 
     /*
@@ -190,7 +191,22 @@ return [
             'maxJobs' => 0,
             'memory' => 128,
             'tries' => 1,
+            // 1 minute
             'timeout' => 60,
+            'nice' => 0,
+        ],
+        'supervisor-2-long-running' => [
+            'connection' => 'redis-long-running',
+            'queue' => ['long-running'],
+            'balance' => 'auto',
+            'autoScalingStrategy' => 'time',
+            'maxProcesses' => 1,
+            'maxTime' => 0,
+            'maxJobs' => 0,
+            'memory' => 128,
+            'tries' => 1,
+            // 10 minutes
+            'timeout' => env('HORIZON_TIMEOUT_LONG_RUNNING', 600),
             'nice' => 0,
         ],
     ],
@@ -202,10 +218,18 @@ return [
                 'balanceMaxShift' => 1,
                 'balanceCooldown' => 3,
             ],
+            'supervisor-2-long-running' => [
+                'maxProcesses' => 10,
+                'balanceMaxShift' => 1,
+                'balanceCooldown' => 3,
+            ],
         ],
 
         'local' => [
             'supervisor-1' => [
+                'maxProcesses' => 3,
+            ],
+            'supervisor-2-long-running' => [
                 'maxProcesses' => 3,
             ],
         ],

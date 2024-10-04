@@ -19,8 +19,6 @@ class Permission extends BasePermission
     const NAME_HORIZON_VIEW = 'horizon view';
     const NAME_USERS_VIEW = 'users view';
     const NAME_USERS_EDIT = 'users edit';
-    const NAME_PROFILE_VIEW = 'profile view';
-    const NAME_PROFILE_EDIT = 'profile edit';
     const NAME_TRANSACTIONS_VIEW = 'transactions view';
     const NAME_TRANSACTIONS_EDIT = 'transactions edit';
     const NAME_CATEGORIES_VIEW = 'categories view';
@@ -46,7 +44,5 @@ class Permission extends BasePermission
         self::NAME_TAGS_EDIT,
         self::NAME_CATEGORY_POINTERS_VIEW,
         self::NAME_CATEGORY_POINTERS_EDIT,
-        self::NAME_PROFILE_VIEW,
-        self::NAME_PROFILE_EDIT,
     ];
 }

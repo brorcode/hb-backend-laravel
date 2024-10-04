@@ -99,6 +99,9 @@ Route::group(['prefix' => 'v1', 'as' => 'api.v1.'], function () {
                 Route::post('/tags', [DictionaryController::class, 'tags'])->name('tags')
                     ->middleware('permission:'.Permission::NAME_TAGS_VIEW)
                 ;
+                Route::post('/transactions/types', [DictionaryController::class, 'transactionTypes'])->name('transactions.types')
+                    ->middleware('permission:'.Permission::NAME_TRANSACTIONS_VIEW)
+                ;
             });
 
             Route::group(['prefix' => 'category-pointers', 'as' => 'category-pointers.'], function () {
@@ -119,17 +122,12 @@ Route::group(['prefix' => 'v1', 'as' => 'api.v1.'], function () {
         });
 
         Route::group(['prefix' => 'profile', 'as' => 'user.profile.'], function () {
-            Route::group(['middleware' => 'permission:'.Permission::NAME_PROFILE_VIEW], function () {
-                Route::get('/', [UserProfileController::class, 'index'])->name('index');
-            });
-
-            Route::group(['middleware' => 'permission:'.Permission::NAME_PROFILE_EDIT], function () {
-                Route::put('/', [UserProfileController::class, 'update'])->name('update');
-                Route::post('/email/verification', [UserProfileController::class, 'emailVerification'])
-                    ->middleware(['throttle:6,1'])
-                    ->name('email.verification')
-                ;
-            });
+            Route::get('/', [UserProfileController::class, 'index'])->name('index');
+            Route::put('/', [UserProfileController::class, 'update'])->name('update');
+            Route::post('/email/verification', [UserProfileController::class, 'emailVerification'])
+                ->middleware(['throttle:6,1'])
+                ->name('email.verification')
+            ;
         });
     });
 });

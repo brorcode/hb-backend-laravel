@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api\v1;
 use App\Models\Transaction;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\DB;
 
 class DashboardController extends ApiController
 {
@@ -24,6 +23,7 @@ class DashboardController extends ApiController
         return response()->json([
             'data' => Transaction::query()
                 ->where('is_debit', true)
+                ->where('is_transfer', false)
                 ->whereBetween('created_at', [$monthStart, $monthEnd])
                 ->sum('amount') / 100
             ,
@@ -38,6 +38,7 @@ class DashboardController extends ApiController
         return response()->json([
             'data' => Transaction::query()
                 ->where('is_debit', false)
+                    ->where('is_transfer', false)
                 ->whereBetween('created_at', [$monthStart, $monthEnd])
                 ->sum('amount') / 100
             ,

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\v1;
 use App\Models\Account;
 use App\Models\Category;
 use App\Models\Tag;
+use App\Models\Transaction;
 use App\Services\DictionaryService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -43,5 +44,10 @@ class DictionaryController extends ApiController
         $builder = Tag::query()->select(['id', 'name']);
 
         return $service->getItems($builder, $request);
+    }
+
+    public function transactionTypes(Request $request, DictionaryService $service): JsonResponse
+    {
+        return response()->json(Transaction::TYPES);
     }
 }
