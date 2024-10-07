@@ -27,6 +27,8 @@ class Permission extends BasePermission
     const NAME_ACCOUNTS_EDIT = 'accounts edit';
     const NAME_TAGS_VIEW = 'tags view';
     const NAME_TAGS_EDIT = 'tags edit';
+    const NAME_LOANS_VIEW = 'loans view';
+    const NAME_LOANS_EDIT = 'loans edit';
     const NAME_CATEGORY_POINTERS_VIEW = 'category pointers view';
     const NAME_CATEGORY_POINTERS_EDIT = 'category pointers edit';
 
@@ -42,6 +44,8 @@ class Permission extends BasePermission
         self::NAME_ACCOUNTS_EDIT,
         self::NAME_TAGS_VIEW,
         self::NAME_TAGS_EDIT,
+        self::NAME_LOANS_VIEW,
+        self::NAME_LOANS_EDIT,
         self::NAME_CATEGORY_POINTERS_VIEW,
         self::NAME_CATEGORY_POINTERS_EDIT,
     ];

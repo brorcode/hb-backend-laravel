@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Scopes\OwnerScope;
 use App\Observers\LoanObserver;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -37,7 +38,7 @@ class Loan extends Model
         self::TYPE_ID_DEBIT => 'Мы должны',
     ];
 
-    protected $dates = [
+    protected array $dates = [
         'deadline_on',
     ];
 
@@ -51,14 +52,15 @@ class Loan extends Model
         static::addGlobalScope(new OwnerScope);
     }
 
-    public function getAmountDecimalAttribute(): string
+    /**
+     * Interact with the amount value.
+     */
+    protected function amount(): Attribute
     {
-        return $this->amount / 100;
-    }
-
-    public function setAmountDecimalAttribute(string $value): void
-    {
-        $this->attributes['amount'] = (int) ($value * 100);
+        return Attribute::make(
+            get: fn ($value) => $value / 100,
+            set: fn ($value) => (int) floor($value * 100),
+        );
     }
 
     public function users(): BelongsToMany

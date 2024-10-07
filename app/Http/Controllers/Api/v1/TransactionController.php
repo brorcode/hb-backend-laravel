@@ -9,6 +9,7 @@ use App\Http\Resources\Api\v1\Transaction\TransactionCollectionResource;
 use App\Http\Resources\Api\v1\Transaction\TransactionSingleResource;
 use App\Models\Transaction;
 use App\Services\Transaction\TransactionListService;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -31,7 +32,7 @@ class TransactionController extends ApiController
         $transaction->amount = $request->amount;
         $transaction->category_id = $request->category_id;
         $transaction->account_id = $request->account_id;
-        $transaction->created_at = $request->created_at;
+        $transaction->created_at = Carbon::parse($request->created_at);
         $transaction->is_debit = $request->is_debit;
         $transaction->is_transfer = $request->is_transfer;
         $transaction->save();
@@ -49,7 +50,7 @@ class TransactionController extends ApiController
         $transaction->amount = $request->amount;
         $transaction->category_id = $request->category_id;
         $transaction->account_id = $request->account_id;
-        $transaction->created_at = $request->created_at;
+        $transaction->created_at = Carbon::parse($request->created_at);
         $transaction->is_debit = $request->is_debit;
         $transaction->is_transfer = $request->is_transfer;
         $transaction->save();

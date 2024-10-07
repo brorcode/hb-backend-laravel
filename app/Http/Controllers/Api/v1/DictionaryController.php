@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Models\Account;
 use App\Models\Category;
+use App\Models\Loan;
 use App\Models\Tag;
 use App\Models\Transaction;
 use App\Services\DictionaryService;
@@ -46,8 +47,13 @@ class DictionaryController extends ApiController
         return $service->getItems($builder, $request);
     }
 
-    public function transactionTypes(Request $request, DictionaryService $service): JsonResponse
+    public function transactionTypes(): JsonResponse
     {
         return response()->json(Transaction::TYPES);
+    }
+
+    public function loanTypes(): JsonResponse
+    {
+        return response()->json(Loan::TYPES);
     }
 }

@@ -6,13 +6,12 @@ use App\Http\Requests\Api\v1\ApiRequest;
 use App\Models\Account;
 use App\Models\Category;
 use App\Rules\ExistForUserRule;
-use Carbon\Carbon;
 
 /**
  * @property-read string amount
  * @property-read int category_id
  * @property-read int account_id
- * @property-read Carbon created_at
+ * @property-read string created_at
  * @property-read bool is_debit
  * @property-read bool is_transfer
  */

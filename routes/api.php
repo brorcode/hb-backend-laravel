@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\v1\TransactionController;
 use App\Http\Controllers\Api\v1\UserController;
 use App\Http\Controllers\Api\v1\UserProfileController;
 use App\Http\Controllers\Api\v1\DashboardController;
+use App\Http\Controllers\Api\v1\LoanController;
 use App\Models\Permission;
 use Illuminate\Support\Facades\Route;
 
@@ -102,6 +103,9 @@ Route::group(['prefix' => 'v1', 'as' => 'api.v1.'], function () {
                 Route::post('/transactions/types', [DictionaryController::class, 'transactionTypes'])->name('transactions.types')
                     ->middleware('permission:'.Permission::NAME_TRANSACTIONS_VIEW)
                 ;
+                Route::post('/loans/types', [DictionaryController::class, 'loanTypes'])->name('loans.types')
+                    ->middleware('permission:'.Permission::NAME_LOANS_VIEW)
+                ;
             });
 
             Route::group(['prefix' => 'category-pointers', 'as' => 'category-pointers.'], function () {
@@ -111,6 +115,19 @@ Route::group(['prefix' => 'v1', 'as' => 'api.v1.'], function () {
                 Route::post('/save', [CategoryPointerController::class, 'save'])->name('save')
                     ->middleware('permission:'.Permission::NAME_CATEGORY_POINTERS_EDIT)
                 ;
+            });
+
+            Route::group(['prefix' => 'loans', 'as' => 'loans.'], function () {
+                Route::group(['middleware' => 'permission:'.Permission::NAME_LOANS_VIEW], function () {
+                    Route::post('/', [LoanController::class, 'index'])->name('index');
+                    Route::get('/{loan}', [LoanController::class, 'show'])->name('show');
+                });
+
+                Route::group(['middleware' => 'permission:'.Permission::NAME_LOANS_EDIT], function () {
+                    Route::post('/store', [LoanController::class, 'store'])->name('store');
+                    Route::put('/{loan}', [LoanController::class, 'update'])->name('update');
+                    Route::delete('/{loan}', [LoanController::class, 'destroy'])->name('destroy');
+                });
             });
         });
 
