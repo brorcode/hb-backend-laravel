@@ -26,6 +26,18 @@ class TransactionListService extends AbstractListService
 
     protected function applySpecificFilters(Builder $builder): void
     {
+        if (isset($this->request->filters['type_id'])) {
+            match($this->request->filters['type_id']['value']) {
+                Transaction::TYPE_ID_DEBIT => $builder->where('is_debit', true)
+                    ->where('is_transfer', false)
+                ,
+                Transaction::TYPE_ID_CREDIT => $builder->where('is_debit', false)
+                    ->where('is_transfer', false)
+                ,
+                Transaction::TYPE_ID_TRANSFER => $builder->where('is_transfer', true),
+            };
+        }
+
         if (isset($this->request->filters['amount'])) {
             $builder->where('amount', $this->request->filters['amount']['value'] * 100);
         }

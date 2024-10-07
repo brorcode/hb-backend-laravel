@@ -39,6 +39,16 @@ class Transaction extends Model
 {
     use HasFactory;
 
+    const TYPE_ID_DEBIT = 1;
+    const TYPE_ID_CREDIT = 2;
+    const TYPE_ID_TRANSFER = 3;
+
+    const TYPES = [
+        self::TYPE_ID_DEBIT => 'Доход',
+        self::TYPE_ID_CREDIT => 'Расход',
+        self::TYPE_ID_TRANSFER => 'Перевод',
+    ];
+
     protected $casts = [
         'is_debit' => 'bool',
         'is_transfer' => 'bool',

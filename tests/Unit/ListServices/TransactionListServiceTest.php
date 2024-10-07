@@ -49,11 +49,14 @@ class TransactionListServiceTest extends TestCase
         $this->assertCount($count, Transaction::all());
         $this->assertCount(1, $data);
 
-
         $expectedValue = match($filterKey) {
             'categories', 'accounts', 'tags' => $filters[$filterKey]['value'][0]['id'],
             'created_at_after' => Carbon::parse($filters[$filterKey]['value'])->addDay()->format('Y-m-d 00:00:00'),
             'created_at_before' => Carbon::parse($filters[$filterKey]['value'])->subDay()->format('Y-m-d 00:00:00'),
+            'type_id' => match($filters[$filterKey]['value']) {
+                Transaction::TYPE_ID_DEBIT, Transaction::TYPE_ID_TRANSFER => true,
+                default => false,
+            },
             default => $filters[$filterKey]['value'],
         };
 
@@ -181,6 +184,52 @@ class TransactionListServiceTest extends TestCase
                 'filterKey' => 'created_at_before',
                 'fieldKey' => 'created_at',
                 'filters' => ['created_at_before' => ['value' => now()]],
+            ],
+            'filter_8' => [
+                'count' => 2,
+                'sequence' => [
+                    [
+                        'is_debit' => true,
+                        'is_transfer' => false,
+                    ],
+                    [
+                        'is_debit' => false,
+                        'is_transfer' => false,
+                    ]
+                ],
+                'filterKey' => 'type_id',
+                'fieldKey' => 'is_debit',
+                'filters' => ['type_id' => ['value' => Transaction::TYPE_ID_DEBIT]],
+            ],
+            'filter_9' => [
+                'count' => 2,
+                'sequence' => [
+                    [
+                        'is_debit' => true,
+                        'is_transfer' => false,
+                    ],
+                    [
+                        'is_debit' => false,
+                        'is_transfer' => false,
+                    ]
+                ],
+                'filterKey' => 'type_id',
+                'fieldKey' => 'is_debit',
+                'filters' => ['type_id' => ['value' => Transaction::TYPE_ID_CREDIT]],
+            ],
+            'filter_10' => [
+                'count' => 2,
+                'sequence' => [
+                    [
+                        'is_transfer' => true,
+                    ],
+                    [
+                        'is_transfer' => false,
+                    ]
+                ],
+                'filterKey' => 'type_id',
+                'fieldKey' => 'is_transfer',
+                'filters' => ['type_id' => ['value' => Transaction::TYPE_ID_TRANSFER]],
             ],
         ];
     }
