@@ -43,7 +43,7 @@ class LoanListTest extends TestCase
                     'name' => Loan::TYPES[$loan->type_id],
                 ],
                 'amount' => 30,
-                'amount_left' => 30 / 100,
+                'amount_left' => 30,
                 'deadline_on' => $loan->deadline_on->toDateString(),
                 'created_at' => $loan->created_at,
                 'updated_at' => $loan->updated_at,

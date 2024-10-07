@@ -24,6 +24,7 @@ class LoanServiceTest extends TestCase
 
     public function testCanGetDebitLoanAmountLeft(): void
     {
+        /** @var Loan $loan */
         $loan = Loan::factory()
             ->state([
                 'type_id' => Loan::TYPE_ID_DEBIT,

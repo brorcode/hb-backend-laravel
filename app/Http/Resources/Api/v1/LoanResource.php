@@ -27,7 +27,7 @@ class LoanResource extends JsonResource
                 'name' => Loan::TYPES[$loan->type_id],
             ],
             'amount' => $loan->amount,
-            'amount_left' => $service->getAmountLeft($loan) / 100,
+            'amount_left' => $service->getAmountLeft($loan),
             'deadline_on' => $loan->deadline_on,
             'created_at' => $loan->created_at,
             'updated_at' => $loan->updated_at,
