@@ -47,6 +47,13 @@ class DictionaryController extends ApiController
         return $service->getItems($builder, $request);
     }
 
+    public function loans(Request $request, DictionaryService $service): JsonResponse
+    {
+        $builder = Loan::query()->select(['id', 'name']);
+
+        return $service->getItems($builder, $request);
+    }
+
     public function transactionTypes(): JsonResponse
     {
         return response()->json(Transaction::TYPES);

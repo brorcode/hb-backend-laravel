@@ -28,6 +28,7 @@ class TransactionListServiceTest extends TestCase
         $factory = Transaction::factory()
             ->count($count)
             ->has(Tag::factory())
+            ->withLoan()
         ;
         if (count($sequence) > 0) {
             $factory = $factory->sequence(...$sequence);
@@ -50,7 +51,7 @@ class TransactionListServiceTest extends TestCase
         $this->assertCount(1, $data);
 
         $expectedValue = match($filterKey) {
-            'categories', 'accounts', 'tags' => $filters[$filterKey]['value'][0]['id'],
+            'categories', 'accounts', 'loans', 'tags' => $filters[$filterKey]['value'][0]['id'],
             'created_at_after' => Carbon::parse($filters[$filterKey]['value'])->addDay()->format('Y-m-d 00:00:00'),
             'created_at_before' => Carbon::parse($filters[$filterKey]['value'])->subDay()->format('Y-m-d 00:00:00'),
             'type_id' => match($filters[$filterKey]['value']) {
@@ -230,6 +231,13 @@ class TransactionListServiceTest extends TestCase
                 'filterKey' => 'type_id',
                 'fieldKey' => 'is_transfer',
                 'filters' => ['type_id' => ['value' => Transaction::TYPE_ID_TRANSFER]],
+            ],
+            'filter_11' => [
+                'count' => 2,
+                'sequence' => [],
+                'filterKey' => 'loans',
+                'fieldKey' => 'loan_id',
+                'filters' => ['loans' => ['value' => [['id' => 2]]]],
             ],
         ];
     }

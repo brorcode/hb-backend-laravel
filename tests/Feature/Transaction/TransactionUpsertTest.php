@@ -4,6 +4,7 @@ namespace Tests\Feature\Transaction;
 
 use App\Models\Account;
 use App\Models\Category;
+use App\Models\Loan;
 use App\Models\Transaction;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -36,6 +37,7 @@ class TransactionUpsertTest extends TestCase
                 'amount' => 123,
                 'category' => $transaction->category->only(['id', 'name']),
                 'account' => $transaction->account->only(['id', 'name']),
+                'loan' => null,
                 'tags' => $transaction->tags->pluck('name')->toArray(),
                 'is_debit' => true,
                 'is_transfer' => $transaction->is_transfer,
@@ -50,11 +52,13 @@ class TransactionUpsertTest extends TestCase
         $this->assertCount(0, Transaction::all());
         $category = Category::factory()->withParentCategory()->create();
         $account = Account::factory()->create();
+        $loan = Loan::factory()->create();
 
         $response = $this->postJson(route('api.v1.transactions.store'), [
             'amount' => 1000,
             'category_id' => $category->getKey(),
             'account_id' => $account->getKey(),
+            'loan_id' => $loan->getKey(),
             'created_at' => now(),
             'is_debit' => false,
             'is_transfer' => false,
@@ -65,6 +69,7 @@ class TransactionUpsertTest extends TestCase
             'amount' => -100000,
             'category_id' => $category->getKey(),
             'account_id' => $account->getKey(),
+            'loan_id' => $loan->getKey(),
             'is_debit' => false,
             'is_transfer' => false,
         ]);
@@ -94,12 +99,14 @@ class TransactionUpsertTest extends TestCase
 
         $category = Category::factory()->withParentCategory()->create();
         $account = Account::factory()->create();
+        $loan = Loan::factory()->create();
 
         $this->assertCount(1, Transaction::all());
         $this->assertDatabaseMissing((new Transaction())->getTable(), [
             'amount' => 10012,
             'category_id' => $category->getKey(),
             'account_id' => $account->getKey(),
+            'loan_id' => $loan->getKey(),
             'is_debit' => true,
             'is_transfer' => false,
         ]);
@@ -108,6 +115,7 @@ class TransactionUpsertTest extends TestCase
             'amount' => 100.12,
             'category_id' => $category->getKey(),
             'account_id' => $account->getKey(),
+            'loan_id' => $loan->getKey(),
             'created_at' => now(),
             'is_debit' => true,
             'is_transfer' => false,
@@ -118,6 +126,7 @@ class TransactionUpsertTest extends TestCase
             'amount' => 10012,
             'category_id' => $category->getKey(),
             'account_id' => $account->getKey(),
+            'loan_id' => $loan->getKey(),
             'is_debit' => true,
             'is_transfer' => false,
         ]);
@@ -132,6 +141,7 @@ class TransactionUpsertTest extends TestCase
                 'amount' => 100.12,
                 'category' => $category->only(['id', 'name']),
                 'account' => $account->only(['id', 'name']),
+                'loan' => $loan->only(['id', 'name']),
                 'tags' => [],
                 'is_debit' => true,
                 'is_transfer' => false,

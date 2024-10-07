@@ -27,6 +27,7 @@ class TransactionListTest extends TestCase
                 'amount' => $transaction->amount,
                 'category' => $transaction->category->only(['id', 'name']),
                 'account' => $transaction->account->only(['id', 'name']),
+                'loan' => null,
                 'tags' => $transaction->tags->pluck('name')->toArray(),
                 'is_debit' => $transaction->is_debit,
                 'is_transfer' => $transaction->is_transfer,

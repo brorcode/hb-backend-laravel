@@ -35,6 +35,8 @@ class TransactionController extends ApiController
         $transaction->created_at = Carbon::parse($request->created_at);
         $transaction->is_debit = $request->is_debit;
         $transaction->is_transfer = $request->is_transfer;
+        $transaction->loan_id = $request->loan_id;
+
         $transaction->save();
 
         return response()->json(['message' => 'Транзакция создана'], Response::HTTP_CREATED);
@@ -53,6 +55,8 @@ class TransactionController extends ApiController
         $transaction->created_at = Carbon::parse($request->created_at);
         $transaction->is_debit = $request->is_debit;
         $transaction->is_transfer = $request->is_transfer;
+        $transaction->loan_id = $request->loan_id;
+
         $transaction->save();
 
         return $this->response(TransactionSingleResource::make($transaction), 'Транзакция обновлена');

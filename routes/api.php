@@ -103,6 +103,9 @@ Route::group(['prefix' => 'v1', 'as' => 'api.v1.'], function () {
                 Route::post('/transactions/types', [DictionaryController::class, 'transactionTypes'])->name('transactions.types')
                     ->middleware('permission:'.Permission::NAME_TRANSACTIONS_VIEW)
                 ;
+                Route::post('/loans', [DictionaryController::class, 'loans'])->name('loans')
+                    ->middleware('permission:'.Permission::NAME_LOANS_VIEW)
+                ;
                 Route::post('/loans/types', [DictionaryController::class, 'loanTypes'])->name('loans.types')
                     ->middleware('permission:'.Permission::NAME_LOANS_VIEW)
                 ;

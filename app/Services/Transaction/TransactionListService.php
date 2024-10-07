@@ -18,7 +18,7 @@ class TransactionListService extends AbstractListService
     {
         $builder = parent::getBuilder();
 
-        $builder->with(['category', 'account', 'tags']);
+        $builder->with(['category', 'account', 'loan', 'tags']);
 
         return $builder;
     }
@@ -54,6 +54,10 @@ class TransactionListService extends AbstractListService
             $builder->whereHas('tags', function(Builder $query) {
                 $query->whereIn('tags.id', array_column($this->request->filters['tags']['value'], 'id'));
             });
+        }
+
+        if (isset($this->request->filters['loans'])) {
+            $builder->whereIn('loan_id', array_column($this->request->filters['loans']['value'], 'id'));
         }
 
         if (isset($this->request->filters['created_at_after'])) {

@@ -21,6 +21,7 @@ class TransactionResource extends JsonResource
             'id' => $transaction->getKey(),
             'category' => $transaction->category->only(['id', 'name']),
             'account' => $transaction->account->only(['id', 'name']),
+            'loan' => $transaction->loan?->only(['id', 'name']),
             'tags' => $transaction->tags->pluck('name')->toArray(),
             'is_debit' => $transaction->is_debit,
             'is_transfer' => $transaction->is_transfer,
