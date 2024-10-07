@@ -75,4 +75,11 @@ class CategoryController extends ApiController
 
         return response()->json(['message' => 'Категория удалена']);
     }
+
+    public function destroyChild(int $parentCategoryId, Category $childCategory): JsonResponse
+    {
+        $childCategory->delete();
+
+        return response()->json(['message' => 'Категория удалена']);
+    }
 }

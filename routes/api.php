@@ -41,6 +41,7 @@ Route::group(['prefix' => 'v1', 'as' => 'api.v1.'], function () {
                     Route::post('/store', [CategoryController::class, 'store'])->name('store');
                     Route::put('/{category}', [CategoryController::class, 'update'])->name('update');
                     Route::delete('/{category}', [CategoryController::class, 'destroy'])->name('destroy');
+                    Route::delete('/{parent_category_id}/child/{child_category}', [CategoryController::class, 'destroyChild'])->name('destroy.child');
                 });
             });
 
