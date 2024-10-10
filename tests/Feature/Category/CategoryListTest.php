@@ -24,8 +24,8 @@ class CategoryListTest extends TestCase
         Category::factory(11)->withParentCategory()
             ->has(Transaction::factory()->count(3)->sequence(
                 ['amount' => 200, 'is_debit' => true, 'is_transfer' => false],
-                ['amount' => 100, 'is_debit' => false, 'is_transfer' => false],
-                ['amount' => 150, 'is_debit' => false, 'is_transfer' => true],
+                ['amount' => -100, 'is_debit' => false, 'is_transfer' => false],
+                ['amount' => -150, 'is_debit' => false, 'is_transfer' => true],
             ))
             ->create()
         ;
@@ -76,8 +76,8 @@ class CategoryListTest extends TestCase
         $childCategory = Category::factory()->withParentCategory()
             ->has(Transaction::factory()->count(3)->sequence(
                 ['amount' => 200, 'is_debit' => true, 'is_transfer' => false],
-                ['amount' => 100, 'is_debit' => false, 'is_transfer' => false],
-                ['amount' => 150, 'is_debit' => false, 'is_transfer' => true],
+                ['amount' => -100, 'is_debit' => false, 'is_transfer' => false],
+                ['amount' => -150, 'is_debit' => false, 'is_transfer' => true],
             ))
             ->create()
         ;

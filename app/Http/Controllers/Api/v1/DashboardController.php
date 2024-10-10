@@ -2,65 +2,37 @@
 
 namespace App\Http\Controllers\Api\v1;
 
-use App\Models\Transaction;
-use Carbon\Carbon;
+use App\Http\Requests\Api\v1\DashboardRequest;
+use App\Services\DashboardService;
 use Illuminate\Http\JsonResponse;
 
 class DashboardController extends ApiController
 {
-    public function balance(): JsonResponse
+    public function balance(DashboardService $service): JsonResponse
     {
         return response()->json([
-            'data' => Transaction::query()->sum('amount') / 100,
+            'data' => $service->getBalance(),
         ]);
     }
 
-    public function debitByMonth(): JsonResponse
+    public function debitByMonth(DashboardRequest $request, DashboardService $service): JsonResponse
     {
-        $monthStart = Carbon::now()->startOfMonth();
-        $monthEnd = Carbon::now()->endOfMonth();
-
         return response()->json([
-            'data' => Transaction::query()
-                ->where('is_debit', true)
-                ->where('is_transfer', false)
-                ->whereBetween('created_at', [$monthStart, $monthEnd])
-                ->sum('amount') / 100
-            ,
+            'data' => $service->getTransactionsByType($request, true),
         ]);
     }
 
-    public function creditByMonth(): JsonResponse
+    public function creditByMonth(DashboardRequest $request, DashboardService $service): JsonResponse
     {
-        $monthStart = Carbon::now()->startOfMonth();
-        $monthEnd = Carbon::now()->endOfMonth();
-
         return response()->json([
-            'data' => Transaction::query()
-                ->where('is_debit', false)
-                    ->where('is_transfer', false)
-                ->whereBetween('created_at', [$monthStart, $monthEnd])
-                ->sum('amount') / 100
-            ,
+            'data' => $service->getTransactionsByType($request, false),
         ]);
     }
 
-    public function totalByMonth(): JsonResponse
+    public function totalByMonth(DashboardRequest $request, DashboardService $service): JsonResponse
     {
-        $monthStart = Carbon::now()->startOfMonth();
-        $monthEnd = Carbon::now()->endOfMonth();
-
         return response()->json([
-            'data' => Transaction::query()
-                ->whereBetween('created_at', [$monthStart, $monthEnd])
-                ->sum('amount') / 100
-            ,
-            // 'total' => Transaction::query()->select(DB::raw('SUM(amount) as total_amount, MONTH(created_at) as month, YEAR(created_at) as year'))
-            //     ->groupBy('year', 'month')
-            //     ->orderBy('year', 'desc')
-            //     ->orderBy('month', 'desc')
-            //     ->limit(10)
-            //     ->get(),
+            'data' => $service->getTotalByMonth($request),
         ]);
     }
 }
