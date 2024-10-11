@@ -56,7 +56,11 @@ class DictionaryController extends ApiController
 
     public function transactionTypes(): JsonResponse
     {
-        return response()->json(Transaction::TYPES);
+        $types = collect(Transaction::TYPES)->map(function ($type, $key) {
+            return ['id' => $key, 'name' => $type];
+        });
+
+        return response()->json($types->values());
     }
 
     public function loanTypes(): JsonResponse

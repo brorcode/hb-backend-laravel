@@ -54,7 +54,7 @@ class TransactionListServiceTest extends TestCase
             'categories', 'accounts', 'loans', 'tags' => $filters[$filterKey]['value'][0]['id'],
             'created_at_after' => Carbon::parse($filters[$filterKey]['value'])->addDay()->format('Y-m-d 00:00:00'),
             'created_at_before' => Carbon::parse($filters[$filterKey]['value'])->subDay()->format('Y-m-d 00:00:00'),
-            'type_id' => match($filters[$filterKey]['value']) {
+            'type' => match($filters[$filterKey]['value']['id']) {
                 Transaction::TYPE_ID_DEBIT, Transaction::TYPE_ID_TRANSFER => true,
                 default => false,
             },
@@ -198,9 +198,12 @@ class TransactionListServiceTest extends TestCase
                         'is_transfer' => false,
                     ]
                 ],
-                'filterKey' => 'type_id',
+                'filterKey' => 'type',
                 'fieldKey' => 'is_debit',
-                'filters' => ['type_id' => ['value' => Transaction::TYPE_ID_DEBIT]],
+                'filters' => ['type' => ['value' => [
+                    'id' => Transaction::TYPE_ID_DEBIT,
+                    'name' => Transaction::TYPES[Transaction::TYPE_ID_DEBIT],
+                ]]],
             ],
             'filter_9' => [
                 'count' => 2,
@@ -214,9 +217,12 @@ class TransactionListServiceTest extends TestCase
                         'is_transfer' => false,
                     ]
                 ],
-                'filterKey' => 'type_id',
+                'filterKey' => 'type',
                 'fieldKey' => 'is_debit',
-                'filters' => ['type_id' => ['value' => Transaction::TYPE_ID_CREDIT]],
+                'filters' => ['type' => ['value' => [
+                    'id' => Transaction::TYPE_ID_CREDIT,
+                    'name' => Transaction::TYPES[Transaction::TYPE_ID_CREDIT],
+                ]]],
             ],
             'filter_10' => [
                 'count' => 2,
@@ -228,9 +234,12 @@ class TransactionListServiceTest extends TestCase
                         'is_transfer' => false,
                     ]
                 ],
-                'filterKey' => 'type_id',
+                'filterKey' => 'type',
                 'fieldKey' => 'is_transfer',
-                'filters' => ['type_id' => ['value' => Transaction::TYPE_ID_TRANSFER]],
+                'filters' => ['type' => ['value' => [
+                    'id' => Transaction::TYPE_ID_TRANSFER,
+                    'name' => Transaction::TYPES[Transaction::TYPE_ID_TRANSFER],
+                ]]],
             ],
             'filter_11' => [
                 'count' => 2,

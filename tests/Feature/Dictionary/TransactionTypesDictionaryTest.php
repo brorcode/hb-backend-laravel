@@ -22,6 +22,8 @@ class TransactionTypesDictionaryTest extends TestCase
         $response = $this->postJson(route('api.v1.dictionary.transactions.types'));
 
         $response->assertOk();
-        $response->assertExactJson(Transaction::TYPES);
+        $response->assertExactJson(collect(Transaction::TYPES)->map(function ($type, $key) {
+            return ['id' => $key, 'name' => $type];
+        })->values()->toArray());
     }
 }
