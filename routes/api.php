@@ -137,9 +137,12 @@ Route::group(['prefix' => 'v1', 'as' => 'api.v1.'], function () {
 
         Route::group(['prefix' => 'dashboard', 'as' => 'dashboard.'], function () {
             Route::get('/balance', [DashboardController::class, 'balance'])->name('balance');
-            Route::post('/debit-by-month', [DashboardController::class, 'debitByMonth'])->name('debit-by-month');
-            Route::post('/credit-by-month', [DashboardController::class, 'creditByMonth'])->name('credit-by-month');
-            Route::post('/total-by-month', [DashboardController::class, 'totalByMonth'])->name('total-by-month');
+            Route::post('/debit-by-months', [DashboardController::class, 'debitByMonths'])->name('debit-by-months');
+            Route::post('/credit-by-months', [DashboardController::class, 'creditByMonths'])->name('credit-by-months');
+            Route::post('/total-by-months', [DashboardController::class, 'totalByMonths'])->name('total-by-months');
+
+            Route::post('/debit-by-categories', [DashboardController::class, 'debitByCategories'])->name('debit-by-categories');
+            Route::post('/credit-by-categories', [DashboardController::class, 'creditByCategories'])->name('credit-by-categories');
         });
 
         Route::group(['prefix' => 'profile', 'as' => 'user.profile.'], function () {

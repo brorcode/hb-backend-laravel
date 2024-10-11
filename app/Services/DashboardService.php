@@ -3,9 +3,11 @@
 namespace App\Services;
 
 use App\Http\Requests\Api\v1\DashboardRequest;
+use App\Models\Category;
 use App\Models\Transaction;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class DashboardService
 {
@@ -37,7 +39,7 @@ class DashboardService
         return $this->prepareResponse($data, $request);
     }
 
-    public function getTotalByMonth(DashboardRequest $request): Collection
+    public function getTotalByMonths(DashboardRequest $request): Collection
     {
         $builder = Transaction::query()
             ->selectRaw('SUM(amount) as total, DATE_FORMAT(created_at, "%Y %M") as month')
@@ -159,6 +161,8 @@ class DashboardService
 
     private function createResponse(Collection $items, string $chartDataKey, bool $positive = false): Collection
     {
+        $total = round($items->sum('total'), 2);
+
         $response = collect();
         $chat = collect();
         $chat->put('labels', $items->pluck('month')->values());
@@ -167,7 +171,38 @@ class DashboardService
         })->values());
         $response->put('data', $items->sortByDesc('id')->values());
         $response->put('chart', $chat);
+        $response->put('total', $total);
 
         return $response;
+    }
+
+    public function totalByCategories(DashboardRequest $request, bool $isDebit): Collection
+    {
+        $builder = Category::query()
+            ->select([
+                'categories.id',
+                'categories.name as title',
+                DB::raw('sum(transactions.amount) as total'),
+            ])
+            ->where('transactions.is_debit', $isDebit)
+            ->where('transactions.is_transfer', false)
+            ->whereNotNull('parent_id')
+            ->whereBetween('transactions.created_at', $this->getDatesFilter($request))
+            ->join('transactions', 'categories.id', '=', 'transactions.category_id')
+            ->groupBy(['categories.id', 'categories.name'])
+            ->orderBy('total', $isDebit ? 'desc' : 'asc')
+        ;
+
+        if ($request->category_count) {
+            $builder->limit($request->category_count);
+        }
+
+        return $builder->get()->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'title' => $item->title,
+                'total' => $item->total / 100,
+            ];
+        });
     }
 }

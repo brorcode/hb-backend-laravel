@@ -7,6 +7,7 @@ use Illuminate\Validation\Rule;
 
 /**
  * @property-read int|null months
+ * @property-read int|null category_count
  */
 class DashboardRequest extends ApiRequest
 {
@@ -14,6 +15,7 @@ class DashboardRequest extends ApiRequest
     {
         return [
             'months' => ['integer'],
+            'category_count' => ['integer'],
         ];
     }
 }

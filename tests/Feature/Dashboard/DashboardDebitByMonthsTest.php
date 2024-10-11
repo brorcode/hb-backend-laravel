@@ -7,7 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class DashboardTotalByMonthTest extends TestCase
+class DashboardDebitByMonthsTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -18,7 +18,7 @@ class DashboardTotalByMonthTest extends TestCase
         $this->userLogin();
     }
 
-    public function testCanSeeTotalAmountGroupedByMonth(): void
+    public function testCanSeeDebitAmountGroupedByCategories(): void
     {
         $now = Carbon::now();
         $oneMonthAgo = Carbon::now()->subMonth();
@@ -34,7 +34,7 @@ class DashboardTotalByMonthTest extends TestCase
             ->create()
         ;
 
-        $response = $this->postJson(route('api.v1.dashboard.total-by-month'));
+        $response = $this->postJson(route('api.v1.dashboard.debit-by-months'));
 
         $response->assertOk();
         $response->assertExactJson([
@@ -42,27 +42,24 @@ class DashboardTotalByMonthTest extends TestCase
                 'data' => [
                     [
                         'id' => 2,
-                        'total' => -150.22,
+                        'total' => 0,
                         'month' => $now->translatedFormat('Y F'),
-                        'percentage' => -74.85,
+                        'percentage' => -100,
                         'down' => true,
-                        'balance' => 50.48,
                     ],
                     [
                         'id' => 1,
                         'total' => 100.50,
                         'month' => $oneMonthAgo->translatedFormat('Y F'),
-                        'percentage' => 100.30,
-                        'down' => false,
-                        'balance' => 200.70,
+                        'percentage' => -49.8,
+                        'down' => true,
                     ],
                     [
                         'id' => 0,
-                        'total' => 100.20,
+                        'total' => 200.20,
                         'month' => $twoMonthsAgo->translatedFormat('Y F'),
                         'percentage' => 0,
                         'down' => false,
-                        'balance' => 100.20,
                     ],
                 ],
                 'chart' => [
@@ -71,13 +68,14 @@ class DashboardTotalByMonthTest extends TestCase
                         $oneMonthAgo->translatedFormat('Y F'),
                         $now->translatedFormat('Y F'),
                     ],
-                    'data' => [100.20, 200.70, 50.48],
+                    'data' => [200.20, 100.50, 0],
                 ],
+                'total' => 300.70,
             ],
         ]);
     }
 
-    public function testItReturnsNoDataWhenNoTotalTransactionsForSelectedPeriod(): void
+    public function testItReturnsNoDataWhenNoDebitTransactionsForSelectedPeriod(): void
     {
         $twoMonthsAgo = Carbon::now()->subMonths(2);
         $threeMonthsAgo = Carbon::now()->subMonths(3);
@@ -91,7 +89,7 @@ class DashboardTotalByMonthTest extends TestCase
             ->create()
         ;
 
-        $response = $this->postJson(route('api.v1.dashboard.total-by-month'), ['months' => 1]);
+        $response = $this->postJson(route('api.v1.dashboard.debit-by-months'), ['months' => 1]);
 
         $response->assertOk();
         $response->assertExactJson([
@@ -101,68 +99,54 @@ class DashboardTotalByMonthTest extends TestCase
                     'labels' => [],
                     'data' => [],
                 ],
+                'total' => 0,
             ],
         ]);
     }
 
-    public function testItReturnsFilteredTotalDataForSelectedPeriod(): void
+    public function testItReturnsFilteredDebitDataForSelectedPeriod(): void
     {
         $twoMonthsAgo = Carbon::now()->subMonths(2);
         $threeMonthsAgo = Carbon::now()->subMonths(3);
-        $fourMonthsAgo = Carbon::now()->subMonths(4);
 
-        Transaction::factory(5)
+        Transaction::factory(3)
             ->sequence(
-                ['amount' => 1000.32, 'is_debit' => true, 'is_transfer' => false, 'created_at' => $fourMonthsAgo],
-                ['amount' => 540.25, 'is_debit' => false, 'is_transfer' => false, 'created_at' => $fourMonthsAgo],
-                ['amount' => 500.20, 'is_debit' => true, 'is_transfer' => false, 'created_at' => $threeMonthsAgo],
-                ['amount' => -600.90, 'is_debit' => false, 'is_transfer' => false, 'created_at' => $threeMonthsAgo],
-                ['amount' => 200.00, 'is_debit' => true, 'is_transfer' => true, 'created_at' => $twoMonthsAgo],
-                ['amount' => 2500.70, 'is_debit' => true, 'is_transfer' => false, 'created_at' => $twoMonthsAgo],
+                ['amount' => 200.20, 'is_debit' => true, 'is_transfer' => false, 'created_at' => $threeMonthsAgo],
                 ['amount' => -100.00, 'is_debit' => false, 'is_transfer' => false, 'created_at' => $twoMonthsAgo],
+                ['amount' => 100.00, 'is_debit' => true, 'is_transfer' => true, 'created_at' => $twoMonthsAgo],
             )
             ->create()
         ;
 
-        $response = $this->postJson(route('api.v1.dashboard.total-by-month'), ['months' => 4]);
+        $response = $this->postJson(route('api.v1.dashboard.debit-by-months'), ['months' => 3]);
 
         $response->assertOk();
         $response->assertExactJson([
             'data' => [
                 'data' => [
                     [
-                        'id' => 2,
-                        'total' => 200,
-                        'month' => $twoMonthsAgo->translatedFormat('Y F'),
-                        'percentage' => 55.65,
-                        'down' => false,
-                        'balance' => 559.37,
-                    ],
-                    [
                         'id' => 1,
-                        'total' => -100.70,
-                        'month' => $threeMonthsAgo->translatedFormat('Y F'),
-                        'percentage' => -21.89,
+                        'total' => 0,
+                        'month' => $twoMonthsAgo->translatedFormat('Y F'),
+                        'percentage' => -100,
                         'down' => true,
-                        'balance' => 359.37,
                     ],
                     [
                         'id' => 0,
-                        'total' => 460.07,
-                        'month' => $fourMonthsAgo->translatedFormat('Y F'),
+                        'total' => 200.20,
+                        'month' => $threeMonthsAgo->translatedFormat('Y F'),
                         'percentage' => 0,
                         'down' => false,
-                        'balance' => 460.07,
                     ],
                 ],
                 'chart' => [
                     'labels' => [
-                        $fourMonthsAgo->translatedFormat('Y F'),
                         $threeMonthsAgo->translatedFormat('Y F'),
                         $twoMonthsAgo->translatedFormat('Y F'),
                     ],
-                    'data' => [460.07, 359.37, 559.37],
+                    'data' => [200.20, 0],
                 ],
+                'total' => 200.20,
             ],
         ]);
     }

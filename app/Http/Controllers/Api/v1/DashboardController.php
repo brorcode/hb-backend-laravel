@@ -15,24 +15,38 @@ class DashboardController extends ApiController
         ]);
     }
 
-    public function debitByMonth(DashboardRequest $request, DashboardService $service): JsonResponse
+    public function debitByMonths(DashboardRequest $request, DashboardService $service): JsonResponse
     {
         return response()->json([
             'data' => $service->getTransactionsByType($request, true),
         ]);
     }
 
-    public function creditByMonth(DashboardRequest $request, DashboardService $service): JsonResponse
+    public function creditByMonths(DashboardRequest $request, DashboardService $service): JsonResponse
     {
         return response()->json([
             'data' => $service->getTransactionsByType($request, false),
         ]);
     }
 
-    public function totalByMonth(DashboardRequest $request, DashboardService $service): JsonResponse
+    public function totalByMonths(DashboardRequest $request, DashboardService $service): JsonResponse
     {
         return response()->json([
-            'data' => $service->getTotalByMonth($request),
+            'data' => $service->getTotalByMonths($request),
+        ]);
+    }
+
+    public function debitByCategories(DashboardRequest $request, DashboardService $service): JsonResponse
+    {
+        return response()->json([
+            'data' => $service->totalByCategories($request, true),
+        ]);
+    }
+
+    public function creditByCategories(DashboardRequest $request, DashboardService $service): JsonResponse
+    {
+        return response()->json([
+            'data' => $service->totalByCategories($request, false),
         ]);
     }
 }

@@ -7,7 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class DashboardCreditByMonthTest extends TestCase
+class DashboardCreditByMonthsTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -18,7 +18,7 @@ class DashboardCreditByMonthTest extends TestCase
         $this->userLogin();
     }
 
-    public function testCanSeeCreditAmountGroupedByMonth(): void
+    public function testCanSeeCreditAmountGroupedByMonths(): void
     {
         $now = Carbon::now();
         $oneMonthAgo = Carbon::now()->subMonth();
@@ -34,7 +34,7 @@ class DashboardCreditByMonthTest extends TestCase
             ->create()
         ;
 
-        $response = $this->postJson(route('api.v1.dashboard.credit-by-month'));
+        $response = $this->postJson(route('api.v1.dashboard.credit-by-months'));
 
         $response->assertOk();
         $response->assertExactJson([
@@ -70,6 +70,7 @@ class DashboardCreditByMonthTest extends TestCase
                     ],
                     'data' => [200.20, 100.50, 0],
                 ],
+                'total' => -300.70,
             ],
         ]);
     }
@@ -88,7 +89,7 @@ class DashboardCreditByMonthTest extends TestCase
             ->create()
         ;
 
-        $response = $this->postJson(route('api.v1.dashboard.credit-by-month'), ['months' => 1]);
+        $response = $this->postJson(route('api.v1.dashboard.credit-by-months'), ['months' => 1]);
 
         $response->assertOk();
         $response->assertExactJson([
@@ -98,6 +99,7 @@ class DashboardCreditByMonthTest extends TestCase
                     'labels' => [],
                     'data' => [],
                 ],
+                'total' => 0,
             ],
         ]);
     }
@@ -116,7 +118,7 @@ class DashboardCreditByMonthTest extends TestCase
             ->create()
         ;
 
-        $response = $this->postJson(route('api.v1.dashboard.credit-by-month'), ['months' => 3]);
+        $response = $this->postJson(route('api.v1.dashboard.credit-by-months'), ['months' => 3]);
 
         $response->assertOk();
         $response->assertExactJson([
@@ -144,6 +146,7 @@ class DashboardCreditByMonthTest extends TestCase
                     ],
                     'data' => [200.20, 0],
                 ],
+                'total' => -200.20,
             ],
         ]);
     }

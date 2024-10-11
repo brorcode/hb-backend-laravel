@@ -2,11 +2,8 @@
 
 namespace Tests\Unit\Services;
 
-use App\Exceptions\SystemException;
 use App\Http\Requests\Api\v1\DashboardRequest;
-use App\Models\User;
 use App\Services\DashboardService;
-use App\Services\OwnerService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -20,6 +17,7 @@ class DashboardServiceTest extends TestCase
         $request = new DashboardRequest();
         $request->merge([
             'months' => 1,
+            'category_count' => 20,
         ]);
         $service = DashboardService::create();
 
@@ -30,6 +28,7 @@ class DashboardServiceTest extends TestCase
                 'labels' => [],
                 'data' => [],
             ],
+            'total' => 0,
         ], $response1->toArray());
 
         $response2 = $service->getTransactionsByType($request, false);
@@ -39,15 +38,23 @@ class DashboardServiceTest extends TestCase
                 'labels' => [],
                 'data' => [],
             ],
+            'total' => 0,
         ], $response2->toArray());
 
-        $response3 = $service->getTotalByMonth($request);
+        $response3 = $service->getTotalByMonths($request);
         $this->assertEquals([
             'data' => [],
             'chart' => [
                 'labels' => [],
                 'data' => [],
             ],
+            'total' => 0,
         ], $response3->toArray());
+
+        $response4 = $service->totalByCategories($request, true);
+        $this->assertEquals([], $response4->toArray());
+
+        $response5 = $service->totalByCategories($request, false);
+        $this->assertEquals([], $response5->toArray());
     }
 }
