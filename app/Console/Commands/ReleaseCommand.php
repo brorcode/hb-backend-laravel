@@ -12,6 +12,7 @@ class ReleaseCommand extends Command
     private array $commands = [
         'app:create-permissions-and-roles',
         'app:update-transactions',
+        'app:remove-transactions',
 
         // Examples:
         // ['send-in-blue:set-email-template', [
