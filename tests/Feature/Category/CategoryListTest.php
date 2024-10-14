@@ -37,15 +37,15 @@ class CategoryListTest extends TestCase
                 'name' => $category->name,
                 'parent_category' => null,
                 'transactions_credit' => [
-                    'amount' => -1,
+                    'amount' => -100,
                     'count' => 1,
                 ],
                 'transactions_debit' => [
-                    'amount' => 2,
+                    'amount' => 200,
                     'count' => 1,
                 ],
                 'transactions_transfer' => [
-                    'amount' => -1.5,
+                    'amount' => -150,
                     'count' => 1,
                 ],
                 'created_at' => $category->created_at,
@@ -96,15 +96,15 @@ class CategoryListTest extends TestCase
                     'name' => $childCategory->name,
                     'parent_category' => $childCategory->parentCategory->only('id', 'name'),
                     'transactions_credit' => [
-                        'amount' => -1,
+                        'amount' => -100,
                         'count' => 1,
                     ],
                     'transactions_debit' => [
-                        'amount' => 2,
+                        'amount' => 200,
                         'count' => 1,
                     ],
                     'transactions_transfer' => [
-                        'amount' => -1.5,
+                        'amount' => -150,
                         'count' => 1,
                     ],
                     'created_at' => $childCategory->created_at,

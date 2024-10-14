@@ -11,7 +11,7 @@ class CategoryBaseResource extends JsonResource
     {
         return [
             'count' => $transactions ? $transactions->count : 0,
-            'amount' => $transactions ? $transactions->amount / 100 : 0,
+            'amount' => $transactions ? $transactions->amount : 0,
         ];
     }
 
