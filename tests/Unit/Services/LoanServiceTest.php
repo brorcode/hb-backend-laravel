@@ -40,7 +40,7 @@ class LoanServiceTest extends TestCase
         ;
 
         $amountLeft = LoanService::create()->getAmountLeft($loan);
-        $this->assertEquals(300, $amountLeft);
+        $this->assertEquals(3, $amountLeft);
     }
 
     public function testCanGetCreditLoanAmountLeft(): void
@@ -60,7 +60,7 @@ class LoanServiceTest extends TestCase
         ;
 
         $amountLeft = LoanService::create()->getAmountLeft($loan);
-        $this->assertEquals(200, $amountLeft);
+        $this->assertEquals(2, $amountLeft);
     }
 
     public function testCanGetLoanAmountLeftWithWrongTypeId(): void
@@ -73,6 +73,6 @@ class LoanServiceTest extends TestCase
         ;
 
         $amountLeft = LoanService::create()->getAmountLeft($loan);
-        $this->assertEquals(1000, $amountLeft);
+        $this->assertEquals(10, $amountLeft);
     }
 }

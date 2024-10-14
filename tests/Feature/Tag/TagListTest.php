@@ -23,7 +23,7 @@ class TagListTest extends TestCase
     {
         $tags = Tag::factory(11)
             ->has(Transaction::factory()->count(3)->state([
-                'amount' => 10,
+                'amount' => 1000,
                 'is_debit' => true,
                 'is_transfer' => false,
             ]))

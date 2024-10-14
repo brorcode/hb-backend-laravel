@@ -20,7 +20,7 @@ class TagResource extends JsonResource
         return [
             'id' => $tag->getKey(),
             'name' => $tag->name,
-            'amount' => $tag->transactions->sum('amount'),
+            'amount' => $tag->transactions->sum('amount') / 100,
             'created_at' => $tag->created_at,
             'updated_at' => $tag->updated_at,
         ];

@@ -12,7 +12,7 @@ class TransactionCollectionResource extends TransactionResource
     {
         $transaction = $this->getResource();
         $response = parent::toArray($request);
-        $response['amount'] = $transaction->amount;
+        $response['amount'] = $transaction->amount / 100;
 
         return $response;
     }

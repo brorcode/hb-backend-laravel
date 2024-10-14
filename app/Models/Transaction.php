@@ -77,17 +77,6 @@ class Transaction extends Model
         static::addGlobalScope(new OwnerScope);
     }
 
-    /**
-     * Interact with the amount value.
-     */
-    protected function amount(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($value) => $value / 100,
-            set: fn ($value) => (int) floor($value * 100),
-        );
-    }
-
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);

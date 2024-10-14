@@ -9,7 +9,7 @@ class LoanService
 {
     use ServiceInstance;
 
-    public function getAmountLeft(Loan $loan): int
+    public function getAmountLeft(Loan $loan): float
     {
         $sum = match ($loan->type_id) {
             Loan::TYPE_ID_CREDIT => $loan->transactions->where('is_debit', true)->sum('amount'),
@@ -17,6 +17,6 @@ class LoanService
             default => 0,
         };
 
-        return $loan->amount - abs($sum);
+        return ($loan->amount - abs($sum)) / 100;
     }
 }

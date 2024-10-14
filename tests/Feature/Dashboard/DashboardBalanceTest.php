@@ -16,10 +16,10 @@ class DashboardBalanceTest extends TestCase
 
         Transaction::factory(4)
             ->sequence(
-                ['amount' => 200.20, 'is_debit' => true, 'is_transfer' => false],
-                ['amount' => -100.00, 'is_debit' => false, 'is_transfer' => false],
-                ['amount' => 100.50, 'is_debit' => true, 'is_transfer' => false],
-                ['amount' => -150.22, 'is_debit' => false, 'is_transfer' => true],
+                ['amount' => 20020, 'is_debit' => true, 'is_transfer' => false],
+                ['amount' => -10000, 'is_debit' => false, 'is_transfer' => false],
+                ['amount' => 10050, 'is_debit' => true, 'is_transfer' => false],
+                ['amount' => -15022, 'is_debit' => false, 'is_transfer' => true],
             )
             ->create()
         ;

@@ -62,7 +62,7 @@ class ImportService
 
         $transaction = new Transaction();
         $transaction->category_id = $category->getKey();
-        $transaction->amount = $row['amount'];
+        $transaction->amount = $row['amount'] * 100;
         $transaction->account_id = $account->getKey();
         $transaction->is_debit = $this->isDebit($row['amount']);
         $transaction->is_transfer = $this->isBetweenAccounts($row['parent_category_name']);

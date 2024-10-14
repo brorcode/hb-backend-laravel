@@ -35,7 +35,7 @@ class AccountUpsertTest extends TestCase
             'data' => [
                 'id' => $account->getKey(),
                 'name' => $account->name,
-                'amount' => $account->transactions->sum('amount'),
+                'amount' => $account->transactions->sum('amount') / 100,
                 'created_at' => $account->created_at,
                 'updated_at' => $account->updated_at,
             ],
@@ -105,7 +105,7 @@ class AccountUpsertTest extends TestCase
             'data' => [
                 'id' => $freshAccount->getKey(),
                 'name' => 'new account name',
-                'amount' => $freshAccount->transactions->sum('amount'),
+                'amount' => $freshAccount->transactions->sum('amount') / 100,
                 'created_at' => $freshAccount->created_at,
                 'updated_at' => $freshAccount->updated_at,
             ],

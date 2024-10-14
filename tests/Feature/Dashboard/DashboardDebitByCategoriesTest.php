@@ -32,10 +32,10 @@ class DashboardDebitByCategoriesTest extends TestCase
 
         Transaction::factory(4)
             ->sequence(
-                ['amount' => 200.20, 'is_debit' => true, 'category_id' => $debitCategory1->getKey(), 'is_transfer' => false, 'created_at' => $twoMonthsAgo],
-                ['amount' => -100.00, 'is_debit' => false, 'is_transfer' => false, 'created_at' => $twoMonthsAgo],
-                ['amount' => 100.50, 'is_debit' => true, 'category_id' => $debitCategory2->getKey(), 'is_transfer' => false, 'created_at' => $oneMonthAgo],
-                ['amount' => -150.22, 'is_debit' => false, 'is_transfer' => true, 'created_at' => $now],
+                ['amount' => 20020, 'is_debit' => true, 'category_id' => $debitCategory1->getKey(), 'is_transfer' => false, 'created_at' => $twoMonthsAgo],
+                ['amount' => -10000, 'is_debit' => false, 'is_transfer' => false, 'created_at' => $twoMonthsAgo],
+                ['amount' => 10050, 'is_debit' => true, 'category_id' => $debitCategory2->getKey(), 'is_transfer' => false, 'created_at' => $oneMonthAgo],
+                ['amount' => -15022, 'is_debit' => false, 'is_transfer' => true, 'created_at' => $now],
             )
             ->create()
         ;
@@ -66,9 +66,9 @@ class DashboardDebitByCategoriesTest extends TestCase
 
         Transaction::factory(3)
             ->sequence(
-                ['amount' => 200.20, 'is_debit' => true, 'is_transfer' => false, 'created_at' => $threeMonthsAgo],
-                ['amount' => -100.00, 'is_debit' => false, 'is_transfer' => false, 'created_at' => $threeMonthsAgo],
-                ['amount' => 100.50, 'is_debit' => true, 'is_transfer' => false, 'created_at' => $twoMonthsAgo],
+                ['amount' => 20020, 'is_debit' => true, 'is_transfer' => false, 'created_at' => $threeMonthsAgo],
+                ['amount' => -10000, 'is_debit' => false, 'is_transfer' => false, 'created_at' => $threeMonthsAgo],
+                ['amount' => 10050, 'is_debit' => true, 'is_transfer' => false, 'created_at' => $twoMonthsAgo],
             )
             ->create()
         ;
@@ -92,9 +92,9 @@ class DashboardDebitByCategoriesTest extends TestCase
 
         Transaction::factory(3)
             ->sequence(
-                ['amount' => 200.20, 'is_debit' => true, 'category_id' => $debitCategory1->getKey(), 'is_transfer' => false, 'created_at' => $threeMonthsAgo],
-                ['amount' => -100.00, 'is_debit' => false, 'is_transfer' => false, 'created_at' => $twoMonthsAgo],
-                ['amount' => 100.00, 'is_debit' => true, 'category_id' => $debitCategory2->getKey(), 'is_transfer' => true, 'created_at' => $twoMonthsAgo],
+                ['amount' => 20020, 'is_debit' => true, 'category_id' => $debitCategory1->getKey(), 'is_transfer' => false, 'created_at' => $threeMonthsAgo],
+                ['amount' => -10000, 'is_debit' => false, 'is_transfer' => false, 'created_at' => $twoMonthsAgo],
+                ['amount' => 10000, 'is_debit' => true, 'category_id' => $debitCategory2->getKey(), 'is_transfer' => true, 'created_at' => $twoMonthsAgo],
             )
             ->create()
         ;

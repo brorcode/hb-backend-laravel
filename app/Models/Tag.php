@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Scopes\OwnerScope;
 use App\Observers\TagObserver;
 use Carbon\Carbon;
+use Database\Factories\TagFactory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -20,6 +21,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property-read Collection users
  *
  * @method static self findOrFail(int $id)
+ * @method static TagFactory factory($count = null, $state = [])
  *
  * @see TagObserver
  */

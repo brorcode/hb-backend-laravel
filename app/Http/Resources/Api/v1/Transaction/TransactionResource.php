@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Api\v1\Transaction;
 
+use App\Models\Tag;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -22,7 +23,9 @@ class TransactionResource extends JsonResource
             'category' => $transaction->category->only(['id', 'name']),
             'account' => $transaction->account->only(['id', 'name']),
             'loan' => $transaction->loan?->only(['id', 'name']),
-            'tags' => $transaction->tags->pluck('name')->toArray(),
+            'tags' => $transaction->tags?->map(function (Tag $tag) {
+                return $tag->only(['id', 'name']);
+            }),
             'is_debit' => $transaction->is_debit,
             'is_transfer' => $transaction->is_transfer,
             'created_at' => $transaction->created_at,

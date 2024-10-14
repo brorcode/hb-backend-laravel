@@ -26,10 +26,10 @@ class DashboardTotalByMonthsTest extends TestCase
 
         Transaction::factory(4)
             ->sequence(
-                ['amount' => 200.20, 'is_debit' => true, 'is_transfer' => false, 'created_at' => $twoMonthsAgo],
-                ['amount' => -100.00, 'is_debit' => false, 'is_transfer' => false, 'created_at' => $twoMonthsAgo],
-                ['amount' => 100.50, 'is_debit' => true, 'is_transfer' => false, 'created_at' => $oneMonthAgo],
-                ['amount' => -150.22, 'is_debit' => false, 'is_transfer' => true, 'created_at' => $now],
+                ['amount' => 20020, 'is_debit' => true, 'is_transfer' => false, 'created_at' => $twoMonthsAgo],
+                ['amount' => -10000, 'is_debit' => false, 'is_transfer' => false, 'created_at' => $twoMonthsAgo],
+                ['amount' => 10050, 'is_debit' => true, 'is_transfer' => false, 'created_at' => $oneMonthAgo],
+                ['amount' => -15022, 'is_debit' => false, 'is_transfer' => true, 'created_at' => $now],
             )
             ->create()
         ;
@@ -85,9 +85,9 @@ class DashboardTotalByMonthsTest extends TestCase
 
         Transaction::factory(3)
             ->sequence(
-                ['amount' => 200.20, 'is_debit' => true, 'is_transfer' => false, 'created_at' => $threeMonthsAgo],
-                ['amount' => -100.00, 'is_debit' => false, 'is_transfer' => false, 'created_at' => $threeMonthsAgo],
-                ['amount' => 100.50, 'is_debit' => true, 'is_transfer' => false, 'created_at' => $twoMonthsAgo],
+                ['amount' => 20020, 'is_debit' => true, 'is_transfer' => false, 'created_at' => $threeMonthsAgo],
+                ['amount' => -10000, 'is_debit' => false, 'is_transfer' => false, 'created_at' => $threeMonthsAgo],
+                ['amount' => 10050, 'is_debit' => true, 'is_transfer' => false, 'created_at' => $twoMonthsAgo],
             )
             ->create()
         ;
@@ -115,13 +115,13 @@ class DashboardTotalByMonthsTest extends TestCase
 
         Transaction::factory(5)
             ->sequence(
-                ['amount' => 1000.32, 'is_debit' => true, 'is_transfer' => false, 'created_at' => $fourMonthsAgo],
-                ['amount' => 540.25, 'is_debit' => false, 'is_transfer' => false, 'created_at' => $fourMonthsAgo],
-                ['amount' => 500.20, 'is_debit' => true, 'is_transfer' => false, 'created_at' => $threeMonthsAgo],
-                ['amount' => -600.90, 'is_debit' => false, 'is_transfer' => false, 'created_at' => $threeMonthsAgo],
-                ['amount' => 200.00, 'is_debit' => true, 'is_transfer' => true, 'created_at' => $twoMonthsAgo],
-                ['amount' => 2500.70, 'is_debit' => true, 'is_transfer' => false, 'created_at' => $twoMonthsAgo],
-                ['amount' => -100.00, 'is_debit' => false, 'is_transfer' => false, 'created_at' => $twoMonthsAgo],
+                ['amount' => 100032, 'is_debit' => true, 'is_transfer' => false, 'created_at' => $fourMonthsAgo],
+                ['amount' => 54025, 'is_debit' => false, 'is_transfer' => false, 'created_at' => $fourMonthsAgo],
+                ['amount' => 50020, 'is_debit' => true, 'is_transfer' => false, 'created_at' => $threeMonthsAgo],
+                ['amount' => -60090, 'is_debit' => false, 'is_transfer' => false, 'created_at' => $threeMonthsAgo],
+                ['amount' => 20000, 'is_debit' => true, 'is_transfer' => true, 'created_at' => $twoMonthsAgo],
+                ['amount' => 250070, 'is_debit' => true, 'is_transfer' => false, 'created_at' => $twoMonthsAgo],
+                ['amount' => -10000, 'is_debit' => false, 'is_transfer' => false, 'created_at' => $twoMonthsAgo],
             )
             ->create()
         ;

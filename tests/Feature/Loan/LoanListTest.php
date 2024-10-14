@@ -24,11 +24,11 @@ class LoanListTest extends TestCase
         $loans = Loan::factory()
             ->count(11)
             ->state([
-                'amount' => 30,
+                'amount' => 300,
                 'type_id' => Loan::TYPE_ID_CREDIT,
             ])
             ->has(Transaction::factory()->count(3)->state([
-                'amount' => 10,
+                'amount' => 100,
                 'is_debit' => false,
                 'is_transfer' => false,
             ]))->create()
@@ -42,8 +42,8 @@ class LoanListTest extends TestCase
                     'id' => $loan->type_id,
                     'name' => Loan::TYPES[$loan->type_id],
                 ],
-                'amount' => 30,
-                'amount_left' => 30,
+                'amount' => 3,
+                'amount_left' => 3,
                 'deadline_on' => $loan->deadline_on->toDateString(),
                 'created_at' => $loan->created_at,
                 'updated_at' => $loan->updated_at,

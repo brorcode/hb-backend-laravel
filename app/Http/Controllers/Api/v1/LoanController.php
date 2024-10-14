@@ -29,7 +29,7 @@ class LoanController extends ApiController
         $loan = new Loan();
         $loan->name = $request->name;
         $loan->type_id = $request->type_id;
-        $loan->amount = $request->amount;
+        $loan->amount = $request->amount * 100;
         $loan->deadline_on = Carbon::parse($request->deadline_on);
         $loan->save();
 
@@ -45,7 +45,7 @@ class LoanController extends ApiController
     {
         $loan->name = $request->name;
         $loan->type_id = $request->type_id;
-        $loan->amount = $request->amount;
+        $loan->amount = $request->amount * 100;
         $loan->deadline_on = Carbon::parse($request->deadline_on);
         $loan->save();
 

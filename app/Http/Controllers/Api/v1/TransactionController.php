@@ -29,7 +29,7 @@ class TransactionController extends ApiController
     public function store(TransactionUpsertRequest $request): JsonResponse
     {
         $transaction = new Transaction();
-        $transaction->amount = $request->amount;
+        $transaction->amount = $request->amount * 100;
         $transaction->category_id = $request->category_id;
         $transaction->account_id = $request->account_id;
         $transaction->created_at = Carbon::parse($request->created_at);
@@ -49,7 +49,7 @@ class TransactionController extends ApiController
 
     public function update(TransactionUpsertRequest $request, Transaction $transaction): JsonResponse
     {
-        $transaction->amount = $request->amount;
+        $transaction->amount = $request->amount * 100;
         $transaction->category_id = $request->category_id;
         $transaction->account_id = $request->account_id;
         $transaction->created_at = Carbon::parse($request->created_at);

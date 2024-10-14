@@ -5,6 +5,7 @@ namespace Tests\Feature\Transaction;
 use App\Models\Account;
 use App\Models\Category;
 use App\Models\Loan;
+use App\Models\Tag;
 use App\Models\Transaction;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -24,21 +25,26 @@ class TransactionUpsertTest extends TestCase
     public function testTransactionShow(): void
     {
         /** @var Transaction $transaction */
-        $transaction = Transaction::factory()->create([
-            'amount' => 123,
-            'is_debit' => true,
-        ]);
+        $transaction = Transaction::factory()
+            ->hasAttached(Tag::factory()->count(2))
+            ->create([
+                'amount' => 123,
+                'is_debit' => true,
+            ])
+        ;
         $response = $this->getJson(route('api.v1.transactions.show', $transaction));
 
         $response->assertOk();
         $response->assertExactJson([
             'data' => [
                 'id' => $transaction->getKey(),
-                'amount' => 123,
+                'amount' => 1.23,
                 'category' => $transaction->category->only(['id', 'name']),
                 'account' => $transaction->account->only(['id', 'name']),
                 'loan' => null,
-                'tags' => $transaction->tags->pluck('name')->toArray(),
+                'tags' => $transaction->tags?->map(function (Tag $tag) {
+                    return $tag->only(['id', 'name']);
+                }),
                 'is_debit' => true,
                 'is_transfer' => $transaction->is_transfer,
                 'created_at' => $transaction->created_at,

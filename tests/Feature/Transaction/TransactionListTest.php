@@ -24,11 +24,11 @@ class TransactionListTest extends TestCase
         $data = $transactions->take(10)->map(function (Transaction $transaction) {
             return [
                 'id' => $transaction->getKey(),
-                'amount' => $transaction->amount,
+                'amount' => $transaction->amount / 100,
                 'category' => $transaction->category->only(['id', 'name']),
                 'account' => $transaction->account->only(['id', 'name']),
                 'loan' => null,
-                'tags' => $transaction->tags->pluck('name')->toArray(),
+                'tags' => [],
                 'is_debit' => $transaction->is_debit,
                 'is_transfer' => $transaction->is_transfer,
                 'created_at' => $transaction->created_at,
