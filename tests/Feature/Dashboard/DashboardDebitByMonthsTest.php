@@ -118,7 +118,7 @@ class DashboardDebitByMonthsTest extends TestCase
             ->create()
         ;
 
-        $response = $this->postJson(route('api.v1.dashboard.debit-by-months'), ['months' => 3]);
+        $response = $this->postJson(route('api.v1.dashboard.debit-by-months'), ['months' => 12]);
 
         $response->assertOk();
         $response->assertExactJson([

@@ -126,7 +126,7 @@ class DashboardTotalByMonthsTest extends TestCase
             ->create()
         ;
 
-        $response = $this->postJson(route('api.v1.dashboard.total-by-months'), ['months' => 4]);
+        $response = $this->postJson(route('api.v1.dashboard.total-by-months'), ['months' => 12]);
 
         $response->assertOk();
         $response->assertExactJson([

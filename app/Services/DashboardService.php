@@ -96,13 +96,15 @@ class DashboardService
     private function getDatesFilter(DashboardRequest $request): array
     {
         // No transactions in the database
-        if (!$lastTransaction = Transaction::query()->orderByDesc('created_at')->first()) {
+        if (!$firstTransaction = Transaction::query()->orderBy('created_at')->first()) {
             return [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()];
         }
 
+        $lastTransaction = Transaction::query()->orderByDesc('created_at')->first();
+
         // All transactions in the database
         if (!$request->months) {
-            $startDate = Transaction::query()->orderBy('created_at')->first()->created_at->startOfMonth();
+            $startDate = $firstTransaction->created_at->startOfMonth();
             $endDate = $lastTransaction->created_at->endOfMonth();
 
             return [$startDate, $endDate];
@@ -112,6 +114,9 @@ class DashboardService
         $startDate = Carbon::now()->subMonths($request->months)->startOfMonth();
         $endDate = Carbon::now()->endOfMonth();
 
+        if ($firstTransaction->created_at->startOfMonth()->isAfter($startDate)) {
+            $startDate = $firstTransaction->created_at->startOfMonth();
+        }
         if ($lastTransaction->created_at->endOfMonth()->isBefore($endDate)) {
             $endDate = $lastTransaction->created_at->endOfMonth();
         }

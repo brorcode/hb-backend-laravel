@@ -118,7 +118,7 @@ class DashboardCreditByMonthsTest extends TestCase
             ->create()
         ;
 
-        $response = $this->postJson(route('api.v1.dashboard.credit-by-months'), ['months' => 3]);
+        $response = $this->postJson(route('api.v1.dashboard.credit-by-months'), ['months' => 12]);
 
         $response->assertOk();
         $response->assertExactJson([
