@@ -5,6 +5,7 @@ namespace App\Services\ImportTransactions;
 use App\Models\Account;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Storage;
 use SplFileObject;
 
 class Reader
@@ -18,9 +19,9 @@ class Reader
         $this->account = $account;
     }
 
-    public function parse(UploadedFile $file): Collection
+    public function parse(string $filePath): Collection
     {
-        $reader = new SplFileObject($file->getRealPath());
+        $reader = new SplFileObject(Storage::path($filePath));
         $reader->setFlags(SplFileObject::READ_AHEAD | SplFileObject::SKIP_EMPTY | SplFileObject::DROP_NEW_LINE);
 
         return $this->readTransactions($reader);

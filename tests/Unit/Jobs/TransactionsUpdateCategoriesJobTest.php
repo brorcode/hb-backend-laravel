@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Jobs;
 
-use App\Jobs\UpdateTransactionCategoriesJob;
+use App\Jobs\TransactionsUpdateCategoriesJob;
 use App\Models\Category;
 use App\Models\CategoryPointer;
 use App\Models\CategoryPointerTag;
@@ -15,7 +15,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 
-class UpdateTransactionCategoriesJobTest extends TestCase
+class TransactionsUpdateCategoriesJobTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -30,7 +30,7 @@ class UpdateTransactionCategoriesJobTest extends TestCase
 
     private function dispatch(): void
     {
-        (new UpdateTransactionCategoriesJob($this->user))->handle();
+        (new TransactionsUpdateCategoriesJob($this->user))->handle();
     }
 
     public function testThisDoesNotRemoveManuallyCreatedEmptyChildCategories(): void
@@ -232,9 +232,9 @@ class UpdateTransactionCategoriesJobTest extends TestCase
         );
     }
 
-    public function testUpdateTransactionCategoriesJobReturnsCorrectTagNames(): void
+    public function testTransactionUpdateCategoriesJobReturnsCorrectTagNames(): void
     {
-        $tagNames = (new UpdateTransactionCategoriesJob($this->user))->tags();
-        $this->assertEquals(['UpdateTransactionCategoriesJob'], $tagNames);
+        $tagNames = (new TransactionsUpdateCategoriesJob($this->user))->tags();
+        $this->assertEquals(['TransactionsUpdateCategoriesJob'], $tagNames);
     }
 }

@@ -3,13 +3,16 @@
 namespace App\Services\ImportTransactions;
 
 use App\Exceptions\SystemException;
+use App\Http\Requests\Api\v1\Account\AccountTransactionsImportRequest;
 use App\Models\Account;
 use App\Models\Category;
 use App\Models\Transaction;
+use App\Models\TransactionsImport;
+use App\Models\User;
 use App\Services\ServiceInstance;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 
 class ImportService
 {
@@ -36,11 +39,11 @@ class ImportService
     /**
      * @throws SystemException
      */
-    public function handle(UploadedFile $file, Account $account): void
+    public function handle(string $filePath, Account $account): void
     {
         $this->imported = 0;
         $reader = $this->factory->make($account);
-        $transactions = $reader->parse($file);
+        $transactions = $reader->parse($filePath);
         $this->saveTransactions($transactions, $account);
     }
 
@@ -125,5 +128,68 @@ class ImportService
     public function getImportedCount(): int
     {
         return $this->imported;
+    }
+
+    public function canRunImport(): bool
+    {
+        return TransactionsImport::query()->where('user_id', Auth::id())->doesntExist();
+    }
+
+    public function createTransactionsImport(AccountTransactionsImportRequest $request): TransactionsImport
+    {
+        /** @var User $user */
+        $user = Auth::user();
+        $now = Carbon::now();
+        $filePath = $request->file->storeAs(
+            "transactions_imports/{$user->getKey()}",
+            "{$now->toDateTimeString()}-{$request->file->getClientOriginalName()}"
+        );
+
+        $transactionsImport = new TransactionsImport();
+        $transactionsImport->user_id = $user->getKey();
+        $transactionsImport->account_id = $request->account->getKey();
+        $transactionsImport->status_id = TransactionsImport::STATUS_ID_PROCESS;
+        $transactionsImport->file_name = $request->file->getClientOriginalName();
+        $transactionsImport->file_path = $filePath;
+        $transactionsImport->started_at = $now;
+        $transactionsImport->save();
+
+        return $transactionsImport;
+    }
+
+    public function checkTransactionsImportStatus(): array
+    {
+        $isFinished = false;
+        $message = null;
+
+        $builder = TransactionsImport::query()->where('user_id', Auth::id());
+        if ($builder->doesntExist()) {
+            return ['data' => ['is_finished' => true]];
+        }
+
+        $builder->get()->each(function (TransactionsImport $import) use (&$message, &$isFinished) {
+            if ($import->isProcess()) {
+                return;
+            }
+
+            if ($import->isSuccess()) {
+                $message = 'Импорт транзакций завершен';
+            }
+
+            if ($import->isFailed()) {
+                $message = 'Импорт транзакций завершен с ошибками';
+            }
+
+            $isFinished = true;
+            $import->delete();
+        });
+
+        $response = ['data' => ['is_finished' => $isFinished]];
+
+        if ($message) {
+            $response['message'] = $message;
+        }
+
+        return $response;
     }
 }

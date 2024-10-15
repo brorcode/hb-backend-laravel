@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers\Api\v1;
 
-use App\Exceptions\SystemException;
 use App\Http\Requests\Api\v1\Account\AccountTransactionsImportRequest;
 use App\Http\Requests\Api\v1\Account\AccountUpsertRequest;
 use App\Http\Requests\Api\v1\ListRequest;
 use App\Http\Resources\Api\v1\AccountResource;
+use App\Jobs\TransactionsImportJob;
 use App\Models\Account;
 use App\Services\Account\AccountListService;
 use App\Services\ImportTransactions\ImportService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class AccountController extends ApiController
@@ -55,15 +56,18 @@ class AccountController extends ApiController
         return response()->json(['message' => 'Аккаунт удален']);
     }
 
-    /**
-     * @throws SystemException
-     */
-    public function import(AccountTransactionsImportRequest $request): JsonResponse
+    public function import(AccountTransactionsImportRequest $request, ImportService $service): JsonResponse
     {
-        $service = ImportService::create();
-        $service->handle($request->file, $request->account);
-        $imported = $service->getImportedCount();
+        $transactionsImport = $service->createTransactionsImport($request);
+        TransactionsImportJob::dispatch(Auth::user(), $transactionsImport, $request->account);
 
-        return response()->json(['message' => "Добавлено новых транзакций: {$imported}"]);
+        return response()->json(['message' => 'Ожидайдение завершения импорта']);
+    }
+
+    public function checkImportStatus(ImportService $service): JsonResponse
+    {
+        $response = $service->checkTransactionsImportStatus();
+
+        return response()->json($response);
     }
 }

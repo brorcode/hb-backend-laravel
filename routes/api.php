@@ -56,6 +56,7 @@ Route::group(['prefix' => 'v1', 'as' => 'api.v1.'], function () {
                     Route::put('/{account}', [AccountController::class, 'update'])->name('update');
                     Route::delete('/{account}', [AccountController::class, 'destroy'])->name('destroy');
                     Route::post('/{account_id}/transactions/import', [AccountController::class, 'import'])->name('import');
+                    Route::get('/check/import-status', [AccountController::class, 'checkImportStatus'])->name('check.import-status');
                 });
             });
 

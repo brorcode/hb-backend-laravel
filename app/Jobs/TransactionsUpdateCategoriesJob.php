@@ -2,7 +2,6 @@
 
 namespace App\Jobs;
 
-use App\Exceptions\SystemException;
 use App\Models\Category;
 use App\Models\Transaction;
 use App\Models\User;
@@ -14,7 +13,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Queue\Queueable;
 use ReflectionClass;
 
-class UpdateTransactionCategoriesJob implements ShouldQueue
+class TransactionsUpdateCategoriesJob implements ShouldQueue
 {
     use Queueable;
 

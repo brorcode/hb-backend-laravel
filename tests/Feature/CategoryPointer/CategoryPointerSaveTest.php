@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\CategoryPointer;
 
-use App\Jobs\UpdateTransactionCategoriesJob;
+use App\Jobs\TransactionsUpdateCategoriesJob;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Queue;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -38,7 +38,7 @@ class CategoryPointerSaveTest extends TestCase
             ],
         ]);
 
-        Queue::assertPushed(UpdateTransactionCategoriesJob::class);
+        Queue::assertPushed(TransactionsUpdateCategoriesJob::class);
 
         $response->assertOk();
         $response->assertExactJson([

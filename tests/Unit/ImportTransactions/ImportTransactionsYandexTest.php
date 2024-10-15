@@ -8,7 +8,7 @@ use App\Models\Integration;
 use App\Models\Transaction;
 use App\Services\ImportTransactions\ImportService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class ImportTransactionsYandexTest extends TestCase
@@ -39,17 +39,17 @@ class ImportTransactionsYandexTest extends TestCase
         $account = Account::factory([
             'integration_id' => Integration::findYandexMoney()->getKey(),
         ])->create();
-        $file = UploadedFile::fake()->createWithContent(
-            'transactions.csv',
-            $this->createFileContentYandex()
-        );
+
+        Storage::fake('local');
+        $filePath = 'transactions.csv';
+        Storage::put($filePath, $this->createFileContentYandex());
 
         $this->assertSame(0, Transaction::query()->count());
 
         $this->expectException(SystemException::class);
         $this->expectExceptionMessage('Автоимпорт для Яндекса отключен, внесите транзакции вручную.');
         $service = ImportService::create();
-        $service->handle($file, $account);
+        $service->handle($filePath, $account);
 
         $this->assertSame(0, Transaction::query()->count());
 

@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Requests\Api\v1\Category\CategoryPointerRequest;
 use App\Http\Resources\Api\v1\Category\CategoryPointerResource;
-use App\Jobs\UpdateTransactionCategoriesJob;
+use App\Jobs\TransactionsUpdateCategoriesJob;
 use App\Services\Category\CategoryPointerService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
@@ -24,7 +24,7 @@ class CategoryPointerController extends ApiController
         $service->createPointersTree($request->child, false);
         $service->createPointersTree($request->parent, true);
 
-        UpdateTransactionCategoriesJob::dispatch(Auth::user());
+        TransactionsUpdateCategoriesJob::dispatch(Auth::user());
 
         return response()->json([
             'message' => 'Указатели категорий обновлены',

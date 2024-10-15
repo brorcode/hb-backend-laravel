@@ -8,7 +8,7 @@ use App\Models\Integration;
 use App\Models\Transaction;
 use App\Services\ImportTransactions\ImportService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class ImportTransactionsTinkoffBusinessTest extends TestCase
@@ -39,14 +39,14 @@ class ImportTransactionsTinkoffBusinessTest extends TestCase
         $account = Account::factory([
             'integration_id' => Integration::findTinkoffBankBusiness()->getKey(),
         ])->create();
-        $file = UploadedFile::fake()->createWithContent(
-            'transactions.csv',
-            $this->createFileContentTinkoffBusiness()
-        );
+
+        Storage::fake('local');
+        $filePath = 'transactions.csv';
+        Storage::put($filePath, $this->createFileContentTinkoffBusiness());
 
         $this->assertSame(0, Transaction::query()->count());
         $service = ImportService::create();
-        $service->handle($file, $account);
+        $service->handle($filePath, $account);
         $imported = $service->getImportedCount();
 
         $this->assertSame(4, $imported);
@@ -68,17 +68,17 @@ class ImportTransactionsTinkoffBusinessTest extends TestCase
         $account = Account::factory([
             'integration_id' => Integration::findTinkoffBankBusiness()->getKey(),
         ])->create();
-        $file = UploadedFile::fake()->createWithContent(
-            'transactions.csv',
-            $this->createFileContentTinkoffBusinessWithWrongTransactionType()
-        );
+
+        Storage::fake('local');
+        $filePath = 'transactions.csv';
+        Storage::put($filePath, $this->createFileContentTinkoffBusinessWithWrongTransactionType());
 
         $this->expectException(SystemException::class);
         $this->expectExceptionMessage('Undefined operation type');
 
         $this->assertSame(0, Transaction::query()->count());
         $service = ImportService::create();
-        $service->handle($file, $account);
+        $service->handle($filePath, $account);
         $imported = $service->getImportedCount();
 
         $this->assertSame(0, $imported);

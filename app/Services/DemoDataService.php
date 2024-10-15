@@ -41,8 +41,8 @@ class DemoDataService
         $this->removeOldDemoDataFor($user);
 
         $this->checkIntegrations();
-        $account = $this->createAccount('Тинькофф карта');
-        $this->createAccount('Сбербанк карта');
+        $account = $this->createAccount('Тинькофф карта', Integration::findTinkoffBank()->getKey());
+        $this->createAccount('Сбербанк карта', Integration::findSberBank()->getKey());
         $parentCategory = $this->createCategory('Доходы');
         $this->createCategory('Источник 1', $parentCategory);
         $this->createCategory('Источник 2', $parentCategory);
@@ -146,10 +146,10 @@ class DemoDataService
         return $category;
     }
 
-    private function createAccount(string $name): Account
+    private function createAccount(string $name, int $integrationId): Account
     {
         $account = new Account();
-        $account->integration_id = Integration::findTinkoffBank()->getKey();
+        $account->integration_id = $integrationId;
         $account->name = $name;
         $account->save();
 

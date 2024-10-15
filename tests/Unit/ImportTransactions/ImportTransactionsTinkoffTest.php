@@ -11,6 +11,7 @@ use App\Models\Transaction;
 use App\Services\ImportTransactions\ImportService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class ImportTransactionsTinkoffTest extends TestCase
@@ -44,15 +45,15 @@ class ImportTransactionsTinkoffTest extends TestCase
         $account = Account::factory([
             'integration_id' => Integration::findTinkoffBank()->getKey(),
         ])->create();
-        $file = UploadedFile::fake()->createWithContent(
-            'transactions.csv',
-            $this->createFileContentTinkoff()
-        );
+
+        Storage::fake('local');
+        $filePath = 'transactions.csv';
+        Storage::put($filePath, $this->createFileContentTinkoff());
 
         $this->assertSame(0, Transaction::query()->count());
         $this->assertSame(0, Category::query()->count());
         $service = ImportService::create();
-        $service->handle($file, $account);
+        $service->handle($filePath, $account);
         $imported = $service->getImportedCount();
 
         $this->assertSame(6, Category::query()->count());
@@ -96,14 +97,14 @@ class ImportTransactionsTinkoffTest extends TestCase
             'name' => ImportService::CASH,
             'integration_id' => null,
         ])->create();
-        $file = UploadedFile::fake()->createWithContent(
-            'transactions.csv',
-            $this->createFileContentTinkoffCash()
-        );
+
+        Storage::fake('local');
+        $filePath = 'transactions.csv';
+        Storage::put($filePath, $this->createFileContentTinkoffCash());
 
         $this->assertSame(0, Transaction::query()->count());
         $service = ImportService::create();
-        $service->handle($file, $account);
+        $service->handle($filePath, $account);
         $imported = $service->getImportedCount();
 
         $this->assertSame(4, $imported);
@@ -131,23 +132,22 @@ class ImportTransactionsTinkoffTest extends TestCase
         ])->create();
 
         $this->assertSame(0, Transaction::query()->count());
-        $file = UploadedFile::fake()->createWithContent(
-            'transactions.csv',
-            $this->createFileContentTinkoff()
-        );
+
+        Storage::fake('local');
+        $filePath = 'transactions.csv';
+        Storage::put($filePath, $this->createFileContentTinkoff());
 
         $service = ImportService::create();
-        $service->handle($file, $account);
+        $service->handle($filePath, $account);
         $imported = $service->getImportedCount();
 
         $this->assertSame(4, $imported);
         $this->assertCount(4, Transaction::all());
 
-        $file = UploadedFile::fake()->createWithContent(
-            'transactions.csv',
-            $this->createFileContentTinkoff()
-        );
-        $service->handle($file, $account);
+        Storage::fake('local');
+        Storage::put($filePath, $this->createFileContentTinkoff());
+
+        $service->handle($filePath, $account);
         $imported = $service->getImportedCount();
         $this->assertSame(0, $imported);
         $this->assertCount(4, Transaction::all());
@@ -167,15 +167,14 @@ class ImportTransactionsTinkoffTest extends TestCase
             'integration_id' => Integration::findTinkoffBank()->getKey(),
         ])->create();
 
-        $file = UploadedFile::fake()->createWithContent(
-            'transactions.csv',
-            $this->createFileContentTinkoffToRenameCategory()
-        );
+        Storage::fake('local');
+        $filePath = 'transactions.csv';
+        Storage::put($filePath, $this->createFileContentTinkoffToRenameCategory());
 
         $this->assertSame(0, Category::query()->count());
         $this->assertSame(0, Transaction::query()->count());
         $service = ImportService::create();
-        $service->handle($file, $account);
+        $service->handle($filePath, $account);
 
         $this->assertSame(2, Category::query()->count());
         $this->assertDatabaseMissing((new Category())->getTable(), [
@@ -201,15 +200,14 @@ class ImportTransactionsTinkoffTest extends TestCase
             'integration_id' => Integration::findTinkoffBank()->getKey(),
         ])->create();
 
-        $file = UploadedFile::fake()->createWithContent(
-            'transactions.csv',
-            $this->createFileContentTinkoffToRenameCategory()
-        );
+        Storage::fake('local');
+        $filePath = 'transactions.csv';
+        Storage::put($filePath, $this->createFileContentTinkoffToRenameCategory());
 
         $this->assertSame(0, Category::query()->count());
         $this->assertSame(0, Transaction::query()->count());
         $service = ImportService::create();
-        $service->handle($file, $account);
+        $service->handle($filePath, $account);
 
         $this->assertSame(2, Category::query()->count());
         $this->assertDatabaseMissing((new Category())->getTable(), [

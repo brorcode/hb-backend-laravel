@@ -4,6 +4,7 @@ namespace App\Http\Requests\Api\v1\Account;
 
 use App\Http\Requests\Api\v1\ApiRequest;
 use App\Models\Account;
+use App\Services\ImportTransactions\ImportService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Validation\ValidationException;
@@ -33,6 +34,12 @@ class AccountTransactionsImportRequest extends ApiRequest
         } catch (ModelNotFoundException) {
             throw ValidationException::withMessages([
                 'account_id' => 'Аккаунт не найден.',
+            ]);
+        }
+
+        if (!ImportService::create()->canRunImport()) {
+            throw ValidationException::withMessages([
+                'file' => 'Импорт уже запущен. Дождидесь завершения.',
             ]);
         }
     }

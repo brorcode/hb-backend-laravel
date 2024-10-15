@@ -8,7 +8,7 @@ use App\Models\Integration;
 use App\Models\Transaction;
 use App\Services\ImportTransactions\ImportService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class ImportServiceTest extends TestCase
@@ -32,15 +32,15 @@ class ImportServiceTest extends TestCase
         $account = Account::factory([
             'integration_id' => Integration::findTinkoffBank()->getKey(),
         ])->create();
-        $file = UploadedFile::fake()->createWithContent(
-            'transactions.csv',
-            $this->getFileContent()
-        );
+
+        Storage::fake('local');
+        $filePath = 'transactions.csv';
+        Storage::put($filePath, $this->getFileContent());
 
         $this->assertNull(Category::findByName('Переводы между счетами'));
 
         $service = ImportService::create();
-        $service->handle($file, $account);
+        $service->handle($filePath, $account);
 
         $freshChildCategory = $childCategory->fresh();
         $newCreatedParentCategory = Category::findByName('Переводы между счетами');
@@ -55,14 +55,14 @@ class ImportServiceTest extends TestCase
         $account = Account::factory([
             'integration_id' => Integration::findTinkoffBank()->getKey(),
         ])->create();
-        $file = UploadedFile::fake()->createWithContent(
-            'transactions.csv',
-            $this->getFileContent()
-        );
+
+        Storage::fake('local');
+        $filePath = 'transactions.csv';
+        Storage::put($filePath, $this->getFileContent());
 
         $this->assertCount(0, Transaction::all());
         $service = ImportService::create();
-        $service->handle($file, $account);
+        $service->handle($filePath, $account);
         $this->assertCount(6, Transaction::all());
     }
 

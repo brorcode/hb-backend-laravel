@@ -6,7 +6,6 @@ use App\Models\Account;
 use App\Models\Transaction;
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidFormatException;
-use Illuminate\Support\Facades\Log;
 
 abstract class Parser
 {
@@ -26,7 +25,7 @@ abstract class Parser
 
             return Carbon::parse($date);
         } catch (InvalidFormatException $exception) {
-            Log::debug($exception->getMessage());
+            logger()->debug($exception->getMessage());
 
             return null;
         }
