@@ -132,7 +132,11 @@ class ImportService
 
     public function canRunImport(): bool
     {
-        return TransactionsImport::query()->where('user_id', Auth::id())->doesntExist();
+        return TransactionsImport::query()
+            ->where('user_id', Auth::id())
+            ->where('status_id', TransactionsImport::STATUS_ID_PROCESS)
+            ->doesntExist()
+        ;
     }
 
     public function createTransactionsImport(AccountTransactionsImportRequest $request): TransactionsImport
@@ -155,41 +159,5 @@ class ImportService
         $transactionsImport->save();
 
         return $transactionsImport;
-    }
-
-    public function checkTransactionsImportStatus(): array
-    {
-        $isFinished = false;
-        $message = null;
-
-        $builder = TransactionsImport::query()->where('user_id', Auth::id());
-        if ($builder->doesntExist()) {
-            return ['data' => ['is_finished' => true]];
-        }
-
-        $builder->get()->each(function (TransactionsImport $import) use (&$message, &$isFinished) {
-            if ($import->isProcess()) {
-                return;
-            }
-
-            if ($import->isSuccess()) {
-                $message = 'Импорт транзакций завершен';
-            }
-
-            if ($import->isFailed()) {
-                $message = 'Импорт транзакций завершен с ошибками';
-            }
-
-            $isFinished = true;
-            $import->delete();
-        });
-
-        $response = ['data' => ['is_finished' => $isFinished]];
-
-        if ($message) {
-            $response['message'] = $message;
-        }
-
-        return $response;
     }
 }

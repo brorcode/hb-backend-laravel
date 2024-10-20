@@ -7,7 +7,7 @@ use App\Models\Account;
 use App\Models\Integration;
 use App\Models\TransactionsImport;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Storage;
@@ -15,7 +15,7 @@ use Tests\TestCase;
 
 class AccountImportTransactionsTest extends TestCase
 {
-    use RefreshDatabase;
+    use DatabaseMigrations;
 
     private User $user;
 
@@ -26,7 +26,7 @@ class AccountImportTransactionsTest extends TestCase
         $this->user = $this->userLogin();
     }
 
-    public function testAccountImportTransactions(): void
+    public function testAccountImportTransactionsWhenNoOtherImports(): void
     {
         Queue::fake();
 
@@ -56,6 +56,49 @@ class AccountImportTransactionsTest extends TestCase
 
         $transactionsImport = TransactionsImport::query()->first();
         $this->assertSame($account->getKey(), $transactionsImport->account->getKey());
+    }
+
+    public function testAccountImportTransactionsWhenPreviousImportIsFinished(): void
+    {
+        Queue::fake();
+        Storage::fake('local');
+
+        collect(TransactionsImport::STATUSES)->each(function ($status, $statusId) {
+            TransactionsImport::query()->truncate();
+
+            // Processing doesn't allow imports
+            if ($statusId === TransactionsImport::STATUS_ID_PROCESS) {
+                return;
+            }
+
+            TransactionsImport::factory()->for($this->user)->create([
+                'status_id' => $statusId,
+            ]);
+
+            $file = UploadedFile::fake()->create('transactions.csv');
+
+            $account = Account::factory()
+                ->for(Integration::factory()->state([
+                    'code_id' => Integration::CODE_ID_TINKOFF_BANK,
+                ]))
+                ->create()
+            ;
+
+            $this->assertCount(1, TransactionsImport::all());
+            $response = $this->postJson(route('api.v1.accounts.import', $account), [
+                'account_id' => $account->getKey(),
+                'file' => $file,
+            ]);
+
+            $this->assertCount(2, TransactionsImport::all());
+
+            Queue::assertPushed(TransactionsImportJob::class);
+
+            $response->assertOk();
+            $response->assertExactJson([
+                'message' => 'Ожидайдение завершения импорта',
+            ]);
+        });
     }
 
     public function testAccountCanNotImportTransactionsWithoutFile(): void
@@ -107,7 +150,9 @@ class AccountImportTransactionsTest extends TestCase
     {
         Queue::fake();
 
-        TransactionsImport::factory()->for($this->user)->create();
+        TransactionsImport::factory()->for($this->user)->create([
+            'status_id' => TransactionsImport::STATUS_ID_PROCESS,
+        ]);
         Storage::fake('local');
         $file = UploadedFile::fake()->create('transactions.csv');
 

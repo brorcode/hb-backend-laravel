@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Models\Scopes\OwnerScope;
 use App\Observers\LoanObserver;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

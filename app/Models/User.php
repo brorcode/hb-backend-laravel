@@ -107,21 +107,6 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsToMany(Loan::class);
     }
 
-    // @todo check this
-    // public static function findSuperUsers(): Collection
-    // {
-    //     return self::query()->whereHas('roles', function (Builder $query) {
-    //         $query->where('name', Role::NAME_SUPER_USER);
-    //     })->get();
-    // }
-    //
-    // public static function findDemoUsers(): Collection
-    // {
-    //     return self::query()->whereHas('roles', function (Builder $query) {
-    //         $query->where('name', Role::NAME_DEMO_USER);
-    //     })->get();
-    // }
-
     public function sendEmailVerificationNotification(): void
     {
         $this->notify(new VerifyEmail);

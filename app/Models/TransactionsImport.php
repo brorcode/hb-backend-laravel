@@ -58,19 +58,4 @@ class TransactionsImport extends Model
     {
         return $this->belongsTo(Account::class);
     }
-
-    public function isProcess(): bool
-    {
-        return $this->status_id === self::STATUS_ID_PROCESS;
-    }
-
-    public function isSuccess(): bool
-    {
-        return $this->status_id === self::STATUS_ID_SUCCESS;
-    }
-
-    public function isFailed(): bool
-    {
-        return $this->status_id === self::STATUS_ID_FAILED;
-    }
 }

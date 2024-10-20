@@ -54,18 +54,6 @@ class Transaction extends Model
         'is_auto_import' => 'bool',
     ];
 
-    protected $fillable = [
-        'category_id',
-        'amount',
-        'account_id',
-        'loan_id',
-        'is_debit',
-        'is_transfer',
-        'is_auto_import',
-        'created_at',
-        'updated_at',
-    ];
-
     /**
      * The "booted" method of the model.
      *

@@ -3,13 +3,14 @@
 use App\Http\Controllers\Api\v1\AccountController;
 use App\Http\Controllers\Api\v1\CategoryController;
 use App\Http\Controllers\Api\v1\CategoryPointerController;
+use App\Http\Controllers\Api\v1\DashboardController;
 use App\Http\Controllers\Api\v1\DictionaryController;
+use App\Http\Controllers\Api\v1\LoanController;
+use App\Http\Controllers\Api\v1\NotificationController;
 use App\Http\Controllers\Api\v1\TagController;
 use App\Http\Controllers\Api\v1\TransactionController;
 use App\Http\Controllers\Api\v1\UserController;
 use App\Http\Controllers\Api\v1\UserProfileController;
-use App\Http\Controllers\Api\v1\DashboardController;
-use App\Http\Controllers\Api\v1\LoanController;
 use App\Models\Permission;
 use Illuminate\Support\Facades\Route;
 
@@ -56,7 +57,6 @@ Route::group(['prefix' => 'v1', 'as' => 'api.v1.'], function () {
                     Route::put('/{account}', [AccountController::class, 'update'])->name('update');
                     Route::delete('/{account}', [AccountController::class, 'destroy'])->name('destroy');
                     Route::post('/{account_id}/transactions/import', [AccountController::class, 'import'])->name('import');
-                    Route::get('/check/import-status', [AccountController::class, 'checkImportStatus'])->name('check.import-status');
                 });
             });
 
@@ -153,6 +153,11 @@ Route::group(['prefix' => 'v1', 'as' => 'api.v1.'], function () {
                 ->middleware(['throttle:6,1'])
                 ->name('email.verification')
             ;
+        });
+
+        Route::group(['prefix' => 'notifications', 'as' => 'notifications.'], function () {
+            Route::get('/', [NotificationController::class, 'index'])->name('index');
+            Route::post('/read', [NotificationController::class, 'read'])->name('read');
         });
     });
 });

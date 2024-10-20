@@ -8,8 +8,10 @@ use App\Http\Requests\Api\v1\ListRequest;
 use App\Http\Resources\Api\v1\AccountResource;
 use App\Jobs\TransactionsImportJob;
 use App\Models\Account;
+use App\Models\User;
 use App\Services\Account\AccountListService;
 use App\Services\ImportTransactions\ImportService;
+use App\Services\ImportTransactions\NotificationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
@@ -56,18 +58,14 @@ class AccountController extends ApiController
         return response()->json(['message' => 'Аккаунт удален']);
     }
 
-    public function import(AccountTransactionsImportRequest $request, ImportService $service): JsonResponse
+    public function import(AccountTransactionsImportRequest $request, ImportService $service, NotificationService $notification): JsonResponse
     {
+        /** @var User $user */
+        $user = Auth::user();
         $transactionsImport = $service->createTransactionsImport($request);
-        TransactionsImportJob::dispatch(Auth::user(), $transactionsImport, $request->account);
+        TransactionsImportJob::dispatch($user, $transactionsImport, $request->account);
+        $notification->addMessage($user, $message = 'Ожидайдение завершения импорта');
 
-        return response()->json(['message' => 'Ожидайдение завершения импорта']);
-    }
-
-    public function checkImportStatus(ImportService $service): JsonResponse
-    {
-        $response = $service->checkTransactionsImportStatus();
-
-        return response()->json($response);
+        return response()->json(['message' => $message]);
     }
 }
