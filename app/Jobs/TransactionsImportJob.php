@@ -52,7 +52,7 @@ class TransactionsImportJob implements ShouldQueue
 
             $this->transactionsImport->imported_count = $imported;
             $this->transactionsImport->status_id = TransactionsImport::STATUS_ID_SUCCESS;
-            $message = "Импорт транзакций для {$this->account->name} завершен. Импортировано {$imported} записей";
+            $message = "Импорт транзакций для {$this->account->name} завершен. Импортировано {$imported}";
         } catch (Exception $e) {
             logger()->error($e->getMessage());
             $this->transactionsImport->status_id = TransactionsImport::STATUS_ID_FAILED;
@@ -85,6 +85,10 @@ class TransactionsImportJob implements ShouldQueue
         $this->transactionsImport->save();
 
         $this->removeUploadedFile();
+        $this->notificationService->addMessage(
+            $this->user,
+            "Импорт транзакций для {$this->account->name} завершен с ошибками",
+        );
     }
 
     private function removeUploadedFile(): void

@@ -2,10 +2,12 @@
 
 namespace Tests\Unit\Jobs;
 
+use App\Exceptions\SystemException;
 use App\Jobs\TransactionsUpdateCategoriesJob;
 use App\Models\Category;
 use App\Models\CategoryPointer;
 use App\Models\CategoryPointerTag;
+use App\Models\Notification;
 use App\Models\Scopes\OwnerScope;
 use App\Models\Transaction;
 use App\Models\User;
@@ -64,9 +66,18 @@ class TransactionsUpdateCategoriesJobTest extends TestCase
             ->where('category_id', $childCategory->getKey())
             ->count()
         );
+
+        $this->assertCount(0, Notification::all());
         $this->assertSame(2, Category::query()->count());
         $this->dispatch();
         $this->assertSame(1, Category::query()->count());
+        $this->assertCount(2, Notification::all());
+        $this->assertDatabaseHas((new Notification())->getTable(), [
+            'message' => 'Запущено обновление категорий',
+        ]);
+        $this->assertDatabaseHas((new Notification())->getTable(), [
+            'message' => 'Категории транзакций обновлены',
+        ]);
     }
 
     public function testThisDoesNotRemoveAutomaticCreatedNotEmptyChildCategories(): void
@@ -118,6 +129,7 @@ class TransactionsUpdateCategoriesJobTest extends TestCase
             ->create()
         ;
 
+        $this->assertCount(0, Notification::all());
         $this->assertSame(1, Transaction::query()->count());
         $this->assertSame(1, Transaction::query()
             ->where('category_id', $childCategory->getKey())
@@ -149,6 +161,13 @@ class TransactionsUpdateCategoriesJobTest extends TestCase
         );
 
         $this->assertSame(3, Category::query()->count());
+        $this->assertCount(2, Notification::all());
+        $this->assertDatabaseHas((new Notification())->getTable(), [
+            'message' => 'Запущено обновление категорий',
+        ]);
+        $this->assertDatabaseHas((new Notification())->getTable(), [
+            'message' => 'Категории транзакций обновлены',
+        ]);
     }
 
     public function testJobRemovesAutomaticCreatedEmptyChildCategoriesForUserWhoRunJob(): void
@@ -236,5 +255,16 @@ class TransactionsUpdateCategoriesJobTest extends TestCase
     {
         $tagNames = (new TransactionsUpdateCategoriesJob($this->user))->tags();
         $this->assertEquals(['TransactionsUpdateCategoriesJob'], $tagNames);
+    }
+
+    public function testTransactionUpdateCategoriesJobAddNotificationWhenFailed(): void
+    {
+        $exception = new SystemException('An error occurred');
+        $this->assertCount(0, Notification::all());
+        (new TransactionsUpdateCategoriesJob($this->user))->failed($exception);
+        $this->assertCount(1, Notification::all());
+        $this->assertDatabaseHas((new Notification())->getTable(), [
+            'message' => 'Обновление категорий завершено с ошибками',
+        ]);
     }
 }

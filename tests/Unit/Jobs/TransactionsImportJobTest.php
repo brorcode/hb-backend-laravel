@@ -6,6 +6,7 @@ use App\Exceptions\SystemException;
 use App\Jobs\TransactionsImportJob;
 use App\Models\Account;
 use App\Models\Integration;
+use App\Models\Notification;
 use App\Models\Transaction;
 use App\Models\TransactionsImport;
 use App\Models\User;
@@ -20,6 +21,7 @@ class TransactionsImportJobTest extends TestCase
     use RefreshDatabase;
 
     private User $user;
+    private Account $account;
     private TransactionsImport $transactionsImport;
 
     public function setUp(): void
@@ -33,13 +35,13 @@ class TransactionsImportJobTest extends TestCase
         Storage::put($filePath, $this->getFileContent());
 
         Integration::factory()->create(['code_id' => Integration::CODE_ID_TINKOFF_BANK]);
-        $account = Account::factory([
+        $this->account = Account::factory([
             'integration_id' => Integration::findTinkoffBank()->getKey(),
         ])->create();
 
         $this->transactionsImport = TransactionsImport::factory()
             ->for($this->user)
-            ->for($account)
+            ->for($this->account)
             ->create([
                 'file_path' => $filePath,
                 'imported_count' => 0,
@@ -57,6 +59,7 @@ class TransactionsImportJobTest extends TestCase
 
     public function testTransactionsImportJobCanImportTransactionsSuccessfully(): void
     {
+        $this->assertCount(0, Notification::all());
         $this->assertCount(0, Transaction::all());
         $this->assertCount(1, TransactionsImport::all());
         $this->dispatch();
@@ -67,6 +70,11 @@ class TransactionsImportJobTest extends TestCase
             'imported_count' => 2,
             'status_id' => TransactionsImport::STATUS_ID_SUCCESS,
             'error' => null,
+        ]);
+
+        $this->assertCount(1, Notification::all());
+        $this->assertDatabaseHas((new Notification())->getTable(), [
+            'message' => "Импорт транзакций для {$this->account->name} завершен. Импортировано 2",
         ]);
     }
 
@@ -79,6 +87,7 @@ class TransactionsImportJobTest extends TestCase
             ;
         });
 
+        $this->assertCount(0, Notification::all());
         $this->assertCount(0, Transaction::all());
         $this->assertCount(1, TransactionsImport::all());
         $this->dispatch();
@@ -90,17 +99,26 @@ class TransactionsImportJobTest extends TestCase
             'status_id' => TransactionsImport::STATUS_ID_FAILED,
             'error' => 'An error occurred',
         ]);
+        $this->assertCount(1, Notification::all());
+        $this->assertDatabaseHas((new Notification())->getTable(), [
+            'message' => "Импорт транзакций для {$this->account->name} завершен с ошибками",
+        ]);
     }
 
     public function testTransactionsImportJobChangesStatusToFailedWhenJobFailsForAnyReason(): void
     {
         $exception = new SystemException('An error occurred');
+        $this->assertCount(0, Notification::all());
         (new TransactionsImportJob($this->user, $this->transactionsImport, $this->transactionsImport->account))->failed($exception);
 
         $this->assertDatabaseHas((new TransactionsImport())->getTable(), [
             'imported_count' => 0,
             'status_id' => TransactionsImport::STATUS_ID_FAILED,
             'error' => 'An error occurred',
+        ]);
+        $this->assertCount(1, Notification::all());
+        $this->assertDatabaseHas((new Notification())->getTable(), [
+            'message' => "Импорт транзакций для {$this->account->name} завершен с ошибками",
         ]);
     }
 
