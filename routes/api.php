@@ -33,8 +33,8 @@ Route::group(['prefix' => 'v1', 'as' => 'api.v1.'], function () {
 
             Route::group(['prefix' => 'categories', 'as' => 'categories.'], function () {
                 Route::group(['middleware' => 'permission:'.Permission::NAME_CATEGORIES_VIEW], function () {
-                    Route::post('/', [CategoryController::class, 'index'])->name('index');
-                    Route::post('/{parent_category_id}/child', [CategoryController::class, 'child'])->name('child');
+                    Route::post('/parent', [CategoryController::class, 'parent'])->name('parent');
+                    Route::post('/child', [CategoryController::class, 'child'])->name('child');
                     Route::get('/{category}', [CategoryController::class, 'show'])->name('show');
                 });
 
@@ -42,7 +42,6 @@ Route::group(['prefix' => 'v1', 'as' => 'api.v1.'], function () {
                     Route::post('/store', [CategoryController::class, 'store'])->name('store');
                     Route::put('/{category}', [CategoryController::class, 'update'])->name('update');
                     Route::delete('/{category}', [CategoryController::class, 'destroy'])->name('destroy');
-                    Route::delete('/{parent_category_id}/child/{child_category}', [CategoryController::class, 'destroyChild'])->name('destroy.child');
                 });
             });
 

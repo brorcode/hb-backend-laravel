@@ -21,6 +21,7 @@ class CategoryChildListService extends AbstractListService
         $builder = parent::getBuilder();
 
         $builder
+            ->whereNotNull('parent_id')
             ->with([
                 'parentCategory',
                 'transactionsDebit' => function (HasMany $query) {
@@ -63,6 +64,12 @@ class CategoryChildListService extends AbstractListService
 
     protected function applySpecificFilters(Builder $builder): void
     {
-        $builder->where('parent_id', $this->request->route('parent_category_id'));
+        if (isset($this->request->filters['name'])) {
+            $builder->where('name', 'like', "%{$this->request->filters['name']['value']}%");
+        }
+
+        if (isset($this->request->filters['parent_categories'])) {
+            $builder->whereIn('parent_id', array_column($this->request->filters['parent_categories']['value'], 'id'));
+        }
     }
 }

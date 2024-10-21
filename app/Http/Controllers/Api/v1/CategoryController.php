@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CategoryController extends ApiController
 {
-    public function index(ListRequest $request): JsonResponse
+    public function parent(ListRequest $request): JsonResponse
     {
         $service = CategoryParentListService::create();
         $service->setRequest($request);
@@ -72,13 +72,6 @@ class CategoryController extends ApiController
     public function destroy(Category $category): JsonResponse
     {
         $category->delete();
-
-        return response()->json(['message' => 'Категория удалена']);
-    }
-
-    public function destroyChild(int $parentCategoryId, Category $childCategory): JsonResponse
-    {
-        $childCategory->delete();
 
         return response()->json(['message' => 'Категория удалена']);
     }

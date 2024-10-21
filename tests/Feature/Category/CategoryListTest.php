@@ -53,7 +53,7 @@ class CategoryListTest extends TestCase
             ];
         });
 
-        $response = $this->postJson(route('api.v1.categories.index'), [
+        $response = $this->postJson(route('api.v1.categories.parent'), [
             'page' => 1,
             'limit' => 10,
         ]);
@@ -82,7 +82,7 @@ class CategoryListTest extends TestCase
             ->create()
         ;
 
-        $response = $this->postJson(route('api.v1.categories.child', $childCategory->parent_id), [
+        $response = $this->postJson(route('api.v1.categories.child'), [
             'page' => 1,
             'limit' => 10,
         ]);
@@ -122,7 +122,7 @@ class CategoryListTest extends TestCase
     #[DataProvider('invalidDataProvider')]
     public function testCategoryListApiReturnsValidationErrors(array $request): void
     {
-        $response = $this->postJson(route('api.v1.categories.index'), $request);
+        $response = $this->postJson(route('api.v1.categories.parent'), $request);
         $response->assertBadRequest();
         $response->assertExactJson([
             'message' => 'Ошибка сервера. Попробуйте еще раз',
