@@ -12,13 +12,8 @@ class ReleaseCommand extends Command
     private array $commands = [
         'app:create-permissions-and-roles',
         'app:update-transactions',
-        'app:remove-transactions',
 
         // Examples:
-        // ['send-in-blue:set-email-template', [
-        //     'code' => SendInBlueEmailTemplate::CODE_P2P_TRANSFER_PROCESSED_TO_RECEIVER,
-        //     'id' => 1804,
-        // ]],
         // ['permissions:create', [
         //     'name' => 'Delete Countries and States',
         //     'slug' => Permission::SLUG_COUNTRIES_DELETE,
