@@ -73,7 +73,7 @@ class TransactionsImportJobTest extends TestCase
             'error' => null,
         ]);
 
-        $this->assertCount(5, Notification::all());
+        $this->assertCount(4, Notification::all());
         $this->assertDatabaseHas((new Notification())->getTable(), [
             'message' => 'Общее количество транзакций для импорта 210',
         ]);
@@ -84,10 +84,7 @@ class TransactionsImportJobTest extends TestCase
             'message' => 'Импортировано 200 транзакции из 210',
         ]);
         $this->assertDatabaseHas((new Notification())->getTable(), [
-            'message' => 'Импортировано 210 транзакции из 210',
-        ]);
-        $this->assertDatabaseHas((new Notification())->getTable(), [
-            'message' => "Импорт транзакций для {$this->account->name} завершен",
+            'message' => "Импорт транзакций для {$this->account->name} завершен. Импортировано 210 транзакции из 210",
         ]);
     }
 
@@ -100,7 +97,6 @@ class TransactionsImportJobTest extends TestCase
             ;
         });
 
-        $this->assertCount(0, Notification::all());
         $this->assertCount(0, Transaction::all());
         $this->assertCount(1, TransactionsImport::all());
         $this->dispatch();
@@ -111,10 +107,6 @@ class TransactionsImportJobTest extends TestCase
             'imported_count' => 0,
             'status_id' => TransactionsImport::STATUS_ID_FAILED,
             'error' => 'An error occurred',
-        ]);
-        $this->assertCount(1, Notification::all());
-        $this->assertDatabaseHas((new Notification())->getTable(), [
-            'message' => "Импорт транзакций для {$this->account->name} завершен с ошибками",
         ]);
     }
 

@@ -24,18 +24,12 @@ class TransactionsImportJob implements ShouldQueue
     private User $user;
     private TransactionsImport $transactionsImport;
     private Account $account;
-    private ImportService $importService;
-    private NotificationService $notificationService;
 
     public function __construct(User $user, TransactionsImport $transactionsImport, Account $account)
     {
         $this->user = $user;
-        OwnerService::make()->setUser($this->user);
-
         $this->transactionsImport = $transactionsImport;
         $this->account = $account;
-        $this->importService = ImportService::create();
-        $this->notificationService = NotificationService::make();
 
         $this->timeout = config('homebudget.queue_long_running_timeout');
         $this->onQueue('long-running');
@@ -49,26 +43,24 @@ class TransactionsImportJob implements ShouldQueue
     public function handle(): void
     {
         $exception = null;
+        OwnerService::make()->setUser($this->user);
+        $importService = ImportService::create();
 
         try {
-            $this->importService->handle($this->transactionsImport->file_path, $this->account);
-            $this->transactionsImport->imported_count = $this->importService->getImportedCount();
+            $importService->handle($this->transactionsImport->file_path, $this->account);
+            $this->transactionsImport->imported_count = $importService->getImportedCount();
             $this->transactionsImport->status_id = TransactionsImport::STATUS_ID_SUCCESS;
-            $message = "Импорт транзакций для {$this->account->name} завершен";
         } catch (Exception $e) {
             logger()->error($e->getMessage());
             $this->transactionsImport->status_id = TransactionsImport::STATUS_ID_FAILED;
             $this->transactionsImport->error = $e->getMessage();
             $exception = $e;
-            $message = "Импорт транзакций для {$this->account->name} завершен с ошибками";
         }
 
         $this->transactionsImport->finished_at = now();
         $this->transactionsImport->save();
 
         $this->removeUploadedFile();
-
-        $this->notificationService->addMessage($this->user, $message);
 
         if ($exception) {
             $this->fail($exception);
@@ -87,7 +79,7 @@ class TransactionsImportJob implements ShouldQueue
         $this->transactionsImport->save();
 
         $this->removeUploadedFile();
-        $this->notificationService->addMessage(
+        NotificationService::make()->addMessage(
             $this->user,
             "Импорт транзакций для {$this->account->name} завершен с ошибками",
         );

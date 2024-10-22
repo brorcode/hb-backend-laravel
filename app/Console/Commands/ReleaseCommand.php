@@ -6,8 +6,8 @@ use Illuminate\Console\Command;
 
 class ReleaseCommand extends Command
 {
-    protected $signature = "db-update:release";
-    protected $description = "Run all commands need for release";
+    protected $signature = 'db-update:release';
+    protected $description = 'Run all commands need for release';
 
     private array $commands = [
         'app:create-permissions-and-roles',

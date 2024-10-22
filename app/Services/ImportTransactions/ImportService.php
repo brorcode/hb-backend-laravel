@@ -58,7 +58,10 @@ class ImportService
     private function saveTransactions(Collection $rows, Account $account): void
     {
         $countTransactions = $rows->count();
-        $this->notificationService->addMessage($this->user, "Общее количество транзакций для импорта {$countTransactions}");
+        $this->notificationService->addMessage(
+            $this->user,
+            "Общее количество транзакций для импорта {$countTransactions}",
+        );
 
         $sorted = $rows->sortBy('date');
         $sorted->each(function (Collection $row) use ($account, $countTransactions) {
@@ -69,11 +72,17 @@ class ImportService
             }
 
             if ($this->imported % 100 === 0) {
-                $this->notificationService->addMessage($this->user, "Импортировано {$this->imported} транзакций из {$countTransactions}");
+                $this->notificationService->addMessage(
+                    $this->user,
+                    "Импортировано {$this->imported} транзакций из {$countTransactions}",
+                );
             }
         });
 
-        $this->notificationService->addMessage($this->user, "Импортировано {$this->imported} транзакций из {$countTransactions}");
+        $this->notificationService->addMessage(
+            $this->user,
+            "Импорт транзакций для {$account->name} завершен. Импортировано {$this->imported} транзакций из {$countTransactions}",
+        );
     }
 
     private function populateDatabase(Collection $row, Account $account): void
