@@ -19,6 +19,8 @@ class TransactionsUpdateCategoriesJob implements ShouldQueue
 {
     use Queueable;
 
+    public int $timeout;
+
     private User $user;
     private CategoryPointerService $categoryPointerService;
     private NotificationService $notificationService;
@@ -27,7 +29,9 @@ class TransactionsUpdateCategoriesJob implements ShouldQueue
     {
         $this->user = $user;
         $this->categoryPointerService = CategoryPointerService::create();
-        $this->notificationService = NotificationService::create();
+        $this->notificationService = NotificationService::make();
+
+        $this->timeout = config('homebudget.queue_long_running_timeout');
         $this->onQueue('long-running');
     }
 

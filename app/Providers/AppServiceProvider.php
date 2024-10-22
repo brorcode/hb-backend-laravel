@@ -20,6 +20,7 @@ use App\Observers\LoanObserver;
 use App\Observers\TagObserver;
 use App\Observers\TransactionObserver;
 use App\Services\ImportTransactions\DelimiterDetector;
+use App\Services\ImportTransactions\NotificationService;
 use App\Services\OwnerService;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Database\Eloquent\Model;
@@ -34,6 +35,7 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->singleton(OwnerService::class);
+        $this->app->singleton(NotificationService::class);
         $this->app->singleton(DelimiterDetector::class);
         $this->app->bind(ExceptionHandler::class, Handler::class);
     }

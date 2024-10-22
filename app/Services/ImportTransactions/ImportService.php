@@ -9,6 +9,7 @@ use App\Models\Category;
 use App\Models\Transaction;
 use App\Models\TransactionsImport;
 use App\Models\User;
+use App\Services\OwnerService;
 use App\Services\ServiceInstance;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
@@ -30,10 +31,17 @@ class ImportService
 
     private ReaderFactory $factory;
     private int $imported;
+    private User $user;
+    private NotificationService $notificationService;
 
+    /**
+     * @throws SystemException
+     */
     public function __construct(ReaderFactory $factory)
     {
         $this->factory = $factory;
+        $this->user = OwnerService::make()->getUser();
+        $this->notificationService = NotificationService::make();
     }
 
     /**
@@ -49,14 +57,23 @@ class ImportService
 
     private function saveTransactions(Collection $rows, Account $account): void
     {
+        $countTransactions = $rows->count();
+        $this->notificationService->addMessage($this->user, "Общее количество транзакций для импорта {$countTransactions}");
+
         $sorted = $rows->sortBy('date');
-        $sorted->each(function (Collection $row) use ($account) {
+        $sorted->each(function (Collection $row) use ($account, $countTransactions) {
             $this->populateDatabase($row, $account);
 
             if ($row['parent_category_name'] === self::CASH) {
                 $this->createCashDebitTransaction($row);
             }
+
+            if ($this->imported % 100 === 0) {
+                $this->notificationService->addMessage($this->user, "Импортировано {$this->imported} транзакций из {$countTransactions}");
+            }
         });
+
+        $this->notificationService->addMessage($this->user, "Импортировано {$this->imported} транзакций из {$countTransactions}");
     }
 
     private function populateDatabase(Collection $row, Account $account): void

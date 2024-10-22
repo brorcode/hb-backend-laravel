@@ -4,13 +4,13 @@ namespace App\Services\ImportTransactions;
 
 use App\Models\Notification;
 use App\Models\User;
-use App\Services\ServiceInstance;
+use App\Services\ServiceSingleton;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 
 class NotificationService
 {
-    use ServiceInstance;
+    use ServiceSingleton;
 
     public function addMessage(User $user, string $message): void
     {

@@ -85,7 +85,7 @@ return [
 
     'waits' => [
         'redis:default' => 60,
-        'redis-long-running:long-running' => env('HORIZON_TIMEOUT_LONG_RUNNING', 600),
+        'redis-long-running:long-running' => env('QUEUE_LONG_RUNNING_TIMEOUT', 600),
     ],
 
     /*
@@ -206,7 +206,7 @@ return [
             'memory' => 128,
             'tries' => 1,
             // 10 minutes
-            'timeout' => env('HORIZON_TIMEOUT_LONG_RUNNING', 600),
+            'timeout' => env('QUEUE_LONG_RUNNING_TIMEOUT', 600),
             'nice' => 0,
         ],
     ],

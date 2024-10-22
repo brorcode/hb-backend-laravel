@@ -76,7 +76,7 @@ return [
             'driver' => 'redis',
             'connection' => env('REDIS_QUEUE_CONNECTION', 'default'),
             'queue' => 'long-running',
-            'retry_after' => env('HORIZON_TIMEOUT_LONG_RUNNING', 600) + 30,
+            'retry_after' => env('QUEUE_LONG_RUNNING_TIMEOUT', 600) + 30,
             'block_for' => null,
             'after_commit' => false,
         ],
