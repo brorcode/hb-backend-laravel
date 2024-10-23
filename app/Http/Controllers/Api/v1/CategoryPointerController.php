@@ -27,7 +27,7 @@ class CategoryPointerController extends ApiController
         TransactionsUpdateCategoriesJob::dispatch(Auth::user());
 
         return response()->json([
-            'message' => 'Указатели категорий обновлены',
+            'message' => 'Указатели категорий обновлены. Запущено обновление категорий',
             'parent' => CategoryPointerResource::collection($service->getPointers(true)),
             'child' => CategoryPointerResource::collection($service->getPointers(false)),
 

@@ -42,7 +42,7 @@ class CategoryPointerSaveTest extends TestCase
 
         $response->assertOk();
         $response->assertExactJson([
-            'message' => 'Указатели категорий обновлены',
+            'message' => 'Указатели категорий обновлены. Запущено обновление категорий',
             'parent' => [
                 [
                     'name' => 'parent pointer',
