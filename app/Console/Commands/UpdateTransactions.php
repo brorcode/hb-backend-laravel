@@ -25,8 +25,9 @@ class UpdateTransactions extends Command
                     $transaction->is_debit = !$transaction->is_debit;
                     $transaction->saveQuietly();
                     $updatedCount++;
-                });
-                $this->info('Updated ' . $updatedCount . ' of ' . $total . ' transactions');
+                })
+            ;
+            $this->info('Updated ' . $updatedCount . ' of ' . $total . ' transactions');
         });
     }
 }

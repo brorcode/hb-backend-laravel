@@ -30,16 +30,6 @@ class ParseTinkoff extends Parser implements ParserContract
             return null;
         }
 
-        // @todo temp solution if I need to import child account. Tinkoff joined accounts for import
-        // if ($row[2] !== '*4514') {
-        //     return null;
-        // }
-
-        // @todo temp solution because Tinkoff joined accounts for import
-        if ($account->getKey() === 1 && $row[2] === '*4514') {
-            return null;
-        }
-
         $date = $this->getDate($dateRow);
         if (!$date || !$this->isCompleted($row[3]) || $this->isImportedAlready($date, $latestImportedDate)) {
             return null;

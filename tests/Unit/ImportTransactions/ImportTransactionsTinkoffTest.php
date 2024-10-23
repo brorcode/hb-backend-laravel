@@ -10,7 +10,6 @@ use App\Models\Integration;
 use App\Models\Transaction;
 use App\Services\ImportTransactions\ImportService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 

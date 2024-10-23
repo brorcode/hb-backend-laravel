@@ -78,10 +78,10 @@ class TransactionsImportJobTest extends TestCase
             'message' => 'Общее количество транзакций для импорта 210',
         ]);
         $this->assertDatabaseHas((new Notification())->getTable(), [
-            'message' => 'Импортировано 100 транзакции из 210',
+            'message' => 'Идет импорт... Импортировано 100 транзакции из 210',
         ]);
         $this->assertDatabaseHas((new Notification())->getTable(), [
-            'message' => 'Импортировано 200 транзакции из 210',
+            'message' => 'Идет импорт... Импортировано 200 транзакции из 210',
         ]);
         $this->assertDatabaseHas((new Notification())->getTable(), [
             'message' => "Импорт транзакций для {$this->account->name} завершен. Импортировано 210 транзакции из 210",

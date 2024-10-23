@@ -74,7 +74,7 @@ class ImportService
             if ($this->imported % 100 === 0) {
                 $this->notificationService->addMessage(
                     $this->user,
-                    "Импортировано {$this->imported} транзакций из {$countTransactions}",
+                    "Идет импорт... Импортировано {$this->imported} транзакций из {$countTransactions}",
                 );
             }
         });
