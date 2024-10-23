@@ -62,15 +62,12 @@ class DashboardService
         $items = $months->map(function ($month, $key) use ($data, &$initialBalance) {
             $total = isset($data[$month]) ? $data[$month]->total : 0;
             $balance = $initialBalance + $total;
-            $percentage = $this->getPercentageBetween($initialBalance, $balance);
             $initialBalance = $balance;
 
             return [
                 'id' => $key,
                 'total' => $total / 100,
                 'month' => $this->getMonth($month),
-                'percentage' => $percentage,
-                'down' => $percentage < 0,
                 'balance' => $balance / 100,
             ];
         });
