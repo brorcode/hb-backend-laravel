@@ -20,6 +20,7 @@ class AccountResource extends JsonResource
         return [
             'id' => $account->getKey(),
             'name' => $account->name,
+            'is_archived' => $account->is_archived,
             'amount' => $account->transactions->sum('amount') / 100,
             'created_at' => $account->created_at,
             'updated_at' => $account->updated_at,

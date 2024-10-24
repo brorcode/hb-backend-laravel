@@ -33,6 +33,7 @@ class AccountController extends ApiController
     {
         $account = new Account();
         $account->name = $request->name;
+        $account->is_archived = $request->is_archived;
         $account->save();
 
         return response()->json(['message' => 'Аккаунт создан'], Response::HTTP_CREATED);
@@ -46,6 +47,7 @@ class AccountController extends ApiController
     public function update(AccountUpsertRequest $request, Account $account): JsonResponse
     {
         $account->name = $request->name;
+        $account->is_archived = $request->is_archived;
         $account->save();
 
         return $this->response(AccountResource::make($account), 'Аккаунт обновлен');

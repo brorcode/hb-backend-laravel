@@ -28,13 +28,14 @@ class AccountListTest extends TestCase
                 'is_debit' => true,
                 'is_transfer' => false,
             ]))
-            ->create()
+            ->create(['is_archived' => false])
         ;
 
         $data = $accounts->take(10)->map(function (Account $account) {
             return [
                 'id' => $account->getKey(),
                 'name' => $account->name,
+                'is_archived' => false,
                 'amount' => 3*10,
                 'created_at' => $account->created_at,
                 'updated_at' => $account->updated_at,

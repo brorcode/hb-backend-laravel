@@ -16,6 +16,7 @@ class AccountFactory extends Factory
         return [
             'name' => $this->faker->words(3, true),
             'integration_id' => Integration::factory(),
+            'is_archived' => $this->faker->boolean,
         ];
     }
 

@@ -10,6 +10,7 @@ use App\Rules\UniqueNameForUserRule;
  * @property-read Account|null account
  *
  * @property-read string name
+ * @property-read bool is_archived
  */
 class AccountUpsertRequest extends ApiRequest
 {
@@ -20,6 +21,7 @@ class AccountUpsertRequest extends ApiRequest
                 'required',
                 new UniqueNameForUserRule(Account::class, $this->account),
             ],
+            'is_archived' => ['required', 'bool'],
         ];
     }
 }

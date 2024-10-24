@@ -35,6 +35,7 @@ class AccountUpsertTest extends TestCase
             'data' => [
                 'id' => $account->getKey(),
                 'name' => $account->name,
+                'is_archived' => $account->is_archived,
                 'amount' => $account->transactions->sum('amount') / 100,
                 'created_at' => $account->created_at,
                 'updated_at' => $account->updated_at,
@@ -48,6 +49,7 @@ class AccountUpsertTest extends TestCase
 
         $response = $this->postJson(route('api.v1.accounts.store'), [
             'name' => 'test',
+            'is_archived' => false,
         ]);
 
         $this->assertCount(1, Account::all());
@@ -80,21 +82,27 @@ class AccountUpsertTest extends TestCase
         /** @var Account $account */
         $account = Account::factory()
             ->has(Transaction::factory()->count(10))
-            ->create(['name' => 'test account name'])
+            ->create([
+                'name' => 'test account name',
+                'is_archived' => false,
+            ])
         ;
 
         $this->assertCount(1, Account::all());
         $this->assertDatabaseMissing((new Account())->getTable(), [
             'name' => 'new account name',
+            'is_archived' => true,
         ]);
 
         $response = $this->putJson(route('api.v1.accounts.update', $account), [
             'name' => 'new account name',
+            'is_archived' => true,
         ]);
 
         $this->assertCount(1, Account::all());
         $this->assertDatabaseHas((new Account())->getTable(), [
             'name' => 'new account name',
+            'is_archived' => true,
         ]);
 
         $response->assertOk();
@@ -105,6 +113,7 @@ class AccountUpsertTest extends TestCase
             'data' => [
                 'id' => $freshAccount->getKey(),
                 'name' => 'new account name',
+                'is_archived' => true,
                 'amount' => $freshAccount->transactions->sum('amount') / 100,
                 'created_at' => $freshAccount->created_at,
                 'updated_at' => $freshAccount->updated_at,
@@ -134,6 +143,7 @@ class AccountUpsertTest extends TestCase
 
         $response = $this->putJson(route('api.v1.accounts.update', $account), [
             'name' => 'existing account name',
+            'is_archived' => false,
         ]);
 
         $response->assertOk();
@@ -142,6 +152,7 @@ class AccountUpsertTest extends TestCase
             'data' => [
                 'id' => $account->getKey(),
                 'name' => 'existing account name',
+                'is_archived' => false,
                 'amount' => 0,
                 'created_at' => $account->created_at,
                 'updated_at' => $account->updated_at,
@@ -157,6 +168,7 @@ class AccountUpsertTest extends TestCase
         $this->userLogin();
         $response = $this->postJson(route('api.v1.accounts.store'), [
             'name' => 'account 1',
+            'is_archived' => false,
         ]);
 
         $this->assertCount(
@@ -177,11 +189,13 @@ class AccountUpsertTest extends TestCase
                 'request' => [],
                 'errors' => [
                     'name' => ['Поле name обязательно.'],
+                    'is_archived' => ['Поле is archived обязательно.'],
                 ],
             ],
             'wrong_data_2' => [
                 'request' => [
                     'name' => 'existing account name',
+                    'is_archived' => false,
                 ],
                 'errors' => [
                     'name' => ['Такое название уже существует.'],

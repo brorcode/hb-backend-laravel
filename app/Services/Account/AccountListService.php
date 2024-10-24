@@ -27,5 +27,9 @@ class AccountListService extends AbstractListService
         if (isset($this->request->filters['name'])) {
             $builder->where('name', 'like', "%{$this->request->filters['name']['value']}%");
         }
+
+        if (!isset($this->request->filters['show_archived'])) {
+            $builder->where('is_archived', false);
+        }
     }
 }

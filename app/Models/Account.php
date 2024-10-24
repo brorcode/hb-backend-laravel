@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read int id
  * @property string name
  * @property int|null integration_id
+ * @property boolean is_archived
  * @property Carbon|null created_at
  * @property Carbon|null updated_at
  *
@@ -32,6 +33,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Account extends Model
 {
     use HasFactory;
+
+    protected $casts = [
+        'is_archived' => 'bool',
+    ];
 
     /**
      * The "booted" method of the model.

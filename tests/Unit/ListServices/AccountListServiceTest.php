@@ -46,6 +46,62 @@ class AccountListServiceTest extends TestCase
         $this->assertEquals($filters[$filterKey]['value'], $data[0][$filterKey]);
     }
 
+    public function testAccountListServiceByDefaultShowsNotArchivedAccountsOnly(): void
+    {
+        Account::factory()
+            ->count(3)
+            ->sequence(
+                ['is_archived' => true],
+                ['is_archived' => false],
+                ['is_archived' => true],
+            )
+            ->create()
+        ;
+
+        $service = AccountListService::create();
+        $request = new ListRequest();
+        $request->merge([
+            'page' => 1,
+            'limit' => 10,
+        ]);
+        $service->setRequest($request);
+        $builder = $service->getListBuilder();
+        $paginator = $builder->simplePaginate($request->limit);
+        $data = $paginator->items();
+
+        $this->assertCount(3, Account::all());
+        $this->assertCount(1, $data);
+        $this->assertFalse($data[0]['is_archived']);
+    }
+
+    public function testAccountListServiceHandleShowArchivedFilter(): void
+    {
+        Account::factory()
+            ->count(3)
+            ->sequence(
+                ['is_archived' => true],
+                ['is_archived' => false],
+                ['is_archived' => true],
+            )
+            ->create()
+        ;
+
+        $service = AccountListService::create();
+        $request = new ListRequest();
+        $request->merge([
+            'page' => 1,
+            'limit' => 10,
+            'filters' => ['show_archived' => true],
+        ]);
+        $service->setRequest($request);
+        $builder = $service->getListBuilder();
+        $paginator = $builder->simplePaginate($request->limit);
+        $data = $paginator->items();
+
+        $this->assertCount(3, Account::all());
+        $this->assertCount(3, $data);
+    }
+
     #[DataProvider('accountSortingDataProvider')]
     public function testAccountListServiceHandleSorting(int $count, array $sequence, array $sorting): void
     {
@@ -60,6 +116,7 @@ class AccountListServiceTest extends TestCase
         $request->merge([
             'page' => 1,
             'limit' => 10,
+            'filters' => ['show_archived' => true],
             'sorting' => $sorting,
         ]);
         $service->setRequest($request);
@@ -88,9 +145,11 @@ class AccountListServiceTest extends TestCase
                 'sequence' => [
                     [
                         'id' => 1,
+                        'is_archived' => false,
                     ],
                     [
                         'id' => 2,
+                        'is_archived' => false,
                     ]
                 ],
                 'filterKey' => 'id',
@@ -101,9 +160,11 @@ class AccountListServiceTest extends TestCase
                 'sequence' => [
                     [
                         'name' => 'name 1',
+                        'is_archived' => false,
                     ],
                     [
                         'name' => 'name 2',
+                        'is_archived' => false,
                     ]
                 ],
                 'filterKey' => 'name',
@@ -120,9 +181,11 @@ class AccountListServiceTest extends TestCase
                 'sequence' => [
                     [
                         'id' => 1,
+                        'is_archived' => false,
                     ],
                     [
                         'id' => 2,
+                        'is_archived' => false,
                     ]
                 ],
                 'sorting' => [
@@ -135,13 +198,30 @@ class AccountListServiceTest extends TestCase
                 'sequence' => [
                     [
                         'name' => 'a name',
+                        'is_archived' => false,
                     ],
                     [
                         'name' => 'b name',
+                        'is_archived' => false,
                     ]
                 ],
                 'sorting' => [
                     'column' => 'name',
+                    'direction' => 'DESC',
+                ],
+            ],
+            'sorting_3' => [
+                'count' => 2,
+                'sequence' => [
+                    [
+                        'is_archived' => false,
+                    ],
+                    [
+                        'is_archived' => true,
+                    ]
+                ],
+                'sorting' => [
+                    'column' => 'is_archived',
                     'direction' => 'DESC',
                 ],
             ],
