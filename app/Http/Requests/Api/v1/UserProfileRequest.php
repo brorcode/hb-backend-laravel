@@ -7,9 +7,9 @@ use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 
 /**
- * @property-read string name
- * @property-read string email
- * @property-read string|null password
+ * @property-read string $name
+ * @property-read string $email
+ * @property-read string|null $password
  */
 class UserProfileRequest extends ApiRequest
 {

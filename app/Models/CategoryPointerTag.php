@@ -13,12 +13,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
- * @property-read int id
- * @property string name
- * @property integer category_pointer_id
+ * @property-read int $id
+ * @property string $name
+ * @property integer $category_pointer_id
  *
- * @property-read CategoryPointer categoryPointer
- * @property-read Collection users
+ * @property-read CategoryPointer $categoryPointer
+ * @property-read Collection $users
  *
  * @method static CategoryPointerTagFactory factory($count = null, $state = [])
  *

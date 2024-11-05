@@ -7,11 +7,11 @@ use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 
 /**
- * @property-read User|null user
+ * @property-read User|null $user
  *
- * @property-read string name
- * @property-read string email
- * @property-read string|null password
+ * @property-read string $name
+ * @property-read string $email
+ * @property-read string|null $password
  */
 class UserUpsertRequest extends ApiRequest
 {

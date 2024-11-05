@@ -8,11 +8,11 @@ use App\Rules\ExistForUserRule;
 use App\Rules\UniqueNameForUserRule;
 
 /**
- * @property-read Category|null category
+ * @property-read Category|null $category
  *
- * @property-read string name
- * @property-read int|null parent_id
- * @property-read bool is_child
+ * @property-read string $name
+ * @property-read int|null $parent_id
+ * @property-read bool $is_child
  */
 class CategoryUpsertRequest extends ApiRequest
 {

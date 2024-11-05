@@ -10,8 +10,8 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Validation\ValidationException;
 
 /**
- * @property-read int|null account_id
- * @property-read UploadedFile file
+ * @property-read int|null $account_id
+ * @property-read UploadedFile $file
  */
 class AccountTransactionsImportRequest extends ApiRequest
 {

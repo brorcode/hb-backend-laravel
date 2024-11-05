@@ -12,16 +12,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * @property-read int id
- * @property string name
- * @property int type_id
- * @property int amount
- * @property Carbon deadline_on
- * @property Carbon created_at
- * @property Carbon updated_at
+ * @property-read int $id
+ * @property string $name
+ * @property int $type_id
+ * @property int $amount
+ * @property Carbon $deadline_on
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
  *
- * @property-read Collection users
- * @property-read Collection|null transactions
+ * @property-read Collection $users
+ * @property-read Collection|null $transactions
  *
  * @see LoanObserver
  */

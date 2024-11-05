@@ -6,8 +6,8 @@ use App\Models\Loan;
 use Illuminate\Validation\Rule;
 
 /**
- * @property-read int|null months
- * @property-read int|null category_count
+ * @property-read int|null $months
+ * @property-read int|null $category_count
  */
 class DashboardRequest extends ApiRequest
 {

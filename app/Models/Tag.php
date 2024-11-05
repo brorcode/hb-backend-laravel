@@ -12,13 +12,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
- * @property-read int id
- * @property string name
- * @property Carbon created_at
- * @property Carbon updated_at
+ * @property-read int $id
+ * @property string $name
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
  *
- * @property-read Collection|null transactions
- * @property-read Collection users
+ * @property-read Collection|null $transactions
+ * @property-read Collection $users
  *
  * @method static self findOrFail(int $id)
  * @method static TagFactory factory($count = null, $state = [])

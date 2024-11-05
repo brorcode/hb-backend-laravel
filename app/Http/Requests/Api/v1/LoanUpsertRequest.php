@@ -6,12 +6,12 @@ use App\Models\Loan;
 use Illuminate\Validation\Rule;
 
 /**
- * @property-read Loan|null account
+ * @property-read Loan|null $account
  *
- * @property-read string name
- * @property-read int type_id
- * @property-read string amount
- * @property-read string deadline_on
+ * @property-read string $name
+ * @property-read int $type_id
+ * @property-read string $amount
+ * @property-read string $deadline_on
  */
 class LoanUpsertRequest extends ApiRequest
 {

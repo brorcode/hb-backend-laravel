@@ -13,22 +13,22 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
- * @property-read int id
- * @property int category_id
- * @property int amount
- * @property int account_id
- * @property int|null loan_id
- * @property bool is_debit
- * @property bool is_transfer
- * @property bool is_auto_import
- * @property Carbon created_at
- * @property Carbon updated_at
+ * @property-read int $id
+ * @property int $category_id
+ * @property int $amount
+ * @property int $account_id
+ * @property int|null $loan_id
+ * @property bool $is_debit
+ * @property bool $is_transfer
+ * @property bool $is_auto_import
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
  *
- * @property-read Category category
- * @property-read Account account
- * @property-read Loan|null loan
- * @property-read Collection|null tags
- * @property-read Collection users
+ * @property-read Category $category
+ * @property-read Account $account
+ * @property-read Loan|null $loan
+ * @property-read Collection|null $tags
+ * @property-read Collection $users
  *
  * @method static TransactionFactory factory($count = null, $state = [])
  *

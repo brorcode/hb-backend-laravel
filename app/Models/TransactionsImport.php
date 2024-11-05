@@ -9,21 +9,21 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * @property-read int id
- * @property int user_id
- * @property int account_id
- * @property int status_id
- * @property string file_name
- * @property string file_path
- * @property int imported_count
- * @property string error
- * @property Carbon started_at
- * @property Carbon finished_at
- * @property Carbon created_at
- * @property Carbon updated_at
+ * @property-read int $id
+ * @property int $user_id
+ * @property int $account_id
+ * @property int $status_id
+ * @property string $file_name
+ * @property string $file_path
+ * @property int $imported_count
+ * @property string $error
+ * @property Carbon $started_at
+ * @property Carbon $finished_at
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
  *
- * @property-read User user
- * @property-read Account account
+ * @property-read User $user
+ * @property-read Account $account
  *
  * @method static TransactionsImportFactory factory($count = null, $state = [])
  */

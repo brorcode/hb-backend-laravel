@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Validation\ValidationException;
 
 /**
- * @property-read int|null tag_id
- * @property-read array<int, int> selected_items
+ * @property-read int|null $tag_id
+ * @property-read array<int, int> $selected_items
  */
 class TagAttachDetachRequest extends ApiRequest
 {

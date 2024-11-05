@@ -14,16 +14,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * @property-read int id
- * @property string name
- * @property int|null integration_id
- * @property boolean is_archived
- * @property Carbon|null created_at
- * @property Carbon|null updated_at
+ * @property-read int $id
+ * @property string $name
+ * @property int|null $integration_id
+ * @property boolean $is_archived
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  *
- * @property-read Collection transactions
- * @property-read Integration|null integration
- * @property-read Collection users
+ * @property-read Collection $transactions
+ * @property-read Integration|null $integration
+ * @property-read Collection $users
  *
  * @method static self findOrFail(int $id)
  * @method static AccountFactory factory($count = null, $state = [])

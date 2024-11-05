@@ -12,12 +12,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * @property-read int id
- * @property string name
- * @property bool is_parent
+ * @property-read int $id
+ * @property string $name
+ * @property bool $is_parent
  *
- * @property-read Collection categoryPointerTags
- * @property-read Collection users
+ * @property-read Collection $categoryPointerTags
+ * @property-read Collection $users
  *
  * @method static CategoryPointerFactory factory($count = null, $state = [])
  *

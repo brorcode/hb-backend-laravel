@@ -15,23 +15,23 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 /**
- * @property-read int id
- * @property integer|null parent_id
- * @property string name
- * @property bool is_manual_created
- * @property bool check_return
- * @property Carbon|null created_at
- * @property Carbon|null updated_at
+ * @property-read int $id
+ * @property integer|null $parent_id
+ * @property string $name
+ * @property bool $is_manual_created
+ * @property bool $check_return
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  *
- * @property-read Collection transactions
- * @property-read Collection transactionsDebit
- * @property-read Collection transactionsCredit
- * @property-read Collection transactionsTransfer
- * @property-read Collection subTransactionsDebit
- * @property-read Collection subTransactionsCredit
- * @property-read Collection subTransactionsTransfer
- * @property-read Category|null parentCategory
- * @property-read Collection users
+ * @property-read Collection $transactions
+ * @property-read Collection $transactionsDebit
+ * @property-read Collection $transactionsCredit
+ * @property-read Collection $transactionsTransfer
+ * @property-read Collection $subTransactionsDebit
+ * @property-read Collection $subTransactionsCredit
+ * @property-read Collection $subTransactionsTransfer
+ * @property-read Category|null $parentCategory
+ * @property-read Collection $users
  *
  * @method static CategoryFactory factory($count = null, $state = [])
  *

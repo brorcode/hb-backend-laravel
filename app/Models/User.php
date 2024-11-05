@@ -16,21 +16,21 @@ use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
- * @property-read int id
- * @property string name
- * @property string email
- * @property Carbon|null email_verified_at
- * @property string password
- * @property Carbon|null created_at
- * @property Carbon|null updated_at
+ * @property-read int $id
+ * @property string $name
+ * @property string $email
+ * @property Carbon|null $email_verified_at
+ * @property string $password
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  *
- * @property-read Collection|null accounts
- * @property-read Collection|null categories
- * @property-read Collection|null categoryPointers
- * @property-read Collection|null categoryPointerTags
- * @property-read Collection|null tags
- * @property-read Collection|null transactions
- * @property-read Collection|null loans
+ * @property-read Collection|null $accounts
+ * @property-read Collection|null $categories
+ * @property-read Collection|null $categoryPointers
+ * @property-read Collection|null $categoryPointerTags
+ * @property-read Collection|null $tags
+ * @property-read Collection|null $transactions
+ * @property-read Collection|null $loans
  *
  * @method static UserFactory factory($count = null, $state = [])
  */

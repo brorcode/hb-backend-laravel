@@ -7,9 +7,9 @@ use App\Models\Tag;
 use App\Rules\UniqueNameForUserRule;
 
 /**
- * @property-read Tag|null tag
+ * @property-read Tag|null $tag
  *
- * @property-read string name
+ * @property-read string $name
  */
 class TagUpsertRequest extends ApiRequest
 {

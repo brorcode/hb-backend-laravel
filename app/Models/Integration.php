@@ -9,11 +9,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * @property-read int id
- * @property string name
- * @property int code_id
+ * @property-read int $id
+ * @property string $name
+ * @property int $code_id
  *
- * @property-read Collection users
+ * @property-read Collection $users
  *
  * @method static IntegrationFactory factory($count = null, $state = [])
  */

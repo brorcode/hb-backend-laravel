@@ -6,10 +6,10 @@ use App\Exceptions\ApiBadRequest;
 use Illuminate\Contracts\Validation\Validator;
 
 /**
- * @property-read int page
- * @property-read int limit
- * @property-read array sorting
- * @property-read array filters
+ * @property-read int $page
+ * @property-read int $limit
+ * @property-read array $sorting
+ * @property-read array $filters
  */
 class ListRequest extends ApiRequest
 {

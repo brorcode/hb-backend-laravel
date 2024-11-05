@@ -7,10 +7,10 @@ use App\Models\Account;
 use App\Rules\UniqueNameForUserRule;
 
 /**
- * @property-read Account|null account
+ * @property-read Account|null $account
  *
- * @property-read string name
- * @property-read bool is_archived
+ * @property-read string $name
+ * @property-read bool $is_archived
  */
 class AccountUpsertRequest extends ApiRequest
 {

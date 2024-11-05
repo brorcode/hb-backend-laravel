@@ -9,13 +9,13 @@ use App\Models\Loan;
 use App\Rules\ExistForUserRule;
 
 /**
- * @property-read string amount
- * @property-read int category_id
- * @property-read int account_id
- * @property-read int|null loan_id
- * @property-read string created_at
- * @property-read bool is_debit
- * @property-read bool is_transfer
+ * @property-read string $amount
+ * @property-read int $category_id
+ * @property-read int $account_id
+ * @property-read int|null $loan_id
+ * @property-read string $created_at
+ * @property-read bool $is_debit
+ * @property-read bool $is_transfer
  */
 class TransactionUpsertRequest extends ApiRequest
 {

@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\Permission\Models\Permission as BasePermission;
 
 /**
- * @property string name
- * @property string guard_name
+ * @property string $name
+ * @property string $guard_name
  *
  * @method static PermissionFactory factory($count = null, $state = [])
  */
