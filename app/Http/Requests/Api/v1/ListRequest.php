@@ -43,9 +43,8 @@ class ListRequest extends ApiRequest
      */
     protected function failedValidation(Validator $validator): void
     {
-        $errors = $validator->failed();
         logger()->error('Validation failed', [
-            'errors' => $errors,
+            'errors' => $validator->errors()->toArray(),
         ]);
 
         throw new ApiBadRequest();
