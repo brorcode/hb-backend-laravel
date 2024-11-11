@@ -70,4 +70,12 @@ class TransactionListService extends AbstractListService
             $builder->where('created_at', '<=', $dateBefore);
         }
     }
+
+    public function getTransactionnSum(): float
+    {
+        $builder = $this->getBuilder();
+        $this->applyFilters($builder);
+
+        return $builder->sum('amount') / 100;
+    }
 }

@@ -45,6 +45,7 @@ class TransactionListTest extends TestCase
         $response->assertJsonCount(10, 'data');
         $response->assertExactJson([
             'data' => $data->toArray(),
+            'sum' => $transactions->sum('amount') / 100,
             'meta' => [
                 'currentPage' => 1,
                 'hasNextPage' => true,

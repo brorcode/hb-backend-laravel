@@ -23,7 +23,10 @@ class TransactionController extends ApiController
         $builder = $service->getListBuilder();
         $transactions = $builder->simplePaginate($request->limit);
 
-        return $this->paginatedResponse(TransactionCollectionResource::collection($transactions));
+        return $this->paginatedResponse(
+            TransactionCollectionResource::collection($transactions),
+            ['sum' => $service->getTransactionnSum()],
+        );
     }
 
     public function store(TransactionUpsertRequest $request): JsonResponse
