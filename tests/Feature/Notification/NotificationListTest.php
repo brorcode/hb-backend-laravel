@@ -2,12 +2,9 @@
 
 namespace Tests\Feature\Notification;
 
-use App\Models\Account;
 use App\Models\Notification;
-use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class NotificationListTest extends TestCase

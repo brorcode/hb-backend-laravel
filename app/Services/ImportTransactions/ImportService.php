@@ -79,9 +79,15 @@ class ImportService
             }
         });
 
+        $message = "Импорт транзакций для {$account->name} завершен. Импортировано {$countTransactions} транзакций из {$countTransactions}";
+        if ($this->imported > $countTransactions) {
+            $importedExtra = $this->imported - $countTransactions;
+            $message .= ". Создано дополнительно транзакций для переводов: {$importedExtra}";
+        }
+
         $this->notificationService->addMessage(
             $this->user,
-            "Импорт транзакций для {$account->name} завершен. Импортировано {$this->imported} транзакций из {$countTransactions}",
+            $message,
         );
     }
 
