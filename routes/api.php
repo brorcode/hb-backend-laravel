@@ -98,6 +98,9 @@ Route::group(['prefix' => 'v1', 'as' => 'api.v1.'], function () {
                 Route::post('/accounts', [DictionaryController::class, 'accounts'])->name('accounts')
                     ->middleware('permission:'.Permission::NAME_ACCOUNTS_VIEW)
                 ;
+                Route::post('/accounts-for-import', [DictionaryController::class, 'accountsForImport'])->name('accounts-for-import')
+                    ->middleware('permission:'.Permission::NAME_ACCOUNTS_VIEW)
+                ;
                 Route::post('/tags', [DictionaryController::class, 'tags'])->name('tags')
                     ->middleware('permission:'.Permission::NAME_TAGS_VIEW)
                 ;

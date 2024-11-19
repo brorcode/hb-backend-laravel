@@ -40,6 +40,17 @@ class DictionaryController extends ApiController
         return $service->getItems($builder, $request);
     }
 
+    public function accountsForImport(Request $request, DictionaryService $service): JsonResponse
+    {
+        $builder = Account::query()
+            ->where('is_archived', false)
+            ->whereNotNull('integration_id')
+            ->select(['id', 'name'])
+        ;
+
+        return $service->getItems($builder, $request);
+    }
+
     public function tags(Request $request, DictionaryService $service): JsonResponse
     {
         $builder = Tag::query()->select(['id', 'name']);
