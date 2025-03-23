@@ -31,6 +31,8 @@ class Permission extends BasePermission
     const NAME_LOANS_EDIT = 'loans edit';
     const NAME_CATEGORY_POINTERS_VIEW = 'category pointers view';
     const NAME_CATEGORY_POINTERS_EDIT = 'category pointers edit';
+    const NAME_BUDGETS_VIEW = 'budgets view';
+    const NAME_BUDGETS_EDIT = 'budgets edit';
 
     const NAMES = [
         self::NAME_HORIZON_VIEW,
@@ -48,5 +50,7 @@ class Permission extends BasePermission
         self::NAME_LOANS_EDIT,
         self::NAME_CATEGORY_POINTERS_VIEW,
         self::NAME_CATEGORY_POINTERS_EDIT,
+        self::NAME_BUDGETS_VIEW,
+        self::NAME_BUDGETS_EDIT,
     ];
 }

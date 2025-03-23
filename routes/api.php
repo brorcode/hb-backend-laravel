@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\v1\TagController;
 use App\Http\Controllers\Api\v1\TransactionController;
 use App\Http\Controllers\Api\v1\UserController;
 use App\Http\Controllers\Api\v1\UserProfileController;
+use App\Http\Controllers\Api\v1\BudgetTemplateController;
 use App\Models\Permission;
 use Illuminate\Support\Facades\Route;
 
@@ -160,6 +161,19 @@ Route::group(['prefix' => 'v1', 'as' => 'api.v1.'], function () {
         Route::group(['prefix' => 'notifications', 'as' => 'notifications.'], function () {
             Route::get('/', [NotificationController::class, 'index'])->name('index');
             Route::post('/read', [NotificationController::class, 'read'])->name('read');
+        });
+
+        Route::group(['prefix' => 'budget-templates', 'as' => 'budget-templates.'], function () {
+            Route::group(['middleware' => 'permission:'.Permission::NAME_BUDGETS_VIEW], function () {
+                Route::post('/', [BudgetTemplateController::class, 'index'])->name('index');
+                Route::get('/{budgetTemplate}', [BudgetTemplateController::class, 'show'])->name('show');
+            });
+
+            Route::group(['middleware' => 'permission:'.Permission::NAME_BUDGETS_EDIT], function () {
+                Route::post('/store', [BudgetTemplateController::class, 'store'])->name('store');
+                Route::put('/{budgetTemplate}', [BudgetTemplateController::class, 'update'])->name('update');
+                Route::delete('/{budgetTemplate}', [BudgetTemplateController::class, 'destroy'])->name('destroy');
+            });
         });
     });
 });

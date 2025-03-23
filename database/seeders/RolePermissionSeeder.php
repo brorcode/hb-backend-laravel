@@ -49,6 +49,8 @@ class RolePermissionSeeder extends Seeder
                 Permission::NAME_LOANS_EDIT,
                 Permission::NAME_CATEGORY_POINTERS_VIEW,
                 Permission::NAME_CATEGORY_POINTERS_EDIT,
+                Permission::NAME_BUDGETS_VIEW,
+                Permission::NAME_BUDGETS_EDIT,
             ],
             Role::NAME_USER => [
                 Permission::NAME_TRANSACTIONS_VIEW,
@@ -63,6 +65,8 @@ class RolePermissionSeeder extends Seeder
                 Permission::NAME_LOANS_EDIT,
                 Permission::NAME_CATEGORY_POINTERS_VIEW,
                 Permission::NAME_CATEGORY_POINTERS_EDIT,
+                Permission::NAME_BUDGETS_VIEW,
+                Permission::NAME_BUDGETS_EDIT,
             ],
             Role::NAME_DEMO_USER => [
                 Permission::NAME_TRANSACTIONS_VIEW,
@@ -71,6 +75,7 @@ class RolePermissionSeeder extends Seeder
                 Permission::NAME_TAGS_VIEW,
                 Permission::NAME_LOANS_VIEW,
                 Permission::NAME_CATEGORY_POINTERS_VIEW,
+                Permission::NAME_BUDGETS_VIEW,
             ],
         ];
 

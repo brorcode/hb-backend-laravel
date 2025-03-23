@@ -16,8 +16,20 @@ class OwnerScope implements Scope
     public function apply(Builder $builder, Model $model): void
     {
         $user = OwnerService::make()->getUser();
+
+        if ($this->hasDirectUserIdColumn($model)) {
+            $builder->where('user_id', $user->getKey());
+
+            return;
+        }
+
         $builder->whereHas('users', function (Builder $query) use ($user) {
             $query->where('user_id', $user->getKey());
         });
+    }
+
+    private function hasDirectUserIdColumn(Model $model): bool
+    {
+        return $model->getConnection()->getSchemaBuilder()->hasColumn($model->getTable(), 'user_id');
     }
 }

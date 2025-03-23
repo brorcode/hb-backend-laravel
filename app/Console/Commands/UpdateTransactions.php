@@ -7,7 +7,6 @@ use App\Models\Transaction;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Collection;
 
-
 class UpdateTransactions extends Command
 {
     protected $signature = 'app:update-transactions';
