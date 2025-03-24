@@ -16,11 +16,13 @@ class UniqueRelationForUserRule implements ValidationRule
      */
     private string $modelClass;
     private ?Model $ignoredModel;
+    private ?array $ignoredFilter;
 
-    public function __construct(string $modelClass, ?Model $ignoredModel)
+    public function __construct(string $modelClass, ?Model $ignoredModel, ?array $ignoredFilter = null)
     {
         $this->modelClass = $modelClass;
         $this->ignoredModel = $ignoredModel;
+        $this->ignoredFilter = $ignoredFilter;
     }
 
     public function validate(string $attribute, mixed $value, Closure $fail): void
@@ -31,6 +33,10 @@ class UniqueRelationForUserRule implements ValidationRule
 
         if ($this->ignoredModel) {
             $builder->where('id', '!=', $this->ignoredModel->getKey());
+        }
+
+        if ($this->ignoredFilter) {
+            $builder->where($this->ignoredFilter['column'], $this->ignoredFilter['value']);
         }
 
         if ($builder->exists()) {

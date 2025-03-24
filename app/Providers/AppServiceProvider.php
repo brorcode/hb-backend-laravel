@@ -6,6 +6,7 @@ use App\Events\UserRegistered;
 use App\Exceptions\Handler;
 use App\Listeners\SendEmailVerificationNotification;
 use App\Models\Account;
+use App\Models\Budget;
 use App\Models\BudgetTemplate;
 use App\Models\Category;
 use App\Models\CategoryPointer;
@@ -14,6 +15,7 @@ use App\Models\Loan;
 use App\Models\Tag;
 use App\Models\Transaction;
 use App\Observers\AccountObserver;
+use App\Observers\BudgetObserver;
 use App\Observers\BudgetTemplateObserver;
 use App\Observers\CategoryObserver;
 use App\Observers\CategoryPointerObserver;
@@ -63,6 +65,7 @@ class AppServiceProvider extends ServiceProvider
         Tag::observe(TagObserver::class);
         Loan::observe(LoanObserver::class);
         BudgetTemplate::observe(BudgetTemplateObserver::class);
+        Budget::observe(BudgetObserver::class);
     }
 
     private function registerEventListeners(): void

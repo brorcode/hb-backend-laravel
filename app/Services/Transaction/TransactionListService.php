@@ -71,7 +71,7 @@ class TransactionListService extends AbstractListService
         }
     }
 
-    public function getTransactionnSum(): float
+    public function getTransactionSum(): float
     {
         $builder = $this->getBuilder();
         $this->applyFilters($builder);

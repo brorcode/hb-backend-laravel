@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\Api\v1\AccountController;
+use App\Http\Controllers\Api\v1\BudgetController;
+use App\Http\Controllers\Api\v1\BudgetTemplateController;
+use App\Http\Controllers\Api\v1\BudgetItemController;
 use App\Http\Controllers\Api\v1\CategoryController;
 use App\Http\Controllers\Api\v1\CategoryPointerController;
 use App\Http\Controllers\Api\v1\DashboardController;
@@ -11,7 +14,6 @@ use App\Http\Controllers\Api\v1\TagController;
 use App\Http\Controllers\Api\v1\TransactionController;
 use App\Http\Controllers\Api\v1\UserController;
 use App\Http\Controllers\Api\v1\UserProfileController;
-use App\Http\Controllers\Api\v1\BudgetTemplateController;
 use App\Models\Permission;
 use Illuminate\Support\Facades\Route;
 
@@ -173,6 +175,31 @@ Route::group(['prefix' => 'v1', 'as' => 'api.v1.'], function () {
                 Route::post('/store', [BudgetTemplateController::class, 'store'])->name('store');
                 Route::put('/{budgetTemplate}', [BudgetTemplateController::class, 'update'])->name('update');
                 Route::delete('/{budgetTemplate}', [BudgetTemplateController::class, 'destroy'])->name('destroy');
+            });
+        });
+
+        Route::group(['prefix' => 'budgets', 'as' => 'budgets.'], function () {
+            Route::group(['middleware' => 'permission:'.Permission::NAME_BUDGETS_VIEW], function () {
+                Route::post('/', [BudgetController::class, 'index'])->name('index');
+                Route::get('/{date}', [BudgetController::class, 'show'])->name('show');
+            });
+
+            Route::group(['middleware' => 'permission:'.Permission::NAME_BUDGETS_EDIT], function () {
+                Route::post('/store', [BudgetController::class, 'store'])->name('store');
+                Route::delete('/{date}', [BudgetController::class, 'destroy'])->name('destroy');
+            });
+        });
+
+        Route::group(['prefix' => 'budget-items', 'as' => 'budget-items.'], function () {
+            Route::group(['middleware' => 'permission:'.Permission::NAME_BUDGETS_VIEW], function () {
+                Route::post('/', [BudgetItemController::class, 'index'])->name('index');
+                Route::get('/{budgetItem}', [BudgetItemController::class, 'show'])->name('show');
+            });
+
+            Route::group(['middleware' => 'permission:'.Permission::NAME_BUDGETS_EDIT], function () {
+                Route::post('/store', [BudgetItemController::class, 'store'])->name('store');
+                Route::put('/{budgetItem}', [BudgetItemController::class, 'update'])->name('update');
+                Route::delete('/{budgetItem}', [BudgetItemController::class, 'destroy'])->name('destroy');
             });
         });
     });

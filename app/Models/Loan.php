@@ -37,10 +37,6 @@ class Loan extends Model
         self::TYPE_ID_DEBIT => 'Мы должны',
     ];
 
-    protected array $dates = [
-        'deadline_on',
-    ];
-
     /**
      * The "booted" method of the model.
      *

@@ -25,7 +25,7 @@ class TransactionController extends ApiController
 
         return $this->paginatedResponse(
             TransactionCollectionResource::collection($transactions),
-            ['sum' => $service->getTransactionnSum()],
+            ['sum' => $service->getTransactionSum()],
         );
     }
 

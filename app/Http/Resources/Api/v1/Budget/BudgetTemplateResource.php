@@ -21,8 +21,6 @@ class BudgetTemplateResource extends JsonResource
             'id' => $budgetTemplate->getKey(),
             'amount' => $budgetTemplate->amount / 100,
             'category' => $budgetTemplate->category->only(['id', 'name']),
-            'created_at' => $budgetTemplate->created_at,
-            'updated_at' => $budgetTemplate->updated_at,
         ];
     }
 }

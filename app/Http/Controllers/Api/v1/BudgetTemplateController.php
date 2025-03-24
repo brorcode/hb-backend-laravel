@@ -18,9 +18,9 @@ class BudgetTemplateController extends ApiController
         $service->setRequest($request);
 
         $builder = $service->getListBuilder();
-        $budgetTemplate = $builder->simplePaginate($request->limit);
+        $budgetTemplates = $builder->simplePaginate($request->limit);
 
-        return $this->paginatedResponse(BudgetTemplateResource::collection($budgetTemplate));
+        return $this->paginatedResponse(BudgetTemplateResource::collection($budgetTemplates));
     }
 
     public function store(BudgetTemplateUpsertRequest $request): JsonResponse
