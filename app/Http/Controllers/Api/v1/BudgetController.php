@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api\v1;
 
-use App\Exceptions\SystemException;
+use App\Exceptions\ApiBadRequest;
 use App\Http\Requests\Api\v1\BudgetUpsertRequest;
 use App\Http\Requests\Api\v1\ListRequest;
 use App\Http\Resources\Api\v1\Budget\BudgetResource;
@@ -25,7 +25,7 @@ class BudgetController extends ApiController
     }
 
     /**
-     * @throws SystemException
+     * @throws ApiBadRequest
      */
     public function store(BudgetUpsertRequest $request, BudgetService $budgetService): JsonResponse
     {
@@ -42,7 +42,7 @@ class BudgetController extends ApiController
     }
 
     /**
-     * @throws SystemException
+     * @throws ApiBadRequest
      */
     public function destroy(int $date, BudgetService $budgetService): JsonResponse
     {

@@ -3,13 +3,14 @@
 namespace Tests\Unit\ListServices;
 
 use App\Http\Requests\Api\v1\ListRequest;
-use App\Models\BudgetTemplate;
-use App\Services\Budget\BudgetTemplateListService;
+use App\Models\Budget;
+use App\Services\Budget\BudgetItemListService;
+use App\Services\Budget\BudgetService;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
-class BudgetTemplateListServiceTest extends TestCase
+class BudgetItemListServiceTest extends TestCase
 {
     use DatabaseMigrations;
 
@@ -20,10 +21,10 @@ class BudgetTemplateListServiceTest extends TestCase
         $this->userLogin();
     }
 
-    #[DataProvider('budgetTemplateFiltersDataProvider')]
-    public function testBudgetTemplateListServiceHandleFilters(int $count, array $sequence, string $filterKey, string $fieldKey, array $filters): void
+    #[DataProvider('budgetItemFiltersDataProvider')]
+    public function testBudgetItemListServiceHandleFilters(int $count, array $sequence, string $filterKey, string $fieldKey, array $filters): void
     {
-        $factory = BudgetTemplate::factory()
+        $factory = Budget::factory()
             ->count($count)
         ;
         if (count($sequence) > 0) {
@@ -31,7 +32,7 @@ class BudgetTemplateListServiceTest extends TestCase
         }
         $factory->create();
 
-        $service = BudgetTemplateListService::create();
+        $service = BudgetItemListService::create();
         $request = new ListRequest();
         $request->merge([
             'page' => 1,
@@ -43,30 +44,34 @@ class BudgetTemplateListServiceTest extends TestCase
         $paginator = $builder->simplePaginate($request->limit);
         $data = $paginator->items();
 
-        $this->assertCount($count, BudgetTemplate::all());
+        $this->assertCount($count, Budget::all());
         $this->assertCount(1, $data);
 
         $expectedValue = match($filterKey) {
             'amount' =>  $filters[$filterKey]['value'] * 100,
             'categories' => $filters[$filterKey]['value'][0]['id'],
+            'period_on' => BudgetService::getPeriodOnFromArray($filters[$filterKey]['value'])->toDateString(),
             default => $filters[$filterKey]['value'],
         };
 
-        $actualValue = $data[0][$fieldKey];
+        $actualValue = match($fieldKey) {
+            'period_on' => $data[0][$fieldKey]->toDateString(),
+            default => $data[0][$fieldKey],
+        };
 
         $this->assertEquals($expectedValue, $actualValue);
     }
 
-    #[DataProvider('budgetTemplateSortingDataProvider')]
-    public function testBudgetTemplateListServiceHandleSorting(int $count, array $sequence, array $sorting): void
+    #[DataProvider('budgetItemSortingDataProvider')]
+    public function testBudgetItemListServiceHandleSorting(int $count, array $sequence, array $sorting): void
     {
-        BudgetTemplate::factory()
+        Budget::factory()
             ->count($count)
             ->sequence(...$sequence)
             ->create()
         ;
 
-        $service = BudgetTemplateListService::create();
+        $service = BudgetItemListService::create();
         $request = new ListRequest();
         $request->merge([
             'page' => 1,
@@ -78,7 +83,7 @@ class BudgetTemplateListServiceTest extends TestCase
         $paginator = $builder->simplePaginate($request->limit);
         $data = $paginator->items();
 
-        $this->assertCount($count, BudgetTemplate::all());
+        $this->assertCount($count, Budget::all());
         $this->assertCount($count, $data);
 
         // Check sorting based on direction
@@ -91,7 +96,7 @@ class BudgetTemplateListServiceTest extends TestCase
         }
     }
 
-    public static function budgetTemplateFiltersDataProvider(): array
+    public static function budgetItemFiltersDataProvider(): array
     {
         return [
             'filter_1' => [
@@ -129,10 +134,27 @@ class BudgetTemplateListServiceTest extends TestCase
                 'fieldKey' => 'category_id',
                 'filters' => ['categories' => ['value' => [['id' => 2]]]],
             ],
+            'filter_4' => [
+                'count' => 2,
+                'sequence' => [
+                    [
+                        'period_on' => '2025-01-01',
+                    ],
+                    [
+                        'period_on' => '2025-02-01',
+                    ]
+                ],
+                'filterKey' => 'period_on',
+                'fieldKey' => 'period_on',
+                'filters' => ['period_on' => ['value' => [
+                    'year' => 2025,
+                    'month' => 1
+                ]]],
+            ],
         ];
     }
 
-    public static function budgetTemplateSortingDataProvider(): array
+    public static function budgetItemSortingDataProvider(): array
     {
         return [
             'sorting_1' => [

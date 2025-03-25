@@ -2,10 +2,8 @@
 
 namespace App\Http\Requests\Api\v1;
 
-use AllowDynamicProperties;
 use App\Models\Budget;
 use App\Services\Budget\BudgetService;
-use Carbon\Carbon;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\ValidationException;
@@ -20,12 +18,12 @@ class BudgetUpsertRequest extends ApiRequest
     {
         return [
             'period_on' => ['required', 'array'],
-            'period_on.month' => ['required:period_on', 'integer', 'between:0,11'],
+            'period_on.month' => ['required', 'integer', 'between:0,11'],
             'period_on.year' => [
-                'required:period_on',
+                'required',
                 'integer',
                 'digits:4',
-                'between:' . now()->subYear()->year . ',' . now()->addYear()->year,
+                'between:' . now()->subYears(50)->year . ',' . now()->addYears(50)->year,
             ],
         ];
     }

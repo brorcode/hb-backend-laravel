@@ -4,7 +4,7 @@ namespace App\Models;
 
 use App\Models\Scopes\OwnerScope;
 use Carbon\Carbon;
-use Database\Factories\BudgetTemplateFactory;
+use Database\Factories\BudgetFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -21,13 +21,25 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property-read Category $category
  *
  * @method static self findOrFail(int $id)
- * @method static BudgetTemplateFactory factory($count = null, $state = [])
+ * @method static BudgetFactory factory($count = null, $state = [])
  *
  * @see BudgetObserver
  */
 class Budget extends Model
 {
     use HasFactory;
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'period_on' => 'datetime',
+        ];
+    }
 
     /**
      * The "booted" method of the model.

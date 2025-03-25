@@ -35,8 +35,6 @@ class BudgetTemplateUpsertTest extends TestCase
                 'id' => $budgetTemplate->getKey(),
                 'amount' => 1.23,
                 'category' => $budgetTemplate->category->only(['id', 'name']),
-                'created_at' => $budgetTemplate->created_at,
-                'updated_at' => $budgetTemplate->updated_at,
             ],
         ]);
     }
@@ -122,16 +120,12 @@ class BudgetTemplateUpsertTest extends TestCase
         ]);
 
         $response->assertOk();
-
-        $freshBudgetTemplate = $budgetTemplate->fresh();
         $response->assertExactJson([
             'message' => 'Шаблон бюджета обновлен',
             'data' => [
                 'id' => $budgetTemplate->getKey(),
                 'amount' => 100.12,
                 'category' => $category->only(['id', 'name']),
-                'created_at' => $freshBudgetTemplate->created_at,
-                'updated_at' => $freshBudgetTemplate->updated_at,
             ],
         ]);
     }

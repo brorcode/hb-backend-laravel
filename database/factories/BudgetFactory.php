@@ -16,7 +16,7 @@ class BudgetFactory extends Factory
         return [
             'amount' => $this->faker->numberBetween(100, 1000),
             'category_id' => Category::factory(),
-            'period_on' => now()->subMonth(),
+            'period_on' => now()->addMonths(2)->startOfMonth(),
         ];
     }
 }

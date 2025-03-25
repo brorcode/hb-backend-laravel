@@ -2,25 +2,26 @@
 
 namespace App\Services\Budget;
 
-use App\Exceptions\SystemException;
+use App\Exceptions\ApiBadRequest;
 use App\Http\Requests\Api\v1\BudgetUpsertRequest;
 use App\Models\Budget;
 use App\Models\BudgetTemplate;
 use App\Services\ServiceInstance;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class BudgetService
 {
     use ServiceInstance;
 
     /**
-     * @throws SystemException
+     * @throws ApiBadRequest
      */
     public function store(BudgetUpsertRequest $request): void
     {
         if (BudgetTemplate::query()->doesntExist()) {
-            throw new SystemException('Нужно создать хотя бы один шаблон бюджета.');
+            throw new ApiBadRequest('Нужно создать хотя бы один шаблон бюджета.');
         }
 
         BudgetTemplate::query()
@@ -36,24 +37,31 @@ class BudgetService
         ;
     }
 
-    public function show(int $date): Budget
+    public function show(int $date): ?Budget
     {
-        return Budget::query()
+        $budget = Budget::query()
             ->where('period_on', self::getPeriodOnFromInt($date)->toDateString())
             ->selectRaw('SUM(amount) as total, period_on')
             ->groupBy('period_on')
             ->first()
         ;
+
+        if (!$budget) {
+            throw new ModelNotFoundException();
+        }
+
+        return $budget;
     }
 
     /**
-     * @throws SystemException
+     * @throws ApiBadRequest
      */
     public function destroy(int $date): void
     {
         $periodOn = self::getPeriodOnFromInt($date);
+
         if ($periodOn->lte(now())) {
-            throw new SystemException('Нельзя удалить активный или завершенные бюджеты.');
+            throw new ApiBadRequest('Нельзя удалить активный или завершенные бюджеты.');
         }
 
         Budget::query()

@@ -26,7 +26,7 @@ class BudgetItemUpsertRequest extends ApiRequest
                 new ExistForUserRule(Category::class),
                 new UniqueRelationForUserRule(Budget::class, $this->budget, [
                     'column' => 'period_on',
-                    'value' => BudgetService::getPeriodOnFromInt($this->period_on)->toDateString(),
+                    'value' => BudgetService::getPeriodOnFromInt($this->period_on ?? 0)->toDateString(),
                 ]),
             ],
             'period_on' => ['required', 'integer'],

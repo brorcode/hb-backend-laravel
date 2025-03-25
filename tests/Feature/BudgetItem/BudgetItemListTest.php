@@ -1,13 +1,13 @@
 <?php
 
-namespace Tests\Feature\BudgetTemplate;
+namespace Tests\Feature\BudgetItem;
 
-use App\Models\BudgetTemplate;
+use App\Models\Budget;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
-class BudgetTemplateListTest extends TestCase
+class BudgetItemListTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -18,18 +18,21 @@ class BudgetTemplateListTest extends TestCase
         $this->userLogin();
     }
 
-    public function testBudgetTemplateListApiReturnsCorrectResponse(): void
+    public function testBudgetItemListApiReturnsCorrectResponse(): void
     {
-        $budgetTemplates = BudgetTemplate::factory(11)->create();
-        $data = $budgetTemplates->take(10)->map(function (BudgetTemplate $budgetTemplate) {
+        $budgetItems = Budget::factory(11)->create(
+            ['period_on' => '2025-02-01']
+        );
+        $data = $budgetItems->take(10)->map(function (Budget $budgetItem) {
             return [
-                'id' => $budgetTemplate->getKey(),
-                'amount' => $budgetTemplate->amount / 100,
-                'category' => $budgetTemplate->category->only(['id', 'name']),
+                'id' => $budgetItem->getKey(),
+                'amount' => $budgetItem->amount / 100,
+                'category' => $budgetItem->category->only(['id', 'name']),
+                'period_on_for_list' => '2025 февраль',
             ];
         });
 
-        $response = $this->postJson(route('api.v1.budget-templates.index'), [
+        $response = $this->postJson(route('api.v1.budget-items.index'), [
             'page' => 1,
             'limit' => 10,
         ]);
@@ -38,6 +41,7 @@ class BudgetTemplateListTest extends TestCase
         $response->assertJsonCount(10, 'data');
         $response->assertExactJson([
             'data' => $data->toArray(),
+            'sum' => $budgetItems->sum('amount') / 100,
             'meta' => [
                 'currentPage' => 1,
                 'hasNextPage' => true,
@@ -47,9 +51,9 @@ class BudgetTemplateListTest extends TestCase
     }
 
     #[DataProvider('invalidDataProvider')]
-    public function testBudgetTemplateListApiReturnsValidationErrors(array $request): void
+    public function testBudgetItemListApiReturnsValidationErrors(array $request): void
     {
-        $response = $this->postJson(route('api.v1.budget-templates.index'), $request);
+        $response = $this->postJson(route('api.v1.budget-items.index'), $request);
         $response->assertBadRequest();
         $response->assertExactJson([
             'message' => 'Ошибка сервера. Попробуйте еще раз',

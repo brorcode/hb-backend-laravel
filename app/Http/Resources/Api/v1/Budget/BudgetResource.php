@@ -17,14 +17,13 @@ class BudgetResource extends JsonResource
     public function toArray(Request $request): array
     {
         $budget = $this->getResource();
-        $periodOn = Carbon::parse($budget['period_on']);
 
         return [
-            'id' => $periodOn->format('Ym'),
+            'id' => $budget->period_on->format('Ym'),
             'total' => $budget['total'] / 100,
-            'period_on_for_list' => $periodOn->translatedFormat('Y F'),
-            'period_on' => $budget['period_on'],
-            'deletable' => $periodOn->gt(now()),
+            'period_on_for_list' => $budget->period_on->translatedFormat('Y F'),
+            'period_on' => $budget->period_on->toDateString(),
+            'deletable' => $budget->period_on->gt(now()),
         ];
     }
 }
