@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\v1\CategoryController;
 use App\Http\Controllers\Api\v1\CategoryPointerController;
 use App\Http\Controllers\Api\v1\DashboardController;
 use App\Http\Controllers\Api\v1\DictionaryController;
+use App\Http\Controllers\Api\v1\BudgetAnalyticsController;
 use App\Http\Controllers\Api\v1\LoanController;
 use App\Http\Controllers\Api\v1\NotificationController;
 use App\Http\Controllers\Api\v1\TagController;
@@ -201,6 +202,11 @@ Route::group(['prefix' => 'v1', 'as' => 'api.v1.'], function () {
                 Route::put('/{budgetItem}', [BudgetItemController::class, 'update'])->name('update');
                 Route::delete('/{budgetItem}', [BudgetItemController::class, 'destroy'])->name('destroy');
             });
+        });
+
+        Route::group(['prefix' => 'budget-analytics', 'as' => 'budget-analytics.', 'middleware' => 'permission:'.Permission::NAME_BUDGETS_VIEW], function () {
+            Route::post('/monthly', [BudgetAnalyticsController::class, 'getMonthlyAnalytics'])->name('getMonthlyAnalytics');
+            Route::post('/monthly/categories/child', [BudgetAnalyticsController::class, 'getChildCategories'])->name('getChildCategories');
         });
     });
 });

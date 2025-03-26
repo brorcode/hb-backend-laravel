@@ -61,12 +61,18 @@ class TransactionListService extends AbstractListService
         }
 
         if (isset($this->request->filters['created_at_after'])) {
-            $dateAfter = Carbon::parse($this->request->filters['created_at_after']['value'])->format('Y-m-d 00:00:00');
+            $dateAfter = Carbon::parse($this->request->filters['created_at_after']['value'])
+                ->setTimezone('Europe/Moscow')
+                ->format('Y-m-d 00:00:00')
+            ;
             $builder->where('created_at', '>=', $dateAfter);
         }
 
         if (isset($this->request->filters['created_at_before'])) {
-            $dateBefore = Carbon::parse($this->request->filters['created_at_before']['value'])->format('Y-m-d 23:59:59');
+            $dateBefore = Carbon::parse($this->request->filters['created_at_before']['value'])
+                ->setTimezone('Europe/Moscow')
+                ->format('Y-m-d 23:59:59')
+            ;
             $builder->where('created_at', '<=', $dateBefore);
         }
     }
