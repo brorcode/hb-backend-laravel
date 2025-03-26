@@ -3,7 +3,6 @@
 namespace App\Http\Resources\Api\v1\Budget;
 
 use App\Models\Budget;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -23,7 +22,6 @@ class BudgetResource extends JsonResource
             'total' => $budget['total'] / 100,
             'period_on_for_list' => $budget->period_on->translatedFormat('Y F'),
             'period_on' => $budget->period_on->toDateString(),
-            'deletable' => $budget->period_on->gt(now()),
         ];
     }
 }

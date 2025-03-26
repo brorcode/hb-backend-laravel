@@ -53,19 +53,10 @@ class BudgetService
         return $budget;
     }
 
-    /**
-     * @throws ApiBadRequest
-     */
     public function destroy(int $date): void
     {
-        $periodOn = self::getPeriodOnFromInt($date);
-
-        if ($periodOn->lte(now())) {
-            throw new ApiBadRequest('Нельзя удалить активный или завершенные бюджеты.');
-        }
-
         Budget::query()
-            ->where('period_on', $periodOn->toDateString())
+            ->where('period_on', self::getPeriodOnFromInt($date)->toDateString())
             ->delete()
         ;
     }

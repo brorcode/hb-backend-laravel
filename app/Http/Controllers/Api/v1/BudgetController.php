@@ -41,9 +41,6 @@ class BudgetController extends ApiController
         return $this->response(BudgetResource::make($budget));
     }
 
-    /**
-     * @throws ApiBadRequest
-     */
     public function destroy(int $date, BudgetService $budgetService): JsonResponse
     {
         $budgetService->destroy($date);
