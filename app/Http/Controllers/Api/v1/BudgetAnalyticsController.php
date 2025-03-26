@@ -17,7 +17,7 @@ class BudgetAnalyticsController extends ApiController
         $this->service = BudgetAnalyticsService::create();
     }
 
-    public function getMonthlyAnalytics(BudgetAnalyticsRequest $request): JsonResponse
+    public function monthly(BudgetAnalyticsRequest $request): JsonResponse
     {
         $budget = $this->service->getBudget($request);
 
@@ -32,7 +32,7 @@ class BudgetAnalyticsController extends ApiController
         ]);
     }
 
-    public function getChildCategories(BudgetAnalyticsChildCategoryRequest $request): JsonResponse
+    public function childCategories(BudgetAnalyticsChildCategoryRequest $request): JsonResponse
     {
         return response()->json([
             'data' => $this->service->getChildCategories($request),

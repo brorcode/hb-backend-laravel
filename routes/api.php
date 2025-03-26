@@ -205,8 +205,8 @@ Route::group(['prefix' => 'v1', 'as' => 'api.v1.'], function () {
         });
 
         Route::group(['prefix' => 'budget-analytics', 'as' => 'budget-analytics.', 'middleware' => 'permission:'.Permission::NAME_BUDGETS_VIEW], function () {
-            Route::post('/monthly', [BudgetAnalyticsController::class, 'getMonthlyAnalytics'])->name('getMonthlyAnalytics');
-            Route::post('/monthly/categories/child', [BudgetAnalyticsController::class, 'getChildCategories'])->name('getChildCategories');
+            Route::post('/monthly', [BudgetAnalyticsController::class, 'monthly'])->name('monthly');
+            Route::post('/monthly/categories/child', [BudgetAnalyticsController::class, 'childCategories'])->name('child-categories');
         });
     });
 });
