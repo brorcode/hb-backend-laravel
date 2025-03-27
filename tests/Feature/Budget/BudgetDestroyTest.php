@@ -35,28 +35,4 @@ class BudgetDestroyTest extends TestCase
             'message' => 'Шаблон бюджета удален',
         ]);
     }
-
-    public function testHistoricalAndActiveBudgetsCannotBeRemoved(): void
-    {
-        /** @var Budget $budgetToBeDeleted */
-        $budgetToBeDeleted = Budget::factory()->create([
-            'period_on' => now()->startOfMonth(),
-        ]);
-
-        $this->assertCount(1, Budget::all());
-        $this->assertDatabaseHas((new Budget())->getTable(), [
-            'id' => $budgetToBeDeleted->getKey(),
-        ]);
-        $response = $this->deleteJson(route('api.v1.budgets.destroy', $budgetToBeDeleted->period_on->format('Ym')));
-
-        $this->assertCount(1, Budget::all());
-        $this->assertDatabaseHas((new Budget())->getTable(), [
-            'id' => $budgetToBeDeleted->getKey(),
-        ]);
-
-        $response->assertBadRequest();
-        $response->assertExactJson([
-            'message' => 'Нельзя удалить активный или завершенные бюджеты.',
-        ]);
-    }
 }

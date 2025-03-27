@@ -26,8 +26,8 @@ class BudgetAnalyticsController extends ApiController
                 'period_on' => BudgetService::getPeriodOnFromArray($request->period_on)->translatedFormat('Y F'),
                 'budget_planned' => $budget->where('budget_amount', '>', '0')->values()->all(),
                 'budget_not_planned' => $budget->where('budget_amount', '=', '0')->values()->all(),
-                'total_spent' => $budget->sum('total_spent'),
-                'total_budget' => $budget->where('budget_amount', '>', '0')->sum('budget_amount'),
+                'total_spent' => round($budget->sum('total_spent'), 2),
+                'total_budget' => round($budget->where('budget_amount', '>', '0')->sum('budget_amount'), 2),
             ]
         ]);
     }

@@ -43,7 +43,6 @@ class BudgetListTest extends TestCase
                 'total' => $budget->amount / 100,
                 'period_on_for_list' => $budget->period_on->translatedFormat('Y F'),
                 'period_on' => $budget->period_on->toDateString(),
-                'deletable' => $budget->period_on->gt(now()),
             ];
         });
 

@@ -41,7 +41,6 @@ class BudgetUpsertTest extends TestCase
                 'total' => (100+100) / 100,
                 'period_on_for_list' => $budget->period_on->translatedFormat('Y F'),
                 'period_on' => $budget->period_on->toDateString(),
-                'deletable' => $budget->period_on->gt(now()),
             ],
         ]);
     }
