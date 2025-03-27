@@ -2,10 +2,12 @@
 
 namespace App\Services;
 
+use App\Http\Requests\Api\v1\BudgetAnalyticsChartRequest;
 use App\Http\Requests\Api\v1\BudgetAnalyticsChildCategoryRequest;
 use App\Http\Requests\Api\v1\BudgetAnalyticsRequest;
 use App\Models\Transaction;
 use App\Services\Budget\BudgetService;
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -91,5 +93,69 @@ class BudgetAnalyticsService
                 ];
             })
         ;
+    }
+
+    public function getChart(BudgetAnalyticsChartRequest $request): Collection
+    {
+        $builder = Transaction::query()
+            ->join('categories', 'transactions.category_id', '=', 'categories.id')
+            ->join('categories as parent_categories', 'categories.parent_id', '=', 'parent_categories.id')
+            ->where('transactions.is_debit', false)
+            ->where('transactions.is_transfer', false)
+            ->whereBetween('transactions.created_at', [
+                now()->subYear()->startOfMonth()->startOfDay(),
+                now()->endOfMonth()->endOfDay(),
+            ])
+            ->groupBy([
+                'parent_categories.id',
+                'parent_categories.name',
+                'month',
+            ])
+            ->select(
+                'parent_categories.id as category_id',
+                'parent_categories.name as category_name',
+                DB::raw('SUM(transactions.amount) as total_spent'),
+                DB::raw('DATE_FORMAT(transactions.created_at, "%Y %M") as month'),
+            )
+            ->orderBy('transactions.created_at')
+            ->orderBy('total_spent')
+        ;
+
+        $categoryTable = $request->is_child ? 'categories.id' : 'parent_categories.id';
+        $builder->where($categoryTable, $request->category_id);
+
+        $data = $builder->get();
+
+        $months = $data->pluck('month')->unique()->values();
+        $categories = $data->pluck('category_name')->unique()->values();
+
+        $response = $categories->map(function ($categoryName) use ($data, $months) {
+            // Get all data points for this category
+            $categoryData = $data->where('category_name', $categoryName);
+
+            // Extract amounts for each month in order
+            $amounts = $months->map(function ($month) use ($categoryData) {
+                $dataPoint = $categoryData->firstWhere('month', $month);
+                return $dataPoint ? abs($dataPoint->total_spent) / 100 : 0;
+            })->values();
+
+            $total = round($amounts->sum(), 2);
+            $average = round($amounts->sum() / $amounts->count(), 2);
+
+            return [
+                'name' => "$categoryName (в среднем: $average ₽, всего: $total ₽)",
+                'color' => '#4F46E5',
+                'data' => $amounts,
+            ];
+        })->values();
+
+        return collect([
+            'labels' => $months->map(function ($month) {
+                $date = Carbon::createFromFormat('Y F', $month);
+
+                return $date->translatedFormat('Y F');
+            }),
+            'data' => $response->all(),
+        ]);
     }
 }

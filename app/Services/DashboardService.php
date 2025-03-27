@@ -166,13 +166,13 @@ class DashboardService
         $total = round($items->sum('total'), 2);
 
         $response = collect();
-        $chat = collect();
-        $chat->put('labels', $items->pluck('month')->values());
-        $chat->put('data', $items->pluck($chartDataKey)->map(function ($total) use ($positive) {
+        $chart = collect();
+        $chart->put('labels', $items->pluck('month')->values());
+        $chart->put('data', $items->pluck($chartDataKey)->map(function ($total) use ($positive) {
             return $positive ? abs($total) : $total;
         })->values());
         $response->put('data', $items->sortByDesc('id')->values());
-        $response->put('chart', $chat);
+        $response->put('chart', $chart);
         $response->put('total', $total);
 
         return $response;

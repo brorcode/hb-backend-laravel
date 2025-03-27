@@ -206,6 +206,7 @@ Route::group(['prefix' => 'v1', 'as' => 'api.v1.'], function () {
 
         Route::group(['prefix' => 'budget-analytics', 'as' => 'budget-analytics.', 'middleware' => 'permission:'.Permission::NAME_BUDGETS_VIEW], function () {
             Route::post('/monthly', [BudgetAnalyticsController::class, 'monthly'])->name('monthly');
+            Route::post('/category/chart', [BudgetAnalyticsController::class, 'categoryChart'])->name('category-chart');
             Route::post('/monthly/categories/child', [BudgetAnalyticsController::class, 'childCategories'])->name('child-categories');
         });
     });

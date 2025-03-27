@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\v1;
 
+use App\Http\Requests\Api\v1\BudgetAnalyticsChartRequest;
 use App\Http\Requests\Api\v1\BudgetAnalyticsChildCategoryRequest;
 use App\Http\Requests\Api\v1\BudgetAnalyticsRequest;
 use App\Services\Budget\BudgetService;
@@ -36,6 +37,13 @@ class BudgetAnalyticsController extends ApiController
     {
         return response()->json([
             'data' => $this->service->getChildCategories($request),
+        ]);
+    }
+
+    public function categoryChart(BudgetAnalyticsChartRequest $request): JsonResponse
+    {
+        return response()->json([
+            'data' => $this->service->getChart($request),
         ]);
     }
 }
