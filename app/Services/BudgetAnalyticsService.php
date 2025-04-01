@@ -158,4 +158,39 @@ class BudgetAnalyticsService
             'data' => $response->all(),
         ]);
     }
+
+    public function getBudgetTotalSpent(Collection $budget): float
+    {
+        return round($budget->sum('total_spent'), 2);
+    }
+    public function getTotalBudget(Collection $budget): float
+    {
+        return round($budget->where('budget_amount', '>', '0')->sum('budget_amount'), 2);
+    }
+
+    public function getPlannedBudget(Collection $budget): array
+    {
+        $budgetCollection = $budget->where('budget_amount', '>', '0');
+
+        return [
+            'data' => $budgetCollection->values()->all(),
+            'total_budget' => $total = round($budgetCollection->sum('budget_amount'), 2),
+            'total_spent' => $totalSpent =round($budgetCollection->sum('total_spent'), 2),
+            'difference' => round($totalSpent - $total, 2),
+            'execution_rate' => $total > 0
+                ? round(($totalSpent / $total) * 100, 2)
+                : 0
+            ,
+        ];
+    }
+
+    public function getNotPlannedBudget(Collection $budget): array
+    {
+        $budgetCollection = $budget->where('budget_amount', '=', '0');
+
+        return [
+            'data' => $budgetCollection->values()->all(),
+            'total_spent' => round($budgetCollection->sum('total_spent'), 2),
+        ];
+    }
 }

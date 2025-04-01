@@ -25,10 +25,10 @@ class BudgetAnalyticsController extends ApiController
         return response()->json([
             'data' => [
                 'period_on' => BudgetService::getPeriodOnFromArray($request->period_on)->translatedFormat('Y F'),
-                'budget_planned' => $budget->where('budget_amount', '>', '0')->values()->all(),
-                'budget_not_planned' => $budget->where('budget_amount', '=', '0')->values()->all(),
-                'total_spent' => round($budget->sum('total_spent'), 2),
-                'total_budget' => round($budget->where('budget_amount', '>', '0')->sum('budget_amount'), 2),
+                'total_spent' => $this->service->getBudgetTotalSpent($budget),
+                'total_budget' =>  $this->service->getTotalBudget($budget),
+                'budget_planned' =>  $this->service->getPlannedBudget($budget),
+                'budget_not_planned' =>  $this->service->getNotPlannedBudget($budget),
             ]
         ]);
     }
