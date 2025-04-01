@@ -32,4 +32,12 @@ class BudgetTemplateListService extends AbstractListService
             $builder->whereIn('category_id', array_column($this->request->filters['categories']['value'], 'id'));
         }
     }
+
+    public function getBudgetSum(): float
+    {
+        $builder = $this->getBuilder();
+        $this->applyFilters($builder);
+
+        return $builder->sum('amount') / 100;
+    }
 }

@@ -38,6 +38,7 @@ class BudgetTemplateListTest extends TestCase
         $response->assertJsonCount(10, 'data');
         $response->assertExactJson([
             'data' => $data->toArray(),
+            'sum' => $budgetTemplates->sum('amount') / 100,
             'meta' => [
                 'currentPage' => 1,
                 'hasNextPage' => true,
