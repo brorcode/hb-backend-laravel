@@ -37,13 +37,13 @@ class BudgetAnalyticsMonthlyTest extends TestCase
             ])
         ;
 
-        $transactionCategories = $categories->map(function (Category $category) {
+        $transactionCategories = $categories->take(2)->map(function (Category $category) {
             return [
                 'category_id' => $category->getKey(),
             ];
         });
 
-        $transactionForPlannedBudget = Transaction::factory(5)
+        $transactionForPlannedBudget = Transaction::factory(2)
             ->sequence(...$transactionCategories)
             ->create([
                 'is_debit' => false,
@@ -70,25 +70,32 @@ class BudgetAnalyticsMonthlyTest extends TestCase
 
         $response->assertOk();
 
-        $plannedBudgetCollection = $transactionForPlannedBudget->map(function (Transaction $transaction) use ($budgets) {
-            $parentCategory = $transaction->category->parentCategory()->first();
+        $plannedBudgetCollection = $budgets->map(function (Budget $budget) use ($transactionForPlannedBudget) {
+            $parentCategory = $budget->category;
 
-            /** @var Budget $budget */
-            $budget = $budgets->where('category_id', $parentCategory->getKey())->first();
+            // Get all transactions for this category
+            $categoryTransactions = $transactionForPlannedBudget->filter(function (Transaction $transaction) use ($parentCategory) {
+                $transactionParentCategory = $transaction->category->parentCategory()->first();
+                return $transactionParentCategory->getKey() === $parentCategory->getKey();
+            });
 
-            $transactionAmount = abs($transaction->amount);
+            // Calculate total spent for this category
+            $totalSpent = $categoryTransactions->sum(function (Transaction $transaction) {
+                return abs($transaction->amount);
+            });
 
             return [
                 'id' => $parentCategory->getKey(),
                 'name' => $parentCategory->name,
-                'total_spent' => $transactionAmount / 100,
+                'total_spent' => $totalSpent / 100,
                 'budget_amount' => $budget->amount / 100,
-                'difference' => ($transactionAmount - $budget->amount) / 100,
+                'difference' => ($totalSpent - $budget->amount) / 100,
                 'execution_rate' => $budget->amount > 0
-                    ? round(($transactionAmount / $budget->amount) * 100, 2)
+                    ? round(($totalSpent / $budget->amount) * 100, 2)
                     : 0,
             ];
-        })->sortByDesc('total_spent');
+        })->sortByDesc('budget_amount');
+
 
         $notPlannedBudgetCollection = $transactionForNotPlannedBudget->map(function (Transaction $transaction) {
             $parentCategory = $transaction->category->parentCategory()->first();

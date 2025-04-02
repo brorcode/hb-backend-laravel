@@ -5,9 +5,11 @@ namespace App\Services;
 use App\Http\Requests\Api\v1\BudgetAnalyticsChartRequest;
 use App\Http\Requests\Api\v1\BudgetAnalyticsChildCategoryRequest;
 use App\Http\Requests\Api\v1\BudgetAnalyticsRequest;
+use App\Models\Category;
 use App\Models\Transaction;
 use App\Services\Budget\BudgetService;
 use Carbon\Carbon;
+use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -21,16 +23,24 @@ class BudgetAnalyticsService
         $startDate = $periodOn->clone()->startOfMonth()->startOfDay();
         $endDate = $periodOn->clone()->endOfMonth()->endOfDay();
 
-        return Transaction::query()
-            ->leftJoin('categories', 'transactions.category_id', '=', 'categories.id')
-            ->leftJoin('categories as parent_categories', 'categories.parent_id', '=', 'parent_categories.id')
-            ->leftJoin('budgets', function($join) use ($periodOn) {
-                $join->on('budgets.category_id', '=', 'parent_categories.id')
-                    ->where('budgets.period_on', $periodOn->toDateString());
+        return Category::query()
+            ->leftJoin('transactions', function (JoinClause $join) use ($startDate, $endDate) {
+                $join
+                    ->on('categories.id', '=', 'transactions.category_id')
+                    ->where('transactions.is_debit', false)
+                    ->where('transactions.is_transfer', false)
+                    ->whereBetween('transactions.created_at', [$startDate, $endDate])
+                ;
             })
-            ->where('transactions.is_debit', false)
-            ->where('transactions.is_transfer', false)
-            ->whereBetween('transactions.created_at', [$startDate, $endDate])
+            ->leftJoin('categories as parent_categories', 'categories.parent_id', '=', 'parent_categories.id')
+            ->leftJoin('budgets', function(JoinClause $join) use ($periodOn) {
+                $join
+                    ->on('budgets.category_id', '=', 'parent_categories.id')
+                    ->where('budgets.period_on', $periodOn->toDateString())
+                ;
+            })
+            ->whereNotNull('parent_categories.id')
+            ->havingRaw('NOT (COALESCE(SUM(transactions.amount), 0) = 0 AND COALESCE(budgets.amount, 0) = 0)')
             ->groupBy([
                 'parent_categories.id',
                 'parent_categories.name',
@@ -40,7 +50,7 @@ class BudgetAnalyticsService
             ->select([
                 'parent_categories.id as category_id',
                 'parent_categories.name as category_name',
-                DB::raw('SUM(transactions.amount) as total_spent'),
+                DB::raw('COALESCE(SUM(transactions.amount), 0) as total_spent'),
                 DB::raw('COALESCE(budgets.amount, 0) as budget_amount'),
             ])
             ->get()
@@ -170,7 +180,7 @@ class BudgetAnalyticsService
 
     public function getPlannedBudget(Collection $budget): array
     {
-        $budgetCollection = $budget->where('budget_amount', '>', '0');
+        $budgetCollection = $budget->where('budget_amount', '>', '0')->sortByDesc('budget_amount');
 
         return [
             'data' => $budgetCollection->values()->all(),
