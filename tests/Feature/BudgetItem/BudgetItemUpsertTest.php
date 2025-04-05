@@ -104,7 +104,7 @@ class BudgetItemUpsertTest extends TestCase
         /** @var Budget $budgetItem */
         $budgetItem = Budget::factory()->create();
 
-        $category = Category::factory()->withParentCategory()->create();
+        $category = Category::factory()->create();
 
         $this->assertCount(1, Budget::all());
         $this->assertDatabaseMissing((new Budget())->getTable(), [
@@ -119,6 +119,8 @@ class BudgetItemUpsertTest extends TestCase
             'period_on' => $budgetItem->period_on->format('Ym'),
         ]);
 
+        $response->assertOk();
+
         $this->assertCount(1, Budget::all());
         $this->assertDatabaseHas((new Budget())->getTable(), [
             'amount' => 10012,
@@ -126,13 +128,50 @@ class BudgetItemUpsertTest extends TestCase
             'period_on' => $budgetItem->period_on->toDateString(),
         ]);
 
-        $response->assertOk();
         $response->assertExactJson([
             'message' => 'Элемент бюджета обновлен',
             'data' => [
                 'id' => $budgetItem->getKey(),
                 'amount' => 100.12,
                 'category' => $category->only(['id', 'name']),
+                'period_on_for_list' => $budgetItem->period_on->translatedFormat('Y F'),
+            ],
+        ]);
+    }
+
+    public function testCanUpdateBudgetItemAmountForSameCategory(): void
+    {
+        /** @var Budget $budgetItem */
+        $budgetItem = Budget::factory()->create();
+
+        $this->assertCount(1, Budget::all());
+        $this->assertDatabaseMissing((new Budget())->getTable(), [
+            'amount' => 100,
+            'category_id' => $budgetItem->category_id,
+            'period_on' => $budgetItem->period_on->toDateString(),
+        ]);
+
+        $response = $this->putJson(route('api.v1.budget-items.update', $budgetItem), [
+            'amount' => 1.00,
+            'category_id' => $budgetItem->category_id,
+            'period_on' => $budgetItem->period_on->format('Ym'),
+        ]);
+
+        $response->assertOk();
+
+        $this->assertCount(1, Budget::all());
+        $this->assertDatabaseHas((new Budget())->getTable(), [
+            'amount' => 100,
+            'category_id' => $budgetItem->category_id,
+            'period_on' => $budgetItem->period_on->toDateString(),
+        ]);
+
+        $response->assertExactJson([
+            'message' => 'Элемент бюджета обновлен',
+            'data' => [
+                'id' => $budgetItem->getKey(),
+                'amount' => 1.00,
+                'category' => $budgetItem->category->only(['id', 'name']),
                 'period_on_for_list' => $budgetItem->period_on->translatedFormat('Y F'),
             ],
         ]);

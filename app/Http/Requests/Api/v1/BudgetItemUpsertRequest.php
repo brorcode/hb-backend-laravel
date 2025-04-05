@@ -9,7 +9,7 @@ use App\Rules\UniqueRelationForUserRule;
 use App\Services\Budget\BudgetService;
 
 /**
- * @property-read Budget|null $budget
+ * @property-read Budget|null $budgetItem
  *
  * @property-read string $amount
  * @property-read int $category_id
@@ -24,7 +24,7 @@ class BudgetItemUpsertRequest extends ApiRequest
             'category_id' => [
                 'required',
                 new ExistForUserRule(Category::class),
-                new UniqueRelationForUserRule(Budget::class, $this->budget, [
+                new UniqueRelationForUserRule(Budget::class, $this->budgetItem, [
                     'column' => 'period_on',
                     'value' => BudgetService::getPeriodOnFromInt($this->period_on ?? 0)->toDateString(),
                 ]),
