@@ -95,7 +95,7 @@ class BudgetAnalyticsCategoryChartTest extends TestCase
                 ],
                 'data' => [
                     [
-                        'name' => $this->getChartName(),
+                        'name' => $this->getChartName(true),
                         'color' => '#4F46E5',
                         'data' => [
                             round(abs($this->transactions2->sum('amount') / 100), 2),
@@ -107,9 +107,9 @@ class BudgetAnalyticsCategoryChartTest extends TestCase
         ]);
     }
 
-    private function getChartName(): string
+    private function getChartName(bool $is_child = false): string
     {
-        $categoryName = $this->category->parentCategory->name;
+        $categoryName = $is_child ? $this->category->name : $this->category->parentCategory->name;
         $total = (abs($this->transactions1->sum('amount')) + abs($this->transactions2->sum('amount'))) / 100;
         $average = round($total / 2, 2);
 

@@ -107,6 +107,9 @@ class BudgetAnalyticsService
 
     public function getChart(BudgetAnalyticsChartRequest $request): Collection
     {
+        $categoryIdField = $request->is_child ? 'categories.id' : 'parent_categories.id';
+        $categoryNameField = $request->is_child ? 'categories.name' : 'parent_categories.name';
+
         $builder = Transaction::query()
             ->join('categories', 'transactions.category_id', '=', 'categories.id')
             ->join('categories as parent_categories', 'categories.parent_id', '=', 'parent_categories.id')
@@ -117,13 +120,13 @@ class BudgetAnalyticsService
                 now()->endOfMonth()->endOfDay(),
             ])
             ->groupBy([
-                'parent_categories.id',
-                'parent_categories.name',
+                $categoryIdField,
+                $categoryNameField,
                 'month',
             ])
             ->select(
-                'parent_categories.id as category_id',
-                'parent_categories.name as category_name',
+                "$categoryIdField as category_id",
+                "$categoryNameField as category_name",
                 DB::raw('SUM(transactions.amount) as total_spent'),
                 DB::raw('DATE_FORMAT(transactions.created_at, "%Y %M") as month'),
             )
